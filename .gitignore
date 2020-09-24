@@ -1,7 +1,13 @@
+# Vitor
+todo.txt
+
 .DS_Store
 node_modules
 /dist
 
+# yarn
+yarn.lock
+yarn-error.log
 
 # local env files
 .env.local

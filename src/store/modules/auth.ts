@@ -1,0 +1,97 @@
+import router from "@/router";
+import { Module, VuexModule, Mutation, Action } from "vuex-module-decorators";
+import loginService, {
+  ExpectedResponseData as LoginRequestData
+} from "@/api/auth/login";
+
+interface LogoutOptions {
+  redirectTo?: string;
+  resetState?: boolean;
+  clearLocalStorage?: boolean;
+}
+
+export interface User {
+  name: string;
+  role: UserRoles;
+}
+
+export type UserRoles = "tutorando" | "professor";
+
+@Module({ namespaced: true, name: "auth" })
+export default class Auth extends VuexModule {
+  token = window.localStorage.getItem("token");
+
+  user: User = {
+    name: "Ciclano da Silva",
+    role: "tutorando"
+  };
+
+  get isLoggedIn() {
+    return !!this.token;
+  }
+
+  /**
+   * Chamado quando o usuário realiza login ou se atualiza
+   *
+   * @param payload.token - O JWT do usuário
+   * @param payload.user  - O objeto do usuário
+   */
+  @Mutation
+  AUTH_SUCCESS(payload: LoginRequestData) {
+    const { token } = payload;
+
+    window.localStorage.setItem("token", `Bearer ${token}`);
+
+    this.token = token;
+
+    router.push({ path: "/minha/rota/de/sucesso/em/login" });
+  }
+
+  /**
+   * Chamado quando o usuário realiza logout:
+   * limpa a localstorage, header com o JWT do axios
+   *
+   * @param payload.redirectTo - path da rota ao redirecionar após logout
+   */
+  @Mutation
+  AUTH_LOGOUT(payload: LogoutOptions) {
+    this.token = null;
+
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+
+    const redirectTo = payload.redirectTo || "/home";
+
+    if (payload.clearLocalStorage) localStorage.clear();
+
+    router.push({ path: redirectTo });
+  }
+
+  /**
+   * @param payload.username - o nome de usuário
+   * @param payload.password - a senha do usuário
+   */
+  @Action
+  async LOGIN({ username, password }: { username: string; password: string }) {
+    return loginService(username, password).then(response =>
+      this.context.commit("AUTH_SUCCESS", response)
+    );
+  }
+
+  /**
+   * @param payload.resetState - se todo o estado da aplicação deve ser resetado
+   * @param payload.clearLocalStorage - se toda a localStorage deve ser limpa
+   */
+  @Action
+  LOGOUT(payload?: LogoutOptions) {
+    this.context.commit("AUTH_LOGOUT");
+
+    if (payload && payload.resetState) {
+      this.context.dispatch(
+        "RESET_VUEX_STATE",
+        { clearLocalStorage: payload.clearLocalStorage },
+        { root: true }
+      );
+    }
+  }
+}
