@@ -25,6 +25,7 @@ const paths = [
   '/professor/usuario',
   '/tutorando/usuario',
   '/acesso-negado',
+  '/teste',
   '*'
 ] as const
 

@@ -4,6 +4,27 @@ import AuthModule from "@/store/modules/auth";
 import { getModule } from "vuex-module-decorators";
 import loginService, { ExpectedResponseData as LoginRequestData } from "@/api/auth/login";
 
+// Mockup do módulo de login
+jest.mock('@/api/auth/login', () => ({
+
+  // Preciso disso porque uso es6 imports, see: https://github.com/facebook/jest/issues/5579#event-1477087994
+  __esModule: true,
+
+  // falo que o export default do módulo de login é esse mock
+  default:
+    // Basicamente um mock do jest que retorna uma promisse a qual retorna um usuario + token
+    jest.fn(() => new Promise((resolve, reject) => {
+
+      resolve({
+        user: {
+          role: 'professor',
+          name: 'Ciclano da Silva Neves'
+        },
+        token: 'ASDHUIASOHDIUSA'
+      });
+    }))
+}))
+
 describe("Vuex Auth Module", () => {
 
   let authModule = getModule(AuthModule, Store);
@@ -138,17 +159,10 @@ describe("Vuex Auth Module", () => {
       authModule = getModule(AuthModule, Store);
     });
 
-    afterEach(() => {
-      jest.clearAllMocks()
-    })
+    it('Should fire the loginService with the provided arguments', async () => {
+      await authModule.LOGIN({ username: 'dummy_username', password: 'dummy_password' })
 
-    it.only('Should fire the loginService with the provided arguments', () => {
-      const mock = jest.mock('@/api/auth/login');
-
-      const loginParams = { username: 'dummy_username', password: 'dummy_password' }
-      authModule.LOGIN(loginParams)
-
-      expect(mock).toHaveBeenLastCalledWith(loginParams);
+      expect(loginService).toHaveBeenLastCalledWith('dummy_username', 'dummy_password');
     })
   })
 });

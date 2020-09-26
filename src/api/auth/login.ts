@@ -12,10 +12,7 @@ export interface ExpectedResponseData {
  * @param username - O username do usuário
  * @param password - A senha do usuario
  */
-export default (
-  username: string,
-  password: string
-): Promise<ExpectedResponseData> =>
+export default (username: string, password: string): Promise<ExpectedResponseData> =>
   new Promise((resolve, reject) => {
     axios
       .post("auth/login", { username, password })
@@ -23,10 +20,7 @@ export default (
         resolve(response.data);
       })
       .catch(error => {
-        const errorMessage = handleAxiosError(
-          error,
-          "Erro do servidor ao realizar login"
-        );
+        const errorMessage = handleAxiosError(error, "Erro do servidor ao realizar login");
         reject(errorMessage);
       });
   });

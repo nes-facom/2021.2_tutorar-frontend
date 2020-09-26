@@ -2,12 +2,12 @@ const rotas = [
   {
     icon: "mdi-chart-bar",
     title: "Informações Gerais",
-    to: "informacoes-gerais"
+    to: "/tutorando/informacoes-gerais"
   },
   {
     title: "Mapa",
     icon: "mdi-map",
-    to: "mapa"
+    to: "/tutorando/mapa"
   },
   {
     title: "Cadastro",
@@ -16,18 +16,10 @@ const rotas = [
       {
         icon: "mdi-message-alert",
         title: "Mensagem do Sistema",
-        to: "cadastro/mensagem"
+        to: "/tutorando/cadastro/mensagem"
       }
     ]
   }
 ];
-
-rotas.map(rota => {
-  if (rota.to) rota.to = `/tutorando/${rota.to}`;
-  if (rota.subrotas)
-    rota.subrotas.map(subrota => {
-      if (subrota.to) subrota.to = `/tutorando/${subrota.to}`;
-    });
-});
 
 export default rotas;

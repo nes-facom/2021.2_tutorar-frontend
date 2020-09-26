@@ -53,8 +53,8 @@ export default class Auth extends VuexModule {
    */
   @Mutation
   AUTH_LOGOUT(payload?: LogoutOptions) {
-
     let path = "/home"
+
     this.token = null;
     window.localStorage.removeItem("token");
 
@@ -74,11 +74,12 @@ export default class Auth extends VuexModule {
    * @param payload.username - o nome de usuário
    * @param payload.password - a senha do usuário
    */
-  @Action
+  @Action({ rawError: true })
   async LOGIN({ username, password }: { username: string; password: string }) {
-    return loginService(username, password).then(response =>
-      this.context.commit("AUTH_SUCCESS", response)
-    );
+    return loginService(username, password)
+      .then(response => {
+        this.context.commit("AUTH_SUCCESS", response)
+      })
   }
 
   /**

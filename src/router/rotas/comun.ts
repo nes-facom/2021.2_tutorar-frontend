@@ -13,6 +13,14 @@ const rotas: RouteConfig[] = [
     //   requiredResources: ['tutorias']
     // }
   },
+  {
+    path: "/teste",
+    component: () =>
+      import(/* webpackChunkName: "PageHome" */ "@/pages/PageLogin.vue")
+    // meta: {
+    //   requiredResources: ['tutorias']
+    // }
+  },
 ];
 
 export default rotas;

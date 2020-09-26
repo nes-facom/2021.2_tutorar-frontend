@@ -4,22 +4,22 @@ const rotas: DrawerRoute[] = [
   {
     icon: "mdi-account",
     title: "Meu Usuário",
-    to: "usuario"
+    to: "/professor/usuario"
   },
   {
     title: "Agenda",
     icon: "mdi-calendar",
-    to: "agenda"
+    to: "/professor/agenda"
   },
   {
     title: "Mensagens",
     icon: "mdi-android-messages",
-    to: "mensagens"
+    to: "/professor/mensagens"
   },
   {
     title: "Procurar Tutoria",
     icon: "mdi-google-classroom",
-    to: "procurar-tutoria"
+    to: "/professor/procurar-tutoria"
   },
   {
     title: "Dev",
@@ -28,22 +28,10 @@ const rotas: DrawerRoute[] = [
       {
         icon: "mdi-toy-brick",
         title: "Sandbox",
-        to: "teste"
+        to: "/teste"
       }
     ]
   }
 ];
-
-rotas.map(rota => {
-  if (rota.to) {
-    rota.to = `/professor/${rota.to}`;
-  }
-
-  if (rota.subrotas) {
-    rota.subrotas.map(subrota => {
-      if (subrota.to) subrota.to = `/professor/${subrota.to}`;
-    });
-  }
-});
 
 export default rotas;
