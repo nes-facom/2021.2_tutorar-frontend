@@ -1,6 +1,5 @@
 <script lang="ts">
 import Auth from "@/store/modules/auth";
-import { User } from "@/store/modules/auth";
 import { getModule } from "vuex-module-decorators";
 import { Vue, Component } from "vue-property-decorator";
 
@@ -9,7 +8,7 @@ export default class Pageuser extends Vue {
   private authModule = getModule(Auth, this.$store);
 
   isEditing = false;
-  userCopy: User = { ...this.authModule.user };
+  userCopy = { ...this.authModule.user };
 
   get currentUserData() {
     return this.authModule.user;

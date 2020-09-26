@@ -3,7 +3,7 @@ import { RouteConfig } from "@/router";
 
 const rotas: RouteConfig[] = [
   {
-    path: "usuario",
+    path: "/professor/usuario",
     component: () =>
       import(/* webpackChunkName: "PageUsuario" */ "@/pages/PageUsuario.vue"),
     meta: {
@@ -14,8 +14,6 @@ const rotas: RouteConfig[] = [
 ];
 
 rotas.map(route => {
-  route.path = `/professor/${route.path}`;
-
   if (!route.meta) route.meta = {};
 
   const defaultMeta = {

@@ -1,12 +1,9 @@
 import router from "@/router";
 import { Module, VuexModule, Mutation, Action } from "vuex-module-decorators";
-import loginService, {
-  ExpectedResponseData as LoginResponse
-} from "@/api/auth/login";
+import loginService, { ExpectedResponseData as LoginResponse } from "@/api/auth/login";
 
 interface LogoutOptions {
   redirectTo?: string;
-  resetState?: boolean;
   clearLocalStorage?: boolean;
 }
 
@@ -24,7 +21,8 @@ export default class Auth extends VuexModule {
   user: User | null = null;
 
   get isLoggedIn() {
-    return !!this.token;
+    // return !!this.token;
+    return true;
   }
 
   /**
@@ -49,22 +47,27 @@ export default class Auth extends VuexModule {
 
   /**
    * Chamado quando o usuário realiza logout:
-   * limpa a localstorage, header com o JWT do axios
    *
    * @param payload.redirectTo - path da rota ao redirecionar após logout
+   * @param payload.clearLocalStorage - se a localStorage deve ser limpa
    */
   @Mutation
-  AUTH_LOGOUT(payload: LogoutOptions) {
+  AUTH_LOGOUT(payload?: LogoutOptions) {
+
+    let path = "/home"
     this.token = null;
+    window.localStorage.removeItem("token");
 
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
+    if (payload) {
+      const { redirectTo, clearLocalStorage } = payload
 
-    const redirectTo = payload.redirectTo || "/home";
+      if (clearLocalStorage) localStorage.clear();
+      if (redirectTo) path = redirectTo;
+    }
 
-    if (payload.clearLocalStorage) localStorage.clear();
-
-    router.push({ path: redirectTo });
+    if (router.currentRoute.path !== path) {
+      router.push({ path });
+    }
   }
 
   /**
@@ -86,12 +89,12 @@ export default class Auth extends VuexModule {
   LOGOUT(payload?: LogoutOptions) {
     this.context.commit("AUTH_LOGOUT");
 
-    if (payload && payload.resetState) {
-      this.context.dispatch(
-        "RESET_VUEX_STATE",
-        { clearLocalStorage: payload.clearLocalStorage },
-        { root: true }
-      );
-    }
+    // if (payload && payload.resetState) {
+    //   this.context.dispatch(
+    //     "RESET_VUEX_STATE",
+    //     { clearLocalStorage: payload.clearLocalStorage },
+    //     { root: true }
+    //   );
+    // }
   }
 }

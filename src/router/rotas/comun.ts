@@ -13,22 +13,6 @@ const rotas: RouteConfig[] = [
     //   requiredResources: ['tutorias']
     // }
   },
-
-  // =========================== ROTAS DE ERROS ===========================
-  {
-    path: "/acesso-negado",
-    component: () =>
-      import(
-        /* webpackChunkName: "DefaultUnauthorizedPage" */ "@/pages/errors/DefaultUnauthorizedPage.vue"
-      )
-  },
-  {
-    path: "*",
-    component: () =>
-      import(
-        /* webpackChunkName: "DefaultNotFoundPage" */ "@/pages/errors/DefaultNotFoundPage.vue"
-      )
-  }
 ];
 
 export default rotas;

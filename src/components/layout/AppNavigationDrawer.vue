@@ -1,7 +1,7 @@
 <script lang="ts">
 import { getModule } from "vuex-module-decorators";
 import { Vue, Component } from "vue-property-decorator";
-import { rotasProfessor } from "@/components/layout/DrawerRoutes";
+import { rotasProfessor } from "@/components/layout/drawer-routes";
 
 import Auth from "@/store/modules/auth";
 import Theme from "@/store/modules/theme";

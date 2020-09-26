@@ -2,7 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 
 import store from "@/store";
-import rotas from "@/router/rotas";
+import routes, { AppRoute } from "@/router/rotas";
 
 import { getModule } from "vuex-module-decorators";
 import Auth, { UserRoles } from "@/store/modules/auth";
@@ -27,26 +27,17 @@ export interface RouteMeta {
 
   // Roteamento
   onFailRedirectTo?: string;
+
+  // Error
+  isErrorRoute?: boolean
 }
 
 export interface RouteConfig extends Omit<RouteConfigSingleView, "meta"> {
-  path: string;
+  path: AppRoute;
   meta?: RouteMeta;
 }
 
 Vue.use(VueRouter);
-
-const {
-  comun: rotasComuns,
-  tutorando: rotasTutorandos,
-  professor: rotasProfessores
-} = rotas;
-
-const routes: RouteConfig[] = [
-  ...rotasComuns,
-  ...rotasTutorandos,
-  ...rotasProfessores
-];
 
 /**
  * Se a rota não é de redirect, tem um path e não tem um name específico

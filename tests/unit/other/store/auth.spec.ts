@@ -2,7 +2,7 @@ import Store from "@/store";
 import router from '@/router'
 import AuthModule from "@/store/modules/auth";
 import { getModule } from "vuex-module-decorators";
-import { ExpectedResponseData as LoginRequestData } from "@/api/auth/login";
+import loginService, { ExpectedResponseData as LoginRequestData } from "@/api/auth/login";
 
 describe("Vuex Auth Module", () => {
 
@@ -23,11 +23,9 @@ describe("Vuex Auth Module", () => {
       authModule = getModule(AuthModule, Store);
     });
 
-    it("Should not have a token in localStorage before the mutation", () => {
+    it("Stores the user token in localStorage as 'Bearer: {token}'", () => {
       expect(localStorage.getItem('token')).toBeNull()
-    })
 
-    it("Should store the user token in localStorage as 'Bearer: {token}'", () => {
       authModule.AUTH_SUCCESS({ user, token });
       const prefixedToken = `Bearer ${token}`
 
@@ -35,17 +33,17 @@ describe("Vuex Auth Module", () => {
       expect(window.localStorage.getItem('token')).toBe(prefixedToken)
     });
 
-    it("Should set the state Token", () => {
+    it("Sets the state Token", () => {
       authModule.AUTH_SUCCESS({ user, token });
       expect(authModule.token).toBe(token)
     });
 
-    it("Should set the state User", () => {
+    it("Sets the state User", () => {
       authModule.AUTH_SUCCESS({ user, token });
       expect(authModule.user).toBe(user)
     });
 
-    it("Should call the router to redirect the user to '/home' when he's not there", async () => {
+    it("Calls the router to redirect the user to '/home' when he's not there", async () => {
 
       // Faço um push para uma rota dummy apenas para que a rota atual seja != de '/home'
       await router.push({ path: 'rota/exemplo' })
@@ -57,7 +55,7 @@ describe("Vuex Auth Module", () => {
       expect(spy).toHaveBeenLastCalledWith({ path: '/home' });
     });
 
-    it("Should NOT call the router to redirect the user to '/home' if he's there", async () => {
+    it("Should NOT call the router to redirect the user to '/home' when he's there", async () => {
 
       // Isso deve acontecer antes de eu criar o spy, pois essa execução não deve ser capturada
       if (router.currentRoute.path !== "/home") {
@@ -65,12 +63,92 @@ describe("Vuex Auth Module", () => {
       }
 
       const spy = jest.spyOn(router, 'push')
-
       authModule.AUTH_SUCCESS({ user, token });
 
-      // Espero que o método tenha sido chamado uma vez e não 0
-      // pois o jest a chama ao criar o spy...
+      // Espero 1 e não 0 pois o jest chama o método ao criar o spy... 
       expect(spy).toHaveBeenCalledTimes(1);
     });
+  })
+
+  describe("@Mutation AUTH_LOGOUT:", () => {
+
+    beforeEach(() => {
+      authModule = getModule(AuthModule, Store);
+      localStorage.clear();
+    });
+
+    afterEach(() => {
+      // Limpo o mock da localstorage para evitar leaks
+      jest.clearAllMocks();
+    });
+
+    it("Removes the token from localstorage and state", () => {
+      localStorage.setItem('token', 'This should be cleared')
+      authModule.AUTH_LOGOUT()
+
+      expect(localStorage.__STORE__.token).toBeUndefined()
+      expect(localStorage.getItem('token')).toBeNull()
+      expect(authModule.token).toBeNull()
+    });
+
+    it("Clears the localStorage when 'clearLocalStorage' is true", () => {
+      authModule.AUTH_LOGOUT({ clearLocalStorage: true })
+
+      // Espero 2 pois a chamo em beforeEach
+      expect(localStorage.clear).toHaveBeenCalledTimes(2);
+    });
+
+    it("Calls the router to redirect to '/home' when redirectTo is not specified", async () => {
+      await router.push({ path: "/not/home" })
+
+      const spy = jest.spyOn(router, 'push')
+      authModule.AUTH_LOGOUT();
+
+      expect(spy).toHaveBeenCalledTimes(2);
+      expect(spy).toHaveBeenLastCalledWith({ path: '/home' });
+    });
+
+    it("Calls the router to redirect to the route specified on redirectTo", async () => {
+      const spy = jest.spyOn(router, 'push')
+      authModule.AUTH_LOGOUT({ redirectTo: 'some/fancy/route' });
+
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(spy).toHaveBeenLastCalledWith({ path: 'some/fancy/route' });
+    });
+
+    it("Should NOT call the router to redirect to the route user is currently in", async () => {
+      await router.push({ path: "/home" })
+      const spy = jest.spyOn(router, 'push')
+
+      // Tento redirecionar para a mesma rota ('/home') especificando-a
+      authModule.AUTH_LOGOUT({ redirectTo: '/home' });
+
+      // Tento redirecionar para a mesma rota ('/home') sem especifica-la
+      // pois ela é a rota default
+      authModule.AUTH_LOGOUT();
+
+      // Só espero 1 call que é a do spyOn
+      expect(spy).toHaveBeenCalledTimes(1);
+    });
+  })
+
+  describe("@Action LOGIN:", () => {
+
+    beforeEach(() => {
+      authModule = getModule(AuthModule, Store);
+    });
+
+    afterEach(() => {
+      jest.clearAllMocks()
+    })
+
+    it.only('Should fire the loginService with the provided arguments', () => {
+      const mock = jest.mock('@/api/auth/login');
+
+      const loginParams = { username: 'dummy_username', password: 'dummy_password' }
+      authModule.LOGIN(loginParams)
+
+      expect(mock).toHaveBeenLastCalledWith(loginParams);
+    })
   })
 });

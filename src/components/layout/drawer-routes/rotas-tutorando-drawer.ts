@@ -23,10 +23,10 @@ const rotas = [
 ];
 
 rotas.map(rota => {
-  if (rota.to) rota.to = `/desenvolvedor/${rota.to}`;
+  if (rota.to) rota.to = `/tutorando/${rota.to}`;
   if (rota.subrotas)
     rota.subrotas.map(subrota => {
-      if (subrota.to) subrota.to = `/desenvolvedor/${subrota.to}`;
+      if (subrota.to) subrota.to = `/tutorando/${subrota.to}`;
     });
 });
 
