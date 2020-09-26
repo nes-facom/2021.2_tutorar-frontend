@@ -2,7 +2,7 @@ import axiosInstance from "@/api/axios";
 
 export type IdentifiableItem = {
   id: number;
-}
+};
 
 export abstract class BaseRepository<I extends IdentifiableItem> {
   axiosInstance = axiosInstance;

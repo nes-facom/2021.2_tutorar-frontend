@@ -1,7 +1,7 @@
 import router from "@/router";
 import { Module, VuexModule, Mutation, Action } from "vuex-module-decorators";
 import loginService, {
-  ExpectedResponseData as LoginRequestData
+  ExpectedResponseData as LoginResponse
 } from "@/api/auth/login";
 
 interface LogoutOptions {
@@ -21,10 +21,7 @@ export type UserRoles = "tutorando" | "professor";
 export default class Auth extends VuexModule {
   token = window.localStorage.getItem("token");
 
-  user: User = {
-    name: "Ciclano da Silva",
-    role: "tutorando"
-  };
+  user: User | null = null;
 
   get isLoggedIn() {
     return !!this.token;
@@ -37,14 +34,17 @@ export default class Auth extends VuexModule {
    * @param payload.user  - O objeto do usuário
    */
   @Mutation
-  AUTH_SUCCESS(payload: LoginRequestData) {
-    const { token } = payload;
+  AUTH_SUCCESS(payload: LoginResponse) {
+    const { token, user } = payload;
 
     window.localStorage.setItem("token", `Bearer ${token}`);
 
     this.token = token;
+    this.user = user;
 
-    router.push({ path: "/minha/rota/de/sucesso/em/login" });
+    if (router.currentRoute.path !== "/home") {
+      router.push({ path: "/home" });
+    }
   }
 
   /**

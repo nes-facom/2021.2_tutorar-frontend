@@ -15,7 +15,7 @@ export interface Items {
 
 export default abstract class RepositoryModule<
   I extends IdentifiableItem
-> extends VuexModule {
+  > extends VuexModule {
   ids: number[] = [];
   items: Items = {};
 
@@ -66,7 +66,7 @@ export default abstract class RepositoryModule<
         this.context.commit("SET_ITEMS", items);
       })
       .catch(errorMessage => {
-        console.log(errorMessage);
+        console.error(errorMessage);
       });
   }
 

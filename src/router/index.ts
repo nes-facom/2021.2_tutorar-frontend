@@ -13,13 +13,20 @@ import fetchResourcesPreenptively, {
 } from "@/router/utils/fetchResourcesPreenptively";
 
 export interface RouteMeta {
+  // Auth
   requireRole?: false | UserRoles;
   requireLogin?: boolean;
   requireLogoff?: boolean;
+
+  // Recursos
   requiredResources?: resources[];
 
+  // Styling
   fullPage?: boolean;
   centered?: boolean;
+
+  // Roteamento
+  onFailRedirectTo?: string;
 }
 
 export interface RouteConfig extends Omit<RouteConfigSingleView, "meta"> {
@@ -70,11 +77,18 @@ const router = new VueRouter({ mode: "history", base: "/", routes });
  * na rota desejada
  */
 router.beforeEach((to, from, next) => {
-  const meta = to.meta || {};
+  const meta: RouteMeta = to.meta || {};
   const { isLoggedIn, user } = getModule(Auth, store);
 
-  const redirectWithFallback = (fallback = `${user.role}/home`) =>
+  const defaultFallback = user ? `${user.role}/home` : "login";
+
+  /**
+   * Refireciona para o fallback especificado caso a rota não tenha um próprio
+   * @param fallback 
+   */
+  function redirectWithFallback(fallback = defaultFallback) {
     meta.onFailRedirectTo ? next(meta.onFailRedirectTo) : next(fallback);
+  }
 
   // Barra usuários logados tentando acessar login para home
   if (meta.requireLogoff && isLoggedIn) {
@@ -87,18 +101,12 @@ router.beforeEach((to, from, next) => {
   }
 
   // Barro usuários sem papel necessário pra acessar a rota
-  if (
-    Array.isArray(meta.requireRole) &&
-    meta.requireRole.indexOf(user.role) === -1
-  ) {
+  if (user && meta.requireRole && meta.requireRole !== user.role) {
     return redirectWithFallback("/acesso-negado");
   }
 
   // Se a rota requer alguns recursos eu a os pego
-  if (
-    Array.isArray(meta.requiredResources) &&
-    meta.requiredResources.length > 0
-  ) {
+  if (meta.requiredResources && meta.requiredResources.length > 0) {
     fetchResourcesPreenptively(meta.requiredResources);
   }
 
