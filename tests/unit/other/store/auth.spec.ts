@@ -11,18 +11,16 @@ jest.mock('@/api/auth/login', () => ({
   __esModule: true,
 
   // falo que o export default do módulo de login é esse mock
-  default:
-    // Basicamente um mock do jest que retorna uma promisse a qual retorna um usuario + token
-    jest.fn(() => new Promise((resolve, reject) => {
-
-      resolve({
-        user: {
-          role: 'professor',
-          name: 'Ciclano da Silva Neves'
-        },
-        token: 'ASDHUIASOHDIUSA'
-      });
-    }))
+  default: jest.fn(() => new Promise((resolve, reject) => {
+    const exempleLoginResponse = {
+      user: {
+        role: 'professor',
+        name: 'Ciclano da Silva Neves'
+      },
+      token: 'ASDHUIASOHDIUSA'
+    }
+    resolve(exempleLoginResponse);
+  }))
 }))
 
 describe("Vuex Auth Module", () => {
@@ -155,12 +153,15 @@ describe("Vuex Auth Module", () => {
 
   describe("@Action LOGIN:", () => {
 
+    const username = 'dummy_username'
+    const password = 'dummy_password'
+
     beforeEach(() => {
       authModule = getModule(AuthModule, Store);
     });
 
     it('Should fire the loginService with the provided arguments', async () => {
-      await authModule.LOGIN({ username: 'dummy_username', password: 'dummy_password' })
+      await authModule.LOGIN({ username, password })
 
       expect(loginService).toHaveBeenLastCalledWith('dummy_username', 'dummy_password');
     })

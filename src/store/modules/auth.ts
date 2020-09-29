@@ -21,8 +21,8 @@ export default class Auth extends VuexModule {
   user: User | null = null;
 
   get isLoggedIn() {
-    // return !!this.token;
-    return true;
+    return !!this.token;
+    // return true;
   }
 
   /**
@@ -76,20 +76,24 @@ export default class Auth extends VuexModule {
    */
   @Action({ rawError: true })
   async LOGIN({ username, password }: { username: string; password: string }) {
-    return loginService(username, password)
-      .then(response => {
-        this.context.commit("AUTH_SUCCESS", response)
-      })
+    return loginService(username, password).then(response => {
+      this.context.commit("AUTH_SUCCESS", response)
+    })
   }
 
   /**
    * @param payload.resetState - se todo o estado da aplicação deve ser resetado
    * @param payload.clearLocalStorage - se toda a localStorage deve ser limpa
    */
-  @Action
+  @Action({ rawError: true })
   LOGOUT(payload?: LogoutOptions) {
     this.context.commit("AUTH_LOGOUT");
 
+    const redirectTo = payload?.redirectTo || "/home"
+
+    if (redirectTo && router.currentRoute.path !== redirectTo) {
+      router.push({ path: redirectTo });
+    }
     // if (payload && payload.resetState) {
     //   this.context.dispatch(
     //     "RESET_VUEX_STATE",

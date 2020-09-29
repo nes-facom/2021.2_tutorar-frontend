@@ -9,7 +9,7 @@ export default class AppBarUserMenu extends Vue {
   private authModule = getModule(Auth, this.$store);
 
   logout() {
-    this.authModule.LOGOUT();
+    this.authModule.LOGOUT({ redirectTo: "/login" });
   }
 }
 </script>

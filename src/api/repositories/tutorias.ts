@@ -10,6 +10,7 @@ export interface Tutoria extends IdentifiableItem {
 }
 
 export class TutoriaRepository extends BaseRepository<Tutoria> {
+
   create(tutoria: Tutoria) {
     return new Promise<boolean>((resolve, reject) => {
       this.axiosInstance.post("", tutoria).then(res => {

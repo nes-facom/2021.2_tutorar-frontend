@@ -22,7 +22,7 @@ export interface RouteMeta {
   requiredResources?: resources[];
 
   // Styling
-  fullPage?: boolean;
+  fullpage?: boolean;
   centered?: boolean;
 
   // Roteamento

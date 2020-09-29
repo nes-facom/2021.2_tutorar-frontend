@@ -11,7 +11,7 @@ export default class Pageuser extends Vue {
   userCopy = { ...this.authModule.user };
 
   get currentUserData() {
-    return this.authModule.user;
+    return this.authModule.user || {};
   }
 
   get user() {
