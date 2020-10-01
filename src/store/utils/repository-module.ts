@@ -15,7 +15,7 @@ export interface Items {
 
 export default abstract class RepositoryModule<
   I extends IdentifiableItem
-  > extends VuexModule {
+> extends VuexModule {
   ids: number[] = [];
   items: Items = {};
 

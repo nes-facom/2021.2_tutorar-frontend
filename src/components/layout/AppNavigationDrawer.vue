@@ -30,11 +30,16 @@ export default class NavigationDrawer extends Vue {
 </script>
 
 <template>
-  <v-navigation-drawer v-model="navigationDrawer" expand-on-hover app>
+  <v-navigation-drawer
+    v-model="navigationDrawer"
+    width="230"
+    expand-on-hover
+    app
+  >
     <v-list dense>
       <v-list-item class="px-2">
         <v-list-item-avatar color="white">
-          <v-img src="@/assets/logo_exemplo.jpg" />
+          <v-img src="@/assets/logos/tutorar.svg" height="50" width="50" />
         </v-list-item-avatar>
 
         <v-list-item-content>

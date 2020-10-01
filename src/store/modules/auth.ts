@@ -1,12 +1,47 @@
 import router from "@/router";
 import { Module, VuexModule, Mutation, Action } from "vuex-module-decorators";
-import loginService, { ExpectedResponseData as LoginResponse } from "@/api/auth/login";
+import loginService, {
+  ExpectedResponseData as LoginResponse
+} from "@/api/auth/login";
 
 interface LogoutOptions {
   redirectTo?: string;
   clearLocalStorage?: boolean;
 }
 
+/**
+ * @TODO: Rascunho de tipagem de usuário
+ * quando o formulário / padrão / tipo
+ * dos dados de professor tiver 100%
+ * implementar tipagem
+ */
+interface BaseUser {
+  cpf: string;
+  nome: string;
+  email: string;
+  celular: string;
+  dataNascimento: string;
+  genero: 'masculino' | 'feminino' | 'não informado';
+}
+
+export interface UserProfessor extends BaseUser {
+  dataInicioEnsino: string;
+  formacaoAcademica: 'basica' | 'tecnica' | 'superior';
+  nivelLecionamento: "infantil" | "fundamental" | "médio" | "superior";
+}
+
+export interface UserTutor extends BaseUser {
+  universidade: string;
+  cursoLicensiatura: string;
+  semestreNoCadastro: string;
+
+  anoFimLicensiatura: string;
+  anoInicioLicensiatura: string;
+}
+
+/**
+ * Tipagem temporaria, ver acima
+ */
 export interface User {
   name: string;
   role: UserRoles;
@@ -22,7 +57,6 @@ export default class Auth extends VuexModule {
 
   get isLoggedIn() {
     return !!this.token;
-    // return true;
   }
 
   /**
@@ -37,8 +71,8 @@ export default class Auth extends VuexModule {
 
     window.localStorage.setItem("token", `Bearer ${token}`);
 
-    this.token = token;
     this.user = user;
+    this.token = token;
 
     if (router.currentRoute.path !== "/home") {
       router.push({ path: "/home" });
@@ -53,13 +87,13 @@ export default class Auth extends VuexModule {
    */
   @Mutation
   AUTH_LOGOUT(payload?: LogoutOptions) {
-    let path = "/home"
+    let path = "/home";
 
     this.token = null;
     window.localStorage.removeItem("token");
 
     if (payload) {
-      const { redirectTo, clearLocalStorage } = payload
+      const { redirectTo, clearLocalStorage } = payload;
 
       if (clearLocalStorage) localStorage.clear();
       if (redirectTo) path = redirectTo;
@@ -77,8 +111,8 @@ export default class Auth extends VuexModule {
   @Action({ rawError: true })
   async LOGIN({ username, password }: { username: string; password: string }) {
     return loginService(username, password).then(response => {
-      this.context.commit("AUTH_SUCCESS", response)
-    })
+      this.context.commit("AUTH_SUCCESS", response);
+    });
   }
 
   /**
@@ -89,17 +123,10 @@ export default class Auth extends VuexModule {
   LOGOUT(payload?: LogoutOptions) {
     this.context.commit("AUTH_LOGOUT");
 
-    const redirectTo = payload?.redirectTo || "/home"
+    const redirectTo = payload?.redirectTo || "/home";
 
     if (redirectTo && router.currentRoute.path !== redirectTo) {
       router.push({ path: redirectTo });
     }
-    // if (payload && payload.resetState) {
-    //   this.context.dispatch(
-    //     "RESET_VUEX_STATE",
-    //     { clearLocalStorage: payload.clearLocalStorage },
-    //     { root: true }
-    //   );
-    // }
   }
 }

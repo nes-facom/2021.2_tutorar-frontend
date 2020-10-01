@@ -29,7 +29,7 @@ export interface RouteMeta {
   onFailRedirectTo?: string;
 
   // Error
-  isErrorRoute?: boolean
+  isErrorRoute?: boolean;
 }
 
 export interface RouteConfig extends Omit<RouteConfigSingleView, "meta"> {
@@ -75,7 +75,7 @@ router.beforeEach((to, from, next) => {
 
   /**
    * Refireciona para o fallback especificado caso a rota não tenha um próprio
-   * @param fallback 
+   * @param fallback
    */
   function redirectWithFallback(fallback = defaultFallback) {
     meta.onFailRedirectTo ? next(meta.onFailRedirectTo) : next(fallback);

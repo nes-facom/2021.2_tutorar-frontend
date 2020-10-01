@@ -3,7 +3,7 @@ import { Vue, Component, Prop } from "vue-property-decorator";
 
 @Component({ name: "Home" })
 export default class PageHome extends Vue {
-  @Prop() message!: string;
+  @Prop({ default: "default value" }) message!: string;
 }
 </script>
 

@@ -47,6 +47,7 @@ export default class PageLogin extends Vue {
         />
 
         <FormularioCadastroProfessor
+          @go-back="formularioAtual = 'login'"
           v-else-if="formularioAtual === 'cadastro-professor'"
         />
 
@@ -56,6 +57,7 @@ export default class PageLogin extends Vue {
         />
 
         <FormularioRecuperarSenha
+          @go-back="formularioAtual = 'login'"
           v-else-if="formularioAtual === 'recuperar-senha'"
         />
       </v-col>

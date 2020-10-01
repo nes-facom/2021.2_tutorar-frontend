@@ -25,14 +25,17 @@ export interface ExpectedResponseData {
 //   });
 // }
 
-export default (username: string, password: string): Promise<ExpectedResponseData> => {
+export default (
+  username: string,
+  password: string
+): Promise<ExpectedResponseData> => {
   return new Promise((resolve, reject) => {
     resolve({
       user: {
         name: "Ciclano",
-        role: 'tutorando'
+        role: "tutorando"
       },
-      token: 'ASJDIOAJS'
+      token: "ASJDIOAJS"
     });
   });
-}
+};

@@ -21,9 +21,9 @@ const rotas: RouteConfig[] = [
       import(/* webpackChunkName: "PageLogin" */ "@/pages/PageLogin.vue"),
     meta: {
       fullpage: true,
-      requireLogoff: true,
+      requireLogoff: true
     }
-  },
+  }
 ];
 
 export default rotas;

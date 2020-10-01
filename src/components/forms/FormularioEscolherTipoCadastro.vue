@@ -45,5 +45,4 @@ export default class FormularioEscolherTipoCadastro extends Vue {}
   </v-card>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

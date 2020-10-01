@@ -22,7 +22,7 @@ rotas.map(route => {
   if (!route.meta) route.meta = {};
 
   const defaultMeta = {
-    isErrorRoute: true,
+    isErrorRoute: true
   };
 
   defaults(route.meta, defaultMeta);

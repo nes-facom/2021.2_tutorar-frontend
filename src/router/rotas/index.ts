@@ -3,12 +3,7 @@ import comun from "@/router/rotas/comun";
 import tutorando from "@/router/rotas/tutorando";
 import professor from "@/router/rotas/professor";
 
-const rotas = [
-  ...error,
-  ...comun,
-  ...professor,
-  ...tutorando
-]
+const rotas = [...error, ...comun, ...professor, ...tutorando];
 
 export default rotas;
 
@@ -20,14 +15,14 @@ export default rotas;
 
 // Então tenho que fazer na mão mesmo
 const paths = [
-  '/',
-  '/home',
-  '/professor/usuario',
-  '/tutorando/usuario',
-  '/acesso-negado',
-  '/teste',
-  '/login',
-  '*'
-] as const
+  "/",
+  "/home",
+  "/professor/usuario",
+  "/tutorando/usuario",
+  "/acesso-negado",
+  "/teste",
+  "/login",
+  "*"
+] as const;
 
 export type AppRoute = typeof paths[number];
