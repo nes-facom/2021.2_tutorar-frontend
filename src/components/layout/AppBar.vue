@@ -106,10 +106,10 @@ export default class AppBar extends Vue {
       <span v-text="clock.hora" />
     </div>
 
-    <app-bar-message-menu />
+    <AppBarMessageMenu />
 
-    <app-bar-notification-menu />
+    <AppBarNotificationMenu />
 
-    <app-bar-user-menu />
+    <AppBarUserMenu />
   </v-app-bar>
 </template>

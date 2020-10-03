@@ -1,7 +1,7 @@
 // setup deve ser importado para carregar o vuetify
 import "./setup";
 import { shallowMount } from "@vue/test-utils";
-import PageHome from "@/pages/PageHome.vue";
+import PageHome from "@/pages/Home.vue";
 
 describe("PageHome", () => {
   it("should render compontent's props !", () => {

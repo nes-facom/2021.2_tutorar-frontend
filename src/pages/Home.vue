@@ -12,6 +12,7 @@ export default class PageHome extends Vue {
     <v-row align="center" justify="center" class="text-center">
       <v-col>
         <h1 v-text="message" />
+        <v-btn @click="$router.push({ path: '/login' })">login</v-btn>
       </v-col>
     </v-row>
   </v-container>

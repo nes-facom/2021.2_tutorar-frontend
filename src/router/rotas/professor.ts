@@ -5,7 +5,7 @@ const rotas: RouteConfig[] = [
   {
     path: "/professor/usuario",
     component: () =>
-      import(/* webpackChunkName: "PageUsuario" */ "@/pages/PageUsuario.vue"),
+      import(/* webpackChunkName: "PageUsuario" */ "@/pages/Usuario.vue"),
     meta: {
       requireRole: false,
       requireLogin: false

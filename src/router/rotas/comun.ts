@@ -8,21 +8,43 @@ const rotas: RouteConfig[] = [
   {
     path: "/home",
     component: () =>
-      import(/* webpackChunkName: "PageHome" */ "@/pages/PageHome.vue")
-  },
-  {
-    path: "/teste",
-    component: () =>
-      import(/* webpackChunkName: "PageTeste" */ "@/pages/PageTeste.vue")
+      import(/* webpackChunkName: "PageHome" */ "@/pages/Home.vue")
   },
   {
     path: "/login",
     component: () =>
-      import(/* webpackChunkName: "PageLogin" */ "@/pages/PageLogin.vue"),
+      import(/* webpackChunkName: "PageLogin" */ "@/pages/auth/Login.vue"),
     meta: {
       fullpage: true,
       requireLogoff: true
     }
+  },
+  {
+    path: "/cadastro/professor",
+    component: () =>
+      import(
+        /* webpackChunkName: "PageCadastroProfessor" */ "@/pages/auth/CadastroProfessor.vue"
+      ),
+    meta: {
+      fullpage: true,
+      requireLogoff: true
+    }
+  },
+  {
+    path: "/cadastro/tutor",
+    component: () =>
+      import(
+        /* webpackChunkName: "PageCadastroTutor" */ "@/pages/auth/CadastroTutor.vue"
+      ),
+    meta: {
+      fullpage: true,
+      requireLogoff: true
+    }
+  },
+  {
+    path: "/teste",
+    component: () =>
+      import(/* webpackChunkName: "PageTeste" */ "@/pages/Teste.vue")
   }
 ];
 

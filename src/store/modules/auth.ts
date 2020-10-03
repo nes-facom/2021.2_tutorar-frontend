@@ -21,12 +21,12 @@ interface BaseUser {
   email: string;
   celular: string;
   dataNascimento: string;
-  genero: 'masculino' | 'feminino' | 'não informado';
+  genero: "masculino" | "feminino" | "não informado";
 }
 
 export interface UserProfessor extends BaseUser {
   dataInicioEnsino: string;
-  formacaoAcademica: 'basica' | 'tecnica' | 'superior';
+  formacaoAcademica: "basica" | "tecnica" | "superior";
   nivelLecionamento: "infantil" | "fundamental" | "médio" | "superior";
 }
 
