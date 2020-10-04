@@ -10,3 +10,4 @@
  */
 
 declare module "v-mask";
+declare module "vue2-dropzone";

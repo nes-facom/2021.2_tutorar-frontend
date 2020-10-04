@@ -1,30 +1,71 @@
 <script lang="ts">
+// Validação
 import isValidCpf from "@/utils/form/is-valid-cpf";
 import isValidDMY from "@/utils/form/is-valid-dd-mm-yyyy";
 
+// Tipagem
 import { StringFieldRules } from "@/utils/form";
-import { Vue, Component, Watch } from "vue-property-decorator";
+import { Vue, Component, Watch, Ref } from "vue-property-decorator";
 
+// Componentes
+import vue2Dropzone from "vue2-dropzone";
 import LoginLink from "@/components/auth/LoginLink.vue";
 import AppBarCadastro from "@/components/auth/AppBarCadastro.vue";
 
-// @TODO: Rever essa interface, ta bem idiota
-interface FormRules {
-  [x: string]: StringFieldRules;
-}
+// CSS
+import "vue2-dropzone/dist/vue2Dropzone.min.css";
 
-@Component({ name: "CadastroTutor", components: { AppBarCadastro, LoginLink } })
+@Component({
+  name: "CadastroTutor",
+  components: { AppBarCadastro, LoginLink, FileDropZone: vue2Dropzone }
+})
 export default class CadastroTutor extends Vue {
+  // @SEE: https://www.dropzonejs.com/#configuration
+  get fileDropZoneOptions() {
+    return {
+      url: "...",
+
+      maxFilesize: 5,
+
+      accept: (file: File, done: () => void) => {
+        this.tutor.foto = file;
+        done();
+      },
+
+      // Não envia a file pro url ao aceitar imagem
+      autoProcessQueue: false,
+
+      // Estilo
+      dictDefaultMessage: "Arraste sua foto aqui. Ou clique para seleciona-la.",
+      includeStyling: false,
+
+      maxFiles: 1,
+      uploadMultiple: false
+    };
+  }
+
+  substituirFoto(file: File) {
+    const dz = this.$refs["fileDropZone"];
+    dz.removeAllFiles();
+    dz.addFile(file);
+  }
+
   currentStep = 0;
+
+  isCpfEmUso = false;
+  isCheckingCpf = false;
+
+  confirmacaoSenha = "";
 
   validadePassos = {
     0: false,
     1: false,
+    2: false,
     3: false
   };
 
   // @TODO: aplicar tipagem, esperando back
-  tutor = {
+  tutor: { [x: string]: any; foto: File | null } = {
     // Passo 1
     cpf: "",
     nome: "",
@@ -38,7 +79,10 @@ export default class CadastroTutor extends Vue {
     tempoEnsino: "",
 
     // Passo 3
-    senha: ""
+    senha: "",
+
+    // Passo 4
+    foto: null
   };
 
   // @TODO: Rever quais são os tipos permitidos no back, transformar em dicionario depois
@@ -66,14 +110,10 @@ export default class CadastroTutor extends Vue {
   /**
    * @TODO: Rever com o time se preferem uma biblioteca de validação, fazer
    * na mão ou ambos, como as desse form é simples fiz na mão.
-   * também posso fazer uma função generica pra campo obrigatorio mas nao muda
-   * muito a qtd de loc e eu fico limitado a uma mensagem de erro, ou passo a
-   * msg por parametro que fica tão feio quanto... ver dps
    *
-   * ex:
    * const campoObrigatorio = (value: string | undefined): true | string => !!value || "Campo Obrigatório";
    */
-  rules: FormRules = {
+  rules: { [x: string]: StringFieldRules } = {
     nome: [
       v => !!v || "Nome é obrigatório",
       v => (!!v && v.length >= 6) || "Nome deve ter no minimo 6 caracteres",
@@ -84,8 +124,6 @@ export default class CadastroTutor extends Vue {
       v => !!v || "E-mail é obrigatório",
       v => (!!v && /.+@.+/.test(v)) || "E-mail inválido"
     ],
-
-    cpf: [this.verificaCpf],
 
     dataNascimento: [
       v => !!v || "Data de nascimento é obrigatório",
@@ -111,7 +149,22 @@ export default class CadastroTutor extends Vue {
     ]
   };
 
-  goBack() {
+  get errosConfirmacaoSenha(): string[] {
+    const erros = [];
+
+    // Só valido se o usuário já digitou uma senha pro tutor
+    if (!this.confirmacaoSenha && this.tutor.senha) {
+      erros.push("Por favor confirme sua senha");
+    }
+
+    if (this.confirmacaoSenha !== this.tutor.senha) {
+      erros.push("Senhas não conferem");
+    }
+
+    return erros;
+  }
+
+  goNext() {
     this.currentStep === 0 ? this.$emit("go-back") : this.currentStep--;
   }
 
@@ -127,9 +180,6 @@ export default class CadastroTutor extends Vue {
 
     return this.isCpfEmUso ? "CPF em uso" : true;
   }
-
-  isCpfEmUso = false;
-  isCheckingCpf = false;
 
   /**
    * @TODO: fazer uma função que faz uma request simples a API pra verificar se
@@ -151,6 +201,11 @@ export default class CadastroTutor extends Vue {
 
       // @TODO: implementar a call a api aqui...
     }
+  }
+
+  mounted() {
+    this.currentStep++;
+    this.currentStep++;
   }
 }
 </script>
@@ -197,7 +252,7 @@ export default class CadastroTutor extends Vue {
                   <v-text-field
                     v-model="tutor.cpf"
                     v-mask="'###.###.###-##'"
-                    :rules="rules.cpf"
+                    :rules="[verificaCpf]"
                     :loading="isCheckingCpf"
                     :error="isCpfEmUso"
                     :error-messages="isCpfEmUso ? ['CPF em uso'] : []"
@@ -260,7 +315,9 @@ export default class CadastroTutor extends Vue {
                     placeholder="Quanto tempo você atua na docencia"
                     outlined
                   />
+                </v-form>
 
+                <v-form v-model="validadePassos['2']">
                   <h1 class="text-center headline mb-8">
                     Passo 3 - Definir Senha
                   </h1>
@@ -274,10 +331,27 @@ export default class CadastroTutor extends Vue {
                   />
                   <!-- TODO... -->
                   <v-text-field
+                    v-model="confirmacaoSenha"
                     append-icon="mdi-lock"
                     type="password"
                     placeholder="Confirmar Senha"
+                    :error-messages="errosConfirmacaoSenha"
                     outlined
+                  />
+                </v-form>
+              </v-window-item>
+
+              <v-window-item>
+                <v-form v-model="validadePassos['3']">
+                  <h1 class="text-center headline mb-8">
+                    Passo 4 - Foto
+                  </h1>
+                  <FileDropZone
+                    :options="fileDropZoneOptions"
+                    @vdropzone-max-files-reached="$log('nigger')"
+                    class="mb-8"
+                    id="dropZone"
+                    ref="fileDropZone"
                   />
                 </v-form>
               </v-window-item>
