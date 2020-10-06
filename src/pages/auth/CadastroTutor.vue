@@ -7,49 +7,14 @@ import isValidDMY from "@/utils/form/is-valid-dd-mm-yyyy";
 import { StringFieldRules } from "@/utils/form";
 import { Vue, Component, Watch, Ref } from "vue-property-decorator";
 
-// Componentes
-import vue2Dropzone from "vue2-dropzone";
 import LoginLink from "@/components/auth/LoginLink.vue";
 import AppBarCadastro from "@/components/auth/AppBarCadastro.vue";
 
-// CSS
-import "vue2-dropzone/dist/vue2Dropzone.min.css";
-
 @Component({
   name: "CadastroTutor",
-  components: { AppBarCadastro, LoginLink, FileDropZone: vue2Dropzone }
+  components: { AppBarCadastro, LoginLink }
 })
 export default class CadastroTutor extends Vue {
-  // @SEE: https://www.dropzonejs.com/#configuration
-  get fileDropZoneOptions() {
-    return {
-      url: "...",
-
-      maxFilesize: 5,
-
-      accept: (file: File, done: () => void) => {
-        this.tutor.foto = file;
-        done();
-      },
-
-      // Não envia a file pro url ao aceitar imagem
-      autoProcessQueue: false,
-
-      // Estilo
-      dictDefaultMessage: "Arraste sua foto aqui. Ou clique para seleciona-la.",
-      includeStyling: false,
-
-      maxFiles: 1,
-      uploadMultiple: false
-    };
-  }
-
-  substituirFoto(file: File) {
-    const dz = this.$refs["fileDropZone"];
-    dz.removeAllFiles();
-    dz.addFile(file);
-  }
-
   currentStep = 0;
 
   isCpfEmUso = false;
@@ -57,11 +22,12 @@ export default class CadastroTutor extends Vue {
 
   confirmacaoSenha = "";
 
+  previewFoto: string | null = null;
+
   validadePassos = {
     0: false,
     1: false,
-    2: false,
-    3: false
+    2: false
   };
 
   // @TODO: aplicar tipagem, esperando back
@@ -113,7 +79,9 @@ export default class CadastroTutor extends Vue {
    *
    * const campoObrigatorio = (value: string | undefined): true | string => !!value || "Campo Obrigatório";
    */
-  rules: { [x: string]: StringFieldRules } = {
+  rules: {
+    [x: string]: StringFieldRules;
+  } = {
     nome: [
       v => !!v || "Nome é obrigatório",
       v => (!!v && v.length >= 6) || "Nome deve ter no minimo 6 caracteres",
@@ -149,6 +117,21 @@ export default class CadastroTutor extends Vue {
     ]
   };
 
+  fotoRules: ((v: File | null) => true | string)[] = [
+    v => !!v || "Escolha uma foto",
+    v => (!!v && v.size < 7000000) || "Foto deve ter no máximo 7 MB!"
+  ];
+
+  onFotoSelected(file: File) {
+    this.tutor.foto = file;
+    this.previewFoto = file ? URL.createObjectURL(file) : null;
+  }
+
+  onFotoDragged(e: DragEvent) {
+    const file = e.dataTransfer?.files[0];
+    if (file) this.onFotoSelected(file);
+  }
+
   get errosConfirmacaoSenha(): string[] {
     const erros = [];
 
@@ -164,8 +147,12 @@ export default class CadastroTutor extends Vue {
     return erros;
   }
 
-  goNext() {
-    this.currentStep === 0 ? this.$emit("go-back") : this.currentStep--;
+  submit() {
+    console.log("wew");
+  }
+
+  gotoNextStep() {
+    this.currentStep === 2 ? this.submit() : this.currentStep++;
   }
 
   getCelularMask(telefone: string) {
@@ -201,11 +188,6 @@ export default class CadastroTutor extends Vue {
 
       // @TODO: implementar a call a api aqui...
     }
-  }
-
-  mounted() {
-    this.currentStep++;
-    this.currentStep++;
   }
 }
 </script>
@@ -315,9 +297,7 @@ export default class CadastroTutor extends Vue {
                     placeholder="Quanto tempo você atua na docencia"
                     outlined
                   />
-                </v-form>
 
-                <v-form v-model="validadePassos['2']">
                   <h1 class="text-center headline mb-8">
                     Passo 3 - Definir Senha
                   </h1>
@@ -342,17 +322,28 @@ export default class CadastroTutor extends Vue {
               </v-window-item>
 
               <v-window-item>
-                <v-form v-model="validadePassos['3']">
+                <v-form v-model="validadePassos['2']">
                   <h1 class="text-center headline mb-8">
                     Passo 4 - Foto
                   </h1>
-                  <FileDropZone
-                    :options="fileDropZoneOptions"
-                    @vdropzone-max-files-reached="$log('nigger')"
+                  <div
+                    v-cloak
+                    @drop.prevent="onFotoDragged"
+                    @dragover.prevent
                     class="mb-8"
-                    id="dropZone"
-                    ref="fileDropZone"
-                  />
+                  >
+                    <v-file-input
+                      v-model="tutor.foto"
+                      :prepend-icon="null"
+                      :rules="fotoRules"
+                      @change="onFotoSelected"
+                      placeholder="Arraste ou Selecione uma foto"
+                      accept="image/png, image/jpeg"
+                      show-size
+                    />
+                    <!-- <v-img v-if="previewFoto" :src="previewFoto" /> -->
+                    {{ validadePassos["3"] }}
+                  </div>
                 </v-form>
               </v-window-item>
 
@@ -361,25 +352,17 @@ export default class CadastroTutor extends Vue {
                 <v-btn
                   color="green"
                   class="white--text pl-4 mb-6"
-                  @click="currentStep++"
+                  @click="gotoNextStep"
                   :disabled="!validadePassos[currentStep] || isCheckingCpf"
                 >
-                  Próximo
+                  <span>
+                    {{ currentStep === 2 ? "Finalizar" : "Próximo" }}
+                  </span>
                   <v-icon dark right>
                     mdi-arrow-right
                   </v-icon>
                 </v-btn>
-                <!-- <v-btn
-                  color="green"
-                  class="white--text pl-4 mb-6"
-                  @click="currentStep++"
-                 
-                >
-                  Próximo
-                  <v-icon dark right>
-                    mdi-arrow-right
-                  </v-icon>
-                </v-btn> -->
+
                 <v-spacer />
               </div>
 
