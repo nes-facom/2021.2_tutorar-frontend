@@ -1,28 +1,38 @@
 <script lang="ts">
-// Validação
-import isValidCpf from "@/utils/form/is-valid-cpf";
-import isValidDMY from "@/utils/form/is-valid-dd-mm-yyyy";
-
 // Tipagem
 import { StringFieldRules } from "@/utils/form";
 import { Vue, Component, Watch, Ref } from "vue-property-decorator";
 
+// Componentes
 import LoginLink from "@/components/auth/LoginLink.vue";
 import AppBarCadastro from "@/components/auth/AppBarCadastro.vue";
+import FotoDropZone from "@/components/base/inputs/FotoDropZone.vue";
+import FormularioSenha from "@/components/auth/FormularioSenha.vue";
+import FormularioDadosPessoais, {
+  DadosPessoais
+} from "@/components/auth/FormularioDadosPessoais.vue";
 
 @Component({
   name: "CadastroTutor",
-  components: { AppBarCadastro, LoginLink }
+  components: {
+    LoginLink,
+    FotoDropZone,
+    AppBarCadastro,
+    FormularioSenha,
+    FormularioDadosPessoais
+  }
 })
 export default class CadastroTutor extends Vue {
   currentStep = 0;
 
-  isCpfEmUso = false;
-  isCheckingCpf = false;
-
-  confirmacaoSenha = "";
-
-  previewFoto: string | null = null;
+  // Passo 0
+  dadosPessoais: DadosPessoais = {
+    nome: "",
+    email: "",
+    cpf: "",
+    genero: "",
+    celular: ""
+  };
 
   validadePassos = {
     0: false,
@@ -33,161 +43,41 @@ export default class CadastroTutor extends Vue {
   // @TODO: aplicar tipagem, esperando back
   tutor: { [x: string]: any; foto: File | null } = {
     // Passo 1
-    cpf: "",
-    nome: "",
-    genero: "",
-    celular: "",
-    dataNascimento: "",
+    universidade: "",
+    cursoLicensiatura: "",
+    semestreAtual: "",
 
     // Passo 2
-    formacao: "",
-    nivel: "",
-    tempoEnsino: "",
-
-    // Passo 3
+    anoInicioLicensiatura: "",
+    anoFimLicensiatura: "",
     senha: "",
 
-    // Passo 4
+    // Passo 3
     foto: null
   };
 
-  // @TODO: Rever quais são os tipos permitidos no back, transformar em dicionario depois
   opcoes = {
-    genero: ["Masculino", "Feminino", "Prefiro não informar"],
+    // @TODO:
+    universidade: ["UFMS", "SEJUSP"],
 
-    // @TODO: REVER https://www.vestibulandoweb.com.br/formacao.htm
-    formacao: [
-      "Bacharelado",
-      "Licenciatura",
-      "Tecnológico",
-      "Seqüencial",
-      "Graduação Modulada",
-      "Educação à Distância"
-    ],
-
-    tempoEnsino: [
-      "menos de 1 ano",
-      "entre 1 a 5 anos",
-      "entre 5 a 10 anos",
-      "mais de 10 anos"
-    ]
+    semestre: []
   };
 
-  /**
-   * @TODO: Rever com o time se preferem uma biblioteca de validação, fazer
-   * na mão ou ambos, como as desse form é simples fiz na mão.
-   *
-   * const campoObrigatorio = (value: string | undefined): true | string => !!value || "Campo Obrigatório";
-   */
-  rules: {
-    [x: string]: StringFieldRules;
-  } = {
-    nome: [
-      v => !!v || "Nome é obrigatório",
-      v => (!!v && v.length >= 6) || "Nome deve ter no minimo 6 caracteres",
-      v => (!!v && v.length <= 60) || "Nome deve ter no máximo 60 caracteres"
-    ],
+  rules = {};
 
-    email: [
-      v => !!v || "E-mail é obrigatório",
-      v => (!!v && /.+@.+/.test(v)) || "E-mail inválido"
-    ],
-
-    dataNascimento: [
-      v => !!v || "Data de nascimento é obrigatório",
-      v => {
-        const maxYear = new Date().getFullYear() - 16;
-        return (!!v && isValidDMY(v, { maxYear })) || "Data inválida";
-      }
-    ],
-
-    genero: [v => !!v || "Gênero é obrigatório"],
-
-    celular: [
-      v => !!v || "Celular é obrigatório",
-      v => (!!v && v.length >= 14) || "Número inválido"
-    ],
-
-    nivel: [v => !!v || "Campo Obrigatório"],
-
-    senha: [
-      v => !!v || "Campo Obrigatório",
-      v => (!!v && v.length >= 6) || "Senha deve ter no minimo 6 caracteres",
-      v => (!!v && v.length < 60) || "Senha deve ter no minimo 60 caracteres"
-    ]
-  };
-
-  fotoRules: ((v: File | null) => true | string)[] = [
-    v => !!v || "Escolha uma foto",
-    v => (!!v && v.size < 7000000) || "Foto deve ter no máximo 7 MB!"
-  ];
-
-  onFotoSelected(file: File) {
-    this.tutor.foto = file;
-    this.previewFoto = file ? URL.createObjectURL(file) : null;
-  }
-
-  onFotoDragged(e: DragEvent) {
-    const file = e.dataTransfer?.files[0];
-    if (file) this.onFotoSelected(file);
-  }
-
-  get errosConfirmacaoSenha(): string[] {
-    const erros = [];
-
-    // Só valido se o usuário já digitou uma senha pro tutor
-    if (!this.confirmacaoSenha && this.tutor.senha) {
-      erros.push("Por favor confirme sua senha");
-    }
-
-    if (this.confirmacaoSenha !== this.tutor.senha) {
-      erros.push("Senhas não conferem");
-    }
-
-    return erros;
+  mounted() {
+    // this.currentStep++;
+    // this.currentStep++;
   }
 
   submit() {
-    console.log("wew");
+    const tutor = { ...this.dadosPessoais, ...this.tutor };
+    console.log(tutor);
+    console.log("A integrar com o back !");
   }
 
   gotoNextStep() {
     this.currentStep === 2 ? this.submit() : this.currentStep++;
-  }
-
-  getCelularMask(telefone: string) {
-    if (!telefone) return "(##) ####-####";
-    return telefone.length > 14 ? "(##) #####-####" : "(##) ####-####";
-  }
-
-  verificaCpf(cpf: string | undefined): true | string {
-    if (!cpf) return "CPF é obrigatório";
-
-    if (!isValidCpf(cpf)) return "CPF inválido";
-
-    return this.isCpfEmUso ? "CPF em uso" : true;
-  }
-
-  /**
-   * @TODO: fazer uma função que faz uma request simples a API pra verificar se
-   * ja existe um cadastro com esse cpf, essa função deve ser chamada quando
-   * o usuario termina de digitar um cpf válido no campo
-   */
-  @Watch("tutor.cpf")
-  onCpfChange(cpf: string | undefined) {
-    if (!cpf || !isValidCpf(cpf)) {
-      this.isCpfEmUso = false;
-    } else {
-      this.isCheckingCpf = true;
-
-      // Mockup
-      setTimeout(() => {
-        this.isCheckingCpf = false;
-        this.isCpfEmUso = false;
-      }, 2000);
-
-      // @TODO: implementar a call a api aqui...
-    }
   }
 }
 </script>
@@ -197,75 +87,29 @@ export default class CadastroTutor extends Vue {
     <AppBarCadastro />
     <v-container fill-height>
       <v-row align="center" justify="end">
-        <v-col cols="auto">
-          <v-card width="400" class="pa-6 elevation-6">
+        <v-col cols="5">
+          <v-img contain src="@/assets/imagens/Alunos_Conexao.svg" alt="img" />
+        </v-col>
+        <v-col cols="4">
+          <h1 class="display-2 font-weight-bold">
+            Agora vamos realizar o seu cadastro
+          </h1>
+
+          <span class="subtitle-1 grey--text text--darken-1">
+            Aqui você pode oferecer sua tutoria a professores do brasil inteiro
+            ! algum texto emocionante aqui, uau !
+          </span>
+        </v-col>
+        <v-col cols="3">
+          <v-card
+            width="450"
+            min-height="715"
+            class="pa-6 elevation-6 d-flex flex-column"
+          >
             <v-window v-model="currentStep">
               <v-window-item>
                 <v-form v-model="validadePassos['0']">
-                  <h1 class="text-center headline mb-8">
-                    Passo 1 - Dados Pessoais
-                  </h1>
-
-                  <v-text-field
-                    v-model="tutor.nome"
-                    :rules="rules.nome"
-                    placeholder="Nome"
-                    outlined
-                  />
-
-                  <v-text-field
-                    v-model="tutor.email"
-                    :rules="rules.email"
-                    placeholder="Email"
-                    outlined
-                  />
-
-                  <!-- 
-                    :error -> Se o cpf esta em uso coloco em estado de erro manualmente
-                    :error-messages -> Se o cpf esta em uso adiciono a mensagem de erro
-                    do mesmo, senão passo um array vazio
-
-                    faço isso pois a validação de inputs é feita quando há um input
-                    mas no caso do cpf eu só sei se é valida quando a api responde,
-                    por isso preciso setar manualmente o estado de erro.
-
-                    see: https://vuetifyjs.com/en/api/v-text-field/#props
-                  -->
-                  <v-text-field
-                    v-model="tutor.cpf"
-                    v-mask="'###.###.###-##'"
-                    :rules="[verificaCpf]"
-                    :loading="isCheckingCpf"
-                    :error="isCpfEmUso"
-                    :error-messages="isCpfEmUso ? ['CPF em uso'] : []"
-                    placeholder="CPF"
-                    outlined
-                  />
-
-                  <v-text-field
-                    v-model="tutor.dataNascimento"
-                    v-mask="'##/##/####'"
-                    :rules="rules.dataNascimento"
-                    placeholder="Data de Nascimento"
-                    outlined
-                  />
-
-                  <v-select
-                    v-model="tutor.genero"
-                    :items="opcoes.genero"
-                    :rules="rules.genero"
-                    placeholder="Gênero"
-                    required
-                    outlined
-                  />
-
-                  <v-text-field
-                    v-model="tutor.celular"
-                    v-mask="getCelularMask(tutor.celular)"
-                    :rules="rules.celular"
-                    placeholder="Celular"
-                    outlined
-                  />
+                  <FormularioDadosPessoais v-model="dadosPessoais" />
                 </v-form>
               </v-window-item>
 
@@ -275,18 +119,18 @@ export default class CadastroTutor extends Vue {
                     Passo 2 - Formação Acadêmica
                   </h1>
 
-                  <v-select
-                    v-model="tutor.formacao"
-                    :items="opcoes.formacao"
-                    :rules="rules.nome"
-                    placeholder="Qual sua Formação ?"
+                  <v-combobox
+                    v-model="tutor.universidade"
+                    :items="opcoes.universidade"
+                    :rules="rules.universidade"
+                    placeholder="Universidade"
                     outlined
                   />
 
                   <v-text-field
-                    v-model="tutor.nivel"
+                    v-model="tutor.c"
                     :rules="rules.nivel"
-                    placeholder="Qual nível você leciona ?"
+                    placeholder="Curso de licensiatura"
                     outlined
                   />
 
@@ -294,30 +138,11 @@ export default class CadastroTutor extends Vue {
                     v-model="tutor.tempoEnsino"
                     :rules="rules.tempoEnsino"
                     :items="opcoes.tempoEnsino"
-                    placeholder="Quanto tempo você atua na docencia"
+                    placeholder="Semestre Atual"
                     outlined
                   />
 
-                  <h1 class="text-center headline mb-8">
-                    Passo 3 - Definir Senha
-                  </h1>
-                  <v-text-field
-                    v-model="tutor.senha"
-                    :rules="rules.senha"
-                    append-icon="mdi-lock"
-                    type="password"
-                    placeholder="Senha"
-                    outlined
-                  />
-                  <!-- TODO... -->
-                  <v-text-field
-                    v-model="confirmacaoSenha"
-                    append-icon="mdi-lock"
-                    type="password"
-                    placeholder="Confirmar Senha"
-                    :error-messages="errosConfirmacaoSenha"
-                    outlined
-                  />
+                  <FormularioSenha v-model="tutor.senha" />
                 </v-form>
               </v-window-item>
 
@@ -326,48 +151,33 @@ export default class CadastroTutor extends Vue {
                   <h1 class="text-center headline mb-8">
                     Passo 4 - Foto
                   </h1>
-                  <div
-                    v-cloak
-                    @drop.prevent="onFotoDragged"
-                    @dragover.prevent
-                    class="mb-8"
-                  >
-                    <v-file-input
-                      v-model="tutor.foto"
-                      :prepend-icon="null"
-                      :rules="fotoRules"
-                      @change="onFotoSelected"
-                      placeholder="Arraste ou Selecione uma foto"
-                      accept="image/png, image/jpeg"
-                      show-size
-                    />
-                    <!-- <v-img v-if="previewFoto" :src="previewFoto" /> -->
-                    {{ validadePassos["3"] }}
-                  </div>
+                  <FotoDropZone v-model="tutor.foto" class="mt-4 mb-8 mx-4" />
                 </v-form>
               </v-window-item>
-
-              <div class="d-flex">
-                <v-spacer />
-                <v-btn
-                  color="green"
-                  class="white--text pl-4 mb-6"
-                  @click="gotoNextStep"
-                  :disabled="!validadePassos[currentStep] || isCheckingCpf"
-                >
-                  <span>
-                    {{ currentStep === 2 ? "Finalizar" : "Próximo" }}
-                  </span>
-                  <v-icon dark right>
-                    mdi-arrow-right
-                  </v-icon>
-                </v-btn>
-
-                <v-spacer />
-              </div>
-
-              <LoginLink />
             </v-window>
+
+            <v-spacer />
+
+            <v-card-actions class="mb-2">
+              <v-spacer />
+
+              <v-btn
+                color="green"
+                class="white--text pl-4"
+                @click="gotoNextStep"
+                :disabled="!validadePassos[currentStep]"
+              >
+                <span>
+                  {{ currentStep === 2 ? "Finalizar" : "Próximo" }}
+                </span>
+                <v-icon dark right>
+                  mdi-arrow-right
+                </v-icon>
+              </v-btn>
+
+              <v-spacer />
+            </v-card-actions>
+            <LoginLink />
           </v-card>
         </v-col>
       </v-row>

@@ -15,6 +15,7 @@ export default class PageLogin extends Vue {
   password = "";
 
   isFormValid = false;
+  showSenha = false;
 
   loginAttempts = 0;
 
@@ -49,6 +50,10 @@ export default class PageLogin extends Vue {
     this.authModule.LOGIN({ username, password });
   }
 }
+
+// Abra sua sala de aula para INOVAR
+// Junte-se a nós e encontre ajuda para implementação
+// de técnologias digitáis na usa prática pedagógica
 </script>
 
 <template>
@@ -56,7 +61,26 @@ export default class PageLogin extends Vue {
     <AppBarCadastro />
     <v-container fill-height>
       <v-row align="center" justify="end">
-        <v-col cols="auto">
+        <v-col cols="5">
+          <v-img contain src="@/assets/imagens/Aluno_VideoAula.svg" alt="img" />
+        </v-col>
+        <v-col cols="4">
+          <h1 class="display-2 mb-2">Abra sua sala de aula para</h1>
+          <h1 class="display-3 font-weight-bold">
+            <span class="green--text">I</span>
+            <span class="blue--text">N</span>
+            <span class="orange--text">O</span>
+            <span class="red--text">V</span>
+            <span class="green--text">A</span>
+            <span class="blue--text">R</span>
+          </h1>
+          <span class="subtitle-1"
+            >Junte-se a nós e encontre ajuda para implementação de técnologias
+            digitáis na usa prática pedagógica</span
+          >
+        </v-col>
+
+        <v-col cols="3">
           <v-card
             width="400"
             class="pa-6 elevation-6"
@@ -92,10 +116,12 @@ export default class PageLogin extends Vue {
               />
 
               <v-text-field
-                append-icon="mdi-lock"
                 placeholder="Senha"
                 v-model="password"
+                @click:append="showSenha = !showSenha"
                 :rules="passwordRules"
+                :type="showSenha ? 'text' : 'password'"
+                :append-icon="showSenha ? 'mdi-eye' : 'mdi-eye-off'"
                 outlined
               />
             </v-form>

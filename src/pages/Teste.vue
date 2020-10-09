@@ -1,6 +1,12 @@
 <script>
+import FileFropZone from "@/components/base/inputs/FileDropZone.vue";
+
 export default {
   name: "AXASDASDIJ",
+
+  components: {
+    FileFropZone,
+  },
 
   data: () => ({
     file: null,
@@ -15,8 +21,8 @@ export default {
 </script>
 
 <template>
-  <div v-cloak @drop.prevent="addDropFile" @dragover.prevent>
-    <v-file-input v-model="file" />
+  <div class="pa-12 grey">
+    <FileFropZone />
   </div>
 </template>
 

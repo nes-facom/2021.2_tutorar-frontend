@@ -8,12 +8,11 @@ export default class AppBarCadastro extends Vue {}
 <template>
   <v-app-bar height="50px" flat color="#f8f8f8">
     <v-img
-      src="@/assets/logos/tutorar.svg"
-      max-height="70"
-      max-width="70"
+      src="@/assets/logos/tutorar_com_titulo.svg"
+      max-height="130"
+      max-width="130"
       contain
     />
-    <span class="title">Tutorar</span>
 
     <v-spacer />
 
