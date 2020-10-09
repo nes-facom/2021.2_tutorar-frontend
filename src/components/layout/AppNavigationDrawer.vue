@@ -1,7 +1,10 @@
 <script lang="ts">
 import { getModule } from "vuex-module-decorators";
 import { Vue, Component } from "vue-property-decorator";
-import { rotasProfessor } from "@/components/layout/drawer-routes";
+import {
+  rotasProfessor,
+  rotasMonitor
+} from "@/components/layout/drawer-routes";
 
 import Auth from "@/store/modules/auth";
 import Theme from "@/store/modules/theme";
@@ -24,7 +27,8 @@ export default class NavigationDrawer extends Vue {
   }
 
   get rotas() {
-    return rotasProfessor;
+    // @TODO: verificar nivel de acesso do usuário e ajustar rotas de acordo
+    return [...rotasProfessor, ...rotasMonitor];
   }
 }
 </script>

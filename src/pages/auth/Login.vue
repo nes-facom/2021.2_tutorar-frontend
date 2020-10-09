@@ -50,10 +50,6 @@ export default class PageLogin extends Vue {
     this.authModule.LOGIN({ username, password });
   }
 }
-
-// Abra sua sala de aula para INOVAR
-// Junte-se a nós e encontre ajuda para implementação
-// de técnologias digitáis na usa prática pedagógica
 </script>
 
 <template>

@@ -29,6 +29,9 @@ const options = {
     values: {}
   },
   lang: {
+    /**
+     * Não tem tradução pt-br :(
+     */
     current: "en",
     // locales: { en },
     t: undefined

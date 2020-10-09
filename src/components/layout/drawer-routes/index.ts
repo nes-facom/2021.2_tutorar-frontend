@@ -1,6 +1,8 @@
+import rotasMonitorDrawer from "@/components/layout/drawer-routes/rotas-monitor-drawer";
 import rotasProfessorDrawer from "@/components/layout/drawer-routes/rotas-professor-drawer";
 import rotasTutorandoDrawer from "@/components/layout/drawer-routes/rotas-tutorando-drawer";
 
+export const rotasMonitor = rotasMonitorDrawer;
 export const rotasProfessor = rotasProfessorDrawer;
 export const rotasTutorando = rotasTutorandoDrawer;
 

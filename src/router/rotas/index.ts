@@ -2,8 +2,9 @@ import error from "@/router/rotas/error";
 import comun from "@/router/rotas/comun";
 import tutorando from "@/router/rotas/tutorando";
 import professor from "@/router/rotas/professor";
+import monitor from "@/router/rotas/monitor";
 
-const rotas = [...error, ...comun, ...professor, ...tutorando];
+const rotas = [...error, ...comun, ...professor, ...tutorando, ...monitor];
 
 export default rotas;
 
@@ -24,6 +25,7 @@ const paths = [
   "/login",
   "/cadastro/professor",
   "/cadastro/tutor",
+  "/monitor/listagem-usuarios",
   "*"
 ] as const;
 
