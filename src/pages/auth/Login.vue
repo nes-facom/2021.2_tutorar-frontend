@@ -57,7 +57,7 @@ export default class PageLogin extends Vue {
     <AppBarCadastro />
     <v-container fill-height>
       <v-row align="center" justify="end">
-        <v-col cols="5">
+        <v-col cols="4">
           <v-img contain src="@/assets/imagens/Aluno_VideoAula.svg" alt="img" />
         </v-col>
         <v-col cols="4">
@@ -76,71 +76,82 @@ export default class PageLogin extends Vue {
           >
         </v-col>
 
-        <v-col cols="3">
+        <v-col cols="4">
           <v-card
-            width="400"
-            class="pa-6 elevation-6"
-            @keyup.enter="canSendLoginRequest ? sendLoginRequest() : () => null"
+              width="400"
+              class="pa-6 elevation-6"
+              @keyup.enter="canSendLoginRequest ? sendLoginRequest() : () => null"
           >
-            <h1 class="text-center display-1 mb-12 indigo--text">
-              Bem Vindo
-            </h1>
+            <v-row align="center"
+                   class="mx-auto">
+              <v-col>
+                <h5>Fazer Login com:</h5>
+              </v-col>
+              <v-col>
+                <v-btn
+                    color="blue lighten-1"
+                    outlined
+                    class="white--text px-4 elevation-2"
+                    style="text-transform: none"
+                    block
+                    x-large
+                >
+                  <v-icon left dark
+                          color="red">
+                    mdi-google
+                  </v-icon>
+                  Google
+                </v-btn>
+              </v-col>
+            </v-row>
 
-            <v-btn
-              color="red lighten-1"
-              class="white--text px-4 elevation-2"
-              style="text-transform: none"
-              block
-              x-large
-            >
-              <v-icon left dark>
-                mdi-google
-              </v-icon>
-
-              Entrar com o Google
-            </v-btn>
-
-            <v-divider class="my-8" />
+            <v-row>
+              <v-col>
+                <v-divider class="my-5" />
+              </v-col>
+              <v-vol class="my-5" style="color: #34A853">
+                ou
+              </v-vol>
+              <v-col>
+                <v-divider class="my-5" />
+              </v-col>
+            </v-row>
 
             <v-form v-model="isFormValid" ref="loginForm">
               <v-text-field
-                outlined
-                append-icon="mdi-account"
-                placeholder="Email"
-                v-model="username"
-                :rules="usernameRules"
+                  outlined
+                  append-icon="mdi-account"
+                  placeholder="Email"
+                  v-model="username"
+                  :rules="usernameRules"
               />
 
               <v-text-field
-                placeholder="Senha"
-                v-model="password"
-                @click:append="showSenha = !showSenha"
-                :rules="passwordRules"
-                :type="showSenha ? 'text' : 'password'"
-                :append-icon="showSenha ? 'mdi-eye' : 'mdi-eye-off'"
-                outlined
+                  append-icon="mdi-lock"
+                  placeholder="Senha"
+                  type="password"
+                  v-model="password"
+                  :rules="passwordRules"
+                  outlined
               />
             </v-form>
 
-            <v-card-actions class="pa-0 mx-0 mt-2">
-              <div>
-                <div
-                  class="body-2 indigo--text link"
-                  @click="$emit('forgot-password-clicked')"
-                >
-                  Esqueceu sua senha ?
-                </div>
-              </div>
-              <v-spacer />
+            <v-card-actions class="pa-0 mx-0 mt-0 mb-3 justify-center">
               <v-btn
-                @click="sendLoginRequest"
-                :disabled="!canSendLoginRequest"
-                color="indigo lighten-1"
-                class="white--text px-4 elevation-2"
+                  @click="sendLoginRequest"
+                  :disabled="!canSendLoginRequest"
+                  color="blue lighten-1"
+                  class="white--text px-4 elevation-2"
               >
-                LOGIN
+                Realizar Login
               </v-btn>
             </v-card-actions>
+
+            <div class="mb-1 text-center">
+              <small>
+                <u>Esqueceu sua senha ?</u>
+              </small>
+            </div>
           </v-card>
         </v-col>
       </v-row>
