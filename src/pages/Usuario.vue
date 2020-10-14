@@ -26,121 +26,150 @@ export default class Pageuser extends Vue {
 </script>
 
 <template>
-  <v-row no-gutters>
-    <v-col cols="12" md="5" lg="3">
-      <v-card class="pa-6">
-        <v-row align="center" justify="center">
-          <v-avatar size="300px" class="mb-4">
-            <v-img src="@/assets/dog.jpg" />
-          </v-avatar>
+  <v-card class="pa-0">
+    <v-row align="center" justify="center" no-gutters>
+      <v-col cols="3" class="pa-0" style="border-right: 1px solid #e3e3e3;">
+        <div class="py-6 px-4">
+          <div class="d-flex align-center">
+            <v-avatar size="270px" class="mb-4 mx-auto">
+              <v-img src="@/assets/dog.jpg" />
+            </v-avatar>
+          </div>
 
           <v-card-text class="text-center">
-            <h6 class="display-1 mb-4 grey--text">
-              Professora / Bacharellado Química
+            <h6 class="headline mb-4 grey--text">
+              Professora Bacharellado Química
             </h6>
 
-            <h4 class="display-2 font-weight-light mb-3">Fulana da Silva</h4>
+            <h4 class="display-1 font-weight-light mb-3">
+              Fulana da Silva
+            </h4>
 
             <p class="font-weight-light grey--text" v-text="user.descricao" />
 
             <div>
-              <v-btn color="orange" dark rounded class="mr-3"
+              <v-btn class="ma-1" color="orange" dark rounded small
                 >100+ Tutorias</v-btn
               >
 
-              <v-btn color="green" dark rounded>Avaliação 4.7/5</v-btn>
+              <v-btn class="ma-1" color="green" dark small rounded
+                >Avaliação 9.5</v-btn
+              >
             </div>
           </v-card-text>
-        </v-row>
-      </v-card>
-    </v-col>
+        </div>
+      </v-col>
 
-    <v-col class="ma-0 pa-0" cols="12" md="7" lg="9">
-      <v-card
-        class="pa-8 ml-lg-8 mt-0 mt-md-4 mt-lg-0"
-        :class="{ 'elevation-0': this.$vuetify.breakpoint.smAndDown }"
-      >
-        <v-card-title class="mx-0 mt-0 mb-4 px-0 py-0">
-          <span class="display-2 font-weight-light grey--text">Meu Perfil</span>
+      <v-col cols="9" align-self="start">
+        <v-tabs style="border-bottom: 1px solid #e3e3e3;">
+          <v-tab>Dados Pessoais</v-tab>
+          <v-tab>Graduação</v-tab>
+          <v-tab>Minha Conta</v-tab>
+        </v-tabs>
+        <div class="pa-6">
+          <v-card-title class="mx-0 mt-0 mb-4 px-0 py-0">
+            <span class="display-1 font-weight-light grey--text"
+              >Meu Perfil</span
+            >
 
-          <v-spacer />
+            <v-spacer />
 
-          <v-btn
-            :color="isEditing ? 'red' : 'grey'"
-            class="mb-auto"
-            text
-            @click="toggleEditMode"
-          >
-            <span>{{ isEditing ? "Cancelar Edição" : "Editar" }}</span>
+            <v-btn
+              :color="isEditing ? 'red' : 'grey'"
+              class="mb-auto"
+              text
+              @click="toggleEditMode"
+            >
+              <span>{{ isEditing ? "Cancelar Edição" : "Editar" }}</span>
 
-            <v-icon
-              class="ml-3"
-              v-text="isEditing ? 'mdi-pencil-off-outline' : 'mdi-pencil'"
-            />
-          </v-btn>
-        </v-card-title>
-
-        <v-form>
-          <v-row>
-            <v-col cols="12" md="4">
-              <v-text-field
-                v-model="user.nome"
-                :readonly="!isEditing"
-                label="Nome Completo"
+              <v-icon
+                class="ml-3"
+                v-text="isEditing ? 'mdi-pencil-off-outline' : 'mdi-pencil'"
               />
-            </v-col>
+            </v-btn>
+          </v-card-title>
 
-            <v-col cols="12" md="4">
-              <v-text-field
-                v-model="user.email"
-                label="Email"
-                :readonly="!isEditing"
-              />
-            </v-col>
+          <v-form>
+            <v-row>
+              <v-col cols="12" md="3">
+                <v-text-field
+                  v-model="user.nome"
+                  :readonly="!isEditing"
+                  label="Nome Completo"
+                />
+              </v-col>
 
-            <v-col cols="12" md="4">
-              <v-text-field
-                v-model="user.telefone"
-                v-mask="'#####-####'"
-                :readonly="!isEditing"
-                label="Telefone"
-              />
-            </v-col>
+              <v-col cols="12" md="3">
+                <v-text-field
+                  v-model="user.dataNascimento"
+                  label="Data Nascimento"
+                  :readonly="!isEditing"
+                />
+              </v-col>
 
-            <v-col cols="12" md="6">
-              <v-text-field
-                v-model="user.campoExemplo1"
-                :readonly="!isEditing"
-                label="Campo 1"
-              />
-            </v-col>
+              <v-col cols="12" md="3">
+                <v-text-field
+                  v-model="user.genero"
+                  label="Gênero"
+                  :readonly="!isEditing"
+                />
+              </v-col>
 
-            <v-col cols="12" md="6">
-              <v-text-field
-                v-model="user.campoExemplo2"
-                :readonly="!isEditing"
-                label="Campo 2"
-              />
-            </v-col>
+              <v-col cols="12" md="3">
+                <v-text-field
+                  v-model="user.cpf"
+                  label="Gênero"
+                  :readonly="!isEditing"
+                />
+              </v-col>
 
-            <v-col cols="12">
-              <v-textarea
-                v-model="user.descricao"
-                :readonly="!isEditing"
-                label="Sobre mim"
-                rows="3"
-                hide-details
-              />
-            </v-col>
+              <v-col cols="12">
+                <span class="subtitle-1 font-weight-light grey--text"
+                  >Sobre Mim</span
+                >
+                <v-textarea
+                  @input="user.descricao = $event"
+                  :value="
+                    user.descricao ||
+                      'Digite uma descrição e enriqueça seu perfil !'
+                  "
+                  :readonly="!isEditing"
+                  rows="3"
+                  hide-details
+                />
+              </v-col>
 
-            <v-col v-if="isEditing" class="pb-0 pt-4 text-right" cols="12">
-              <v-btn color="success" class="mr-0">
-                <span>Concluir Edição</span>
-              </v-btn>
-            </v-col>
-          </v-row>
-        </v-form>
-      </v-card>
-    </v-col>
-  </v-row>
+              <v-col v-if="isEditing" class="pb-0 pt-4 text-right" cols="12">
+                <v-btn color="success" class="mr-0">
+                  <span>Concluir Edição</span>
+                </v-btn>
+              </v-col>
+            </v-row>
+          </v-form>
+        </div>
+      </v-col>
+    </v-row>
+  </v-card>
 </template>
+
+<style scoped>
+::v-deep .v-tabs-slider-wrapper {
+  height: 4px !important;
+}
+
+::v-deep .v-tabs-slider {
+  background-image: repeating-linear-gradient(
+    to right,
+    #33a650 0px,
+    #33a650 50px,
+    #448ff2 50px,
+    #448ff2 100px,
+    #f2a007 100px,
+    #f2a007 150px,
+    #f23838 150px,
+    #f23838 200px
+  );
+  background-size: 100% 10px;
+  background-repeat: no-repeat;
+}
+</style>

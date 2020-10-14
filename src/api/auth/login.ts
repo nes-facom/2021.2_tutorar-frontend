@@ -32,8 +32,18 @@ export default (
   return new Promise((resolve, reject) => {
     resolve({
       user: {
-        name: "Ciclano",
-        role: "tutorando"
+        role: 'professor',
+
+        cpf: '03690208122',
+        nome: 'Fulano Da Silva Sanches',
+        email: 'fulano.silva@hotmail.com',
+        celular: '67998801996',
+        dataNascimento: '23/10/1996',
+        genero: 'masculino',
+
+        dataInicioEnsino: '12/04/2015',
+        formacaoAcademica: "superior",
+        nivelLecionamento: "superior"
       },
       token: "ASJDIOAJS"
     });

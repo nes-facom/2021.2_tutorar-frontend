@@ -1,8 +1,6 @@
 import router from "@/router";
 import { Module, VuexModule, Mutation, Action } from "vuex-module-decorators";
-import loginService, {
-  ExpectedResponseData as LoginResponse
-} from "@/api/auth/login";
+import loginService, { ExpectedResponseData as LoginResponse } from "@/api/auth/login";
 
 interface LogoutOptions {
   redirectTo?: string;
@@ -16,6 +14,8 @@ interface LogoutOptions {
  * implementar tipagem
  */
 interface BaseUser {
+  role: UserRoles;
+
   cpf: string;
   nome: string;
   email: string;
@@ -42,10 +42,7 @@ export interface UserTutor extends BaseUser {
 /**
  * Tipagem temporaria, ver acima
  */
-export interface User {
-  name: string;
-  role: UserRoles;
-}
+export type User = UserProfessor | UserTutor | null
 
 export type UserRoles = "tutorando" | "professor";
 
@@ -53,7 +50,21 @@ export type UserRoles = "tutorando" | "professor";
 export default class Auth extends VuexModule {
   token = window.localStorage.getItem("token");
 
-  user: User | null = null;
+  // Implementando sem tipagem por enquanto
+  user: User = {
+    role: 'professor',
+
+    cpf: '03690208122',
+    nome: 'Fulano Da Silva Sanches',
+    email: 'fulano.silva@hotmail.com',
+    celular: '67998801996',
+    dataNascimento: '23/10/1996',
+    genero: 'masculino',
+
+    dataInicioEnsino: '12/04/2015',
+    formacaoAcademica: "superior",
+    nivelLecionamento: "superior"
+  };
 
   get isLoggedIn() {
     return !!this.token;

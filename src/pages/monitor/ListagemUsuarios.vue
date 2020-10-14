@@ -141,7 +141,7 @@ export default class PageListagemUsuarios extends Vue {
           no-results-text="Nenhum registro encontrado com esses filtros"
         >
           <template #item.avatar>
-            <v-avatar size="34">
+            <v-avatar size="50" class="my-2">
               <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
             </v-avatar>
           </template>
@@ -159,3 +159,6 @@ export default class PageListagemUsuarios extends Vue {
     </v-col>
   </v-row>
 </template>
+
+<style scoped>
+</style>

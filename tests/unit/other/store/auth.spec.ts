@@ -32,7 +32,20 @@ describe("Vuex Auth Module", () => {
 
   describe("@Mutation AUTH_SUCCESS:", () => {
     const { user, token }: LoginRequestData = {
-      user: { name: "Fulano", role: "tutorando" },
+      user: {
+        role: 'professor',
+
+        cpf: '03690208122',
+        nome: 'Fulano Da Silva Sanches',
+        email: 'fulano.silva@hotmail.com',
+        celular: '67998801996',
+        dataNascimento: '23/10/1996',
+        genero: 'masculino',
+
+        dataInicioEnsino: '12/04/2015',
+        formacaoAcademica: "superior",
+        nivelLecionamento: "superior"
+      },
       token: "eyJhbGciOiJIUzI1NiVCJ9.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV"
     };
 
