@@ -31,7 +31,7 @@ export default class Pageuser extends Vue {
       <v-col cols="3" class="pa-0" style="border-right: 1px solid #e3e3e3;">
         <div class="py-6 px-4">
           <div class="d-flex align-center">
-            <v-avatar size="270px" class="mb-4 mx-auto">
+            <v-avatar size="220px" class="mb-4 mx-auto">
               <v-img src="@/assets/dog.jpg" />
             </v-avatar>
           </div>
@@ -41,7 +41,7 @@ export default class Pageuser extends Vue {
               Professora Bacharellado Química
             </h6>
 
-            <h4 class="display-1 font-weight-light mb-3">
+            <h4 class="display-1 font-weight-light blue--text mb-3">
               Fulana da Silva
             </h4>
 
@@ -68,10 +68,6 @@ export default class Pageuser extends Vue {
         </v-tabs>
         <div class="pa-6">
           <v-card-title class="mx-0 mt-0 mb-4 px-0 py-0">
-            <span class="display-1 font-weight-light grey--text"
-              >Meu Perfil</span
-            >
-
             <v-spacer />
 
             <v-btn
@@ -94,7 +90,7 @@ export default class Pageuser extends Vue {
               <v-col cols="12" md="3">
                 <v-text-field
                   v-model="user.nome"
-                  :readonly="!isEditing"
+                  :disabled="!isEditing"
                   label="Nome Completo"
                 />
               </v-col>
@@ -103,7 +99,7 @@ export default class Pageuser extends Vue {
                 <v-text-field
                   v-model="user.dataNascimento"
                   label="Data Nascimento"
-                  :readonly="!isEditing"
+                  :disabled="!isEditing"
                 />
               </v-col>
 
@@ -111,15 +107,15 @@ export default class Pageuser extends Vue {
                 <v-text-field
                   v-model="user.genero"
                   label="Gênero"
-                  :readonly="!isEditing"
+                  :disabled="!isEditing"
                 />
               </v-col>
 
               <v-col cols="12" md="3">
                 <v-text-field
                   v-model="user.cpf"
-                  label="Gênero"
-                  :readonly="!isEditing"
+                  label="CPF"
+                  :disabled="!isEditing"
                 />
               </v-col>
 
@@ -133,7 +129,7 @@ export default class Pageuser extends Vue {
                     user.descricao ||
                       'Digite uma descrição e enriqueça seu perfil !'
                   "
-                  :readonly="!isEditing"
+                  :disabled="!isEditing"
                   rows="3"
                   hide-details
                 />
@@ -160,16 +156,20 @@ export default class Pageuser extends Vue {
 ::v-deep .v-tabs-slider {
   background-image: repeating-linear-gradient(
     to right,
-    #33a650 0px,
-    #33a650 50px,
-    #448ff2 50px,
-    #448ff2 100px,
-    #f2a007 100px,
-    #f2a007 150px,
-    #f23838 150px,
-    #f23838 200px
+    #33a650 0%,
+    #33a650 25%,
+    #448ff2 25%,
+    #448ff2 50%,
+    #f2a007 50%,
+    #f2a007 75%,
+    #f23838 75%,
+    #f23838 100%
   );
   background-size: 100% 10px;
   background-repeat: no-repeat;
+}
+
+v-text-field {
+  border-style: none;
 }
 </style>

@@ -16,7 +16,7 @@ export default class AppBarMessageMenu extends Vue {}
       left
     >
       <template #activator="{ attrs, on }">
-        <v-btn class="ml-6" min-width="0" text v-bind="attrs" v-on="on">
+        <v-btn min-width="0" text v-bind="attrs" v-on="on" color="grey">
           <v-badge color="red" overlap bordered>
             <template #badge>
               <span>1</span>

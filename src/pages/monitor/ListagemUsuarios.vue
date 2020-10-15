@@ -91,7 +91,7 @@ export default class PageListagemUsuarios extends Vue {
 
 <template>
   <v-row no-gutters align="center">
-    <v-col cols="12" md="8" lg="8" class="mx-auto">
+    <v-col cols="12" class="mx-auto">
       <v-card>
         <v-card-title class="font-weight-bold pb-2">
           Lista de Usuários
@@ -141,7 +141,7 @@ export default class PageListagemUsuarios extends Vue {
           no-results-text="Nenhum registro encontrado com esses filtros"
         >
           <template #item.avatar>
-            <v-avatar size="50" class="my-2">
+            <v-avatar size="50" class="my-2" @click="$router.push({path: '/teste'})">
               <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
             </v-avatar>
           </template>

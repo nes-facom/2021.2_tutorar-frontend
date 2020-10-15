@@ -97,11 +97,11 @@ export default class CadastroProfessor extends Vue {
     <AppBarCadastro />
     <v-container fill-height>
       <v-row align="center" justify="end">
-        <v-col cols="5">
+        <v-col cols="4">
           <v-img contain src="@/assets/imagens/Alunos_Conexao.svg" alt="img" />
         </v-col>
         <v-col cols="4">
-          <h1 class="display-2 font-weight-bold">
+          <h1 class="display-1 font-weight-bold">
             Agora vamos realizar o seu cadastro
           </h1>
 
@@ -110,7 +110,7 @@ export default class CadastroProfessor extends Vue {
             suas necessidades de aprendizagem
           </span>
         </v-col>
-        <v-col cols="3">
+        <v-col cols="4">
           <v-card
             width="450"
             min-height="715"
@@ -171,7 +171,8 @@ export default class CadastroProfessor extends Vue {
             <v-spacer />
 
             <div>
-              <v-card-actions class="mb-2">
+              <LoginLink />
+              <v-card-actions class="mb-2 mt-5">
                 <v-spacer />
 
                 <v-btn
@@ -190,7 +191,6 @@ export default class CadastroProfessor extends Vue {
 
                 <v-spacer />
               </v-card-actions>
-              <LoginLink />
             </div>
           </v-card>
         </v-col>

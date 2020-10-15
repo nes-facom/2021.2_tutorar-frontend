@@ -1,4 +1,4 @@
-<script lang="ts">
+v<script lang="ts">
 import { getModule } from "vuex-module-decorators";
 import { Vue, Component } from "vue-property-decorator";
 import {
@@ -37,11 +37,12 @@ export default class NavigationDrawer extends Vue {
   <v-navigation-drawer
     v-model="navigationDrawer"
     width="230"
+    color="#f8f8f8"
     expand-on-hover
     app
   >
     <v-list dense>
-      <v-list-item class="px-2">
+      <v-list-item class="px-2" @click="$router.push({path: '/home'})">
         <v-list-item-avatar color="white">
           <v-img src="@/assets/logos/tutorar.svg" height="50" width="50" />
         </v-list-item-avatar>
@@ -121,7 +122,7 @@ export default class NavigationDrawer extends Vue {
 <style lang="sass" scoped>
 .route--active
   color: #FFFFFF
-  background-color: #227685 !important
+  background-color: #4285F4 !important
 
 .subrota
   background-color: #FFFFFF

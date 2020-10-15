@@ -23,14 +23,14 @@ export default class AppBarUserMenu extends Vue {
     left
   >
     <template #activator="{ on }">
-      <v-btn class="ml-2" min-width="0" text v-on="on">
+      <v-btn class="ml-2" min-width="0" text v-on="on" color="grey">
         <v-icon>mdi-account</v-icon>
       </v-btn>
     </template>
 
     <v-card width="350px">
       <v-list>
-        <v-list-item>
+        <v-list-item @click="$router.push({path: '/'+ authModule.user.role +'/usuario'})">
           <v-list-item-avatar>
             <v-img src="@/assets/dog.jpg" alt="Usuário" />
           </v-list-item-avatar>

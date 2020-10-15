@@ -80,7 +80,7 @@ export default class AppBar extends Vue {
   <v-app-bar
     v-model="appBar"
     style="border-bottom: 1px solid #e2e2e2 !important;"
-    color="white"
+    color="#f8f8f8"
     height="50px"
     clipped-right
     flat
@@ -89,6 +89,7 @@ export default class AppBar extends Vue {
     <v-icon
       @click="navigationDrawer = !navigationDrawer"
       v-text="navigationDrawer ? 'mdi-menu-open' : 'mdi-menu'"
+      color="grey"
     />
 
     <v-breadcrumbs
@@ -100,7 +101,7 @@ export default class AppBar extends Vue {
 
     <v-spacer />
 
-    <div class="hidden-sm-and-down mr-6">
+    <div class="hidden-sm-and-down mr-10">
       <v-icon left>mdi-calendar-clock</v-icon>
       <span class="mr-2" v-text="clock.data" />
       <span v-text="clock.hora" />
@@ -109,6 +110,10 @@ export default class AppBar extends Vue {
     <AppBarMessageMenu />
 
     <AppBarNotificationMenu />
+
+    <v-divider
+        vertical
+    ></v-divider>
 
     <AppBarUserMenu />
   </v-app-bar>

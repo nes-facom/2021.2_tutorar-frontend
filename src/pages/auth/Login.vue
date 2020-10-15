@@ -1,12 +1,12 @@
 <script lang="ts">
 import Auth from "@/store/modules/auth";
-import { getModule } from "vuex-module-decorators";
-import { Vue, Component } from "vue-property-decorator";
+import {getModule} from "vuex-module-decorators";
+import {Component, Vue} from "vue-property-decorator";
 import AppBarCadastro from "@/components/auth/AppBarCadastro.vue";
 
 @Component({
   name: "PageLogin",
-  components: { AppBarCadastro }
+  components: {AppBarCadastro}
 })
 export default class PageLogin extends Vue {
   private authModule = getModule(Auth, this.$store);
@@ -45,23 +45,23 @@ export default class PageLogin extends Vue {
 
     this.loginAttempts++;
 
-    const { username, password } = this;
+    const {username, password} = this;
 
-    this.authModule.LOGIN({ username, password });
+    this.authModule.LOGIN({username, password});
   }
 }
 </script>
 
 <template>
   <div class="page-container">
-    <AppBarCadastro />
+    <AppBarCadastro/>
     <v-container fill-height>
       <v-row align="center" justify="end">
         <v-col cols="4">
-          <v-img contain src="@/assets/imagens/Aluno_VideoAula.svg" alt="img" />
+          <v-img contain src="@/assets/imagens/Aluno_VideoAula.svg" alt="img"/>
         </v-col>
         <v-col cols="4">
-          <h1 class="display-2 mb-2">Abra sua sala de aula para</h1>
+          <h1 class="display-1 mb-2 font-weight-bold">Abra sua sala de aula para</h1>
           <h1 class="display-3 font-weight-bold">
             <span class="green--text">I</span>
             <span class="blue--text">N</span>
@@ -70,8 +70,8 @@ export default class PageLogin extends Vue {
             <span class="green--text">A</span>
             <span class="blue--text">R</span>
           </h1>
-          <span class="subtitle-1"
-            >Junte-se a nós e encontre ajuda para implementação de técnologias
+          <span class="subtitle-1 grey--text text--darken-1"
+          >Junte-se a nós e encontre ajuda para implementação de técnologias
             digitáis na usa prática pedagógica</span
           >
         </v-col>
@@ -107,13 +107,13 @@ export default class PageLogin extends Vue {
 
             <v-row>
               <v-col>
-                <v-divider class="my-5" />
+                <v-divider class="my-5"/>
               </v-col>
               <v-vol class="my-5" style="color: #34A853">
                 ou
               </v-vol>
               <v-col>
-                <v-divider class="my-5" />
+                <v-divider class="my-5"/>
               </v-col>
             </v-row>
 
@@ -147,10 +147,10 @@ export default class PageLogin extends Vue {
               </v-btn>
             </v-card-actions>
 
-            <div class="mb-1 text-center">
-              <small>
-                <u>Esqueceu sua senha ?</u>
-              </small>
+            <div class="text-center mt-5" @click="$router.push({ path: '/login' })">
+              <span class="link">
+                Esqueceu sua senha ?
+              </span>
             </div>
           </v-card>
         </v-col>
