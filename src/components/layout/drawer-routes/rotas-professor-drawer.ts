@@ -28,7 +28,7 @@ const rotas: DrawerRoute[] = [
       {
         icon: "mdi-toy-brick",
         title: "Sandbox",
-        to: "/teste"
+        to: "/perfil"
       }
     ]
   }

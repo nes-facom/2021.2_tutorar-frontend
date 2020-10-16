@@ -141,7 +141,7 @@ export default class PageListagemUsuarios extends Vue {
           no-results-text="Nenhum registro encontrado com esses filtros"
         >
           <template #item.avatar>
-            <v-avatar size="50" class="my-2" @click="$router.push({path: '/teste'})">
+            <v-avatar size="50" class="my-2 avatarClass" @click="$router.push({path: '/perfil'})">
               <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
             </v-avatar>
           </template>
@@ -161,4 +161,7 @@ export default class PageListagemUsuarios extends Vue {
 </template>
 
 <style scoped>
+.avatarClass:hover {
+  cursor: pointer;
+}
 </style>
