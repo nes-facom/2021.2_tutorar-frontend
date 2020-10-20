@@ -1,15 +1,15 @@
 <script lang="ts">
-import { getModule } from "vuex-module-decorators";
-import { Vue, Component } from "vue-property-decorator";
+import { getModule } from "vuex-module-decorators"
+import { Vue, Component } from "vue-property-decorator"
 
-import store from "@/store";
-import Auth from "@/store/modules/auth";
+import store from "@/store"
+import Auth from "@/store/modules/auth"
 
-import AppBar from "@/components/layout/AppBar.vue";
-import AppFooter from "@/components/layout/AppFooter.vue";
-import AppNavigationDrawer from "@/components/layout/AppNavigationDrawer.vue";
+import AppBar from "@/components/layout/AppBar.vue"
+import AppFooter from "@/components/layout/AppFooter.vue"
+import AppNavigationDrawer from "@/components/layout/AppNavigationDrawer.vue"
 
-const authModule = getModule(Auth, store);
+const authModule = getModule(Auth, store)
 
 @Component({
   name: "App",
@@ -17,21 +17,21 @@ const authModule = getModule(Auth, store);
 })
 export default class App extends Vue {
   get isLoggedIn() {
-    return authModule.isLoggedIn;
+    return authModule.isLoggedIn
   }
 
   get routerViewContainerPadding() {
-    if (this.$route.meta.fullpage) return "main-container";
+    if (this.$route.meta.fullpage) return "main-container"
 
-    return this.$route.meta.centered ? "px-auto" : "pa-0 pa-md-4 pa-lg-8 ma-0";
+    return this.$route.meta.centered ? "px-auto" : "pa-0 pa-md-4 pa-lg-8 ma-0"
   }
 
   get hideFooter() {
-    return !this.isLoggedIn || !!this.$route.meta.hideFooter;
+    return !this.isLoggedIn || !!this.$route.meta.hideFooter
   }
 
   get hideHeader() {
-    return !this.isLoggedIn || !!this.$route.meta.hideHeader;
+    return !this.isLoggedIn || !!this.$route.meta.hideHeader
   }
 }
 </script>
@@ -44,7 +44,9 @@ export default class App extends Vue {
 
     <v-main app>
       <v-container :class="routerViewContainerPadding" fluid>
-        <router-view />
+        <v-fade-transition mode="out-in">
+          <router-view />
+        </v-fade-transition>
       </v-container>
     </v-main>
 

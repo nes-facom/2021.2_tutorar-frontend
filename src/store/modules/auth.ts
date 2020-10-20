@@ -40,9 +40,9 @@ export interface UserTutor extends BaseUser {
 }
 
 /**
- * Tipagem temporaria, ver acima
+ * @TODO Tipagem temporaria, ver acima
  */
-export type User = UserProfessor | UserTutor | null
+export type User = UserProfessor | UserTutor | null | any
 
 export type UserRoles = "tutorando" | "professor"
 

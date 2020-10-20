@@ -1,10 +1,9 @@
-import { defaults } from "lodash"
-import { RouteConfig } from "@/router"
+import { RouteConfig, RouteMeta } from "@/router"
 
 const rotas: RouteConfig[] = [
   {
     path: "/tutorando/usuario",
-    component: () => import(/* webpackChunkName: "PageUsuario" */ "@/pages/Usuario.vue"),
+    component: () => import(/* webpackChunkName: "PageUsuario" */ "@/pages/MeuUsuario/MeuUsuario.vue"),
     meta: {
       requireRole: false,
       requireLogin: false
@@ -15,12 +14,12 @@ const rotas: RouteConfig[] = [
 rotas.map(route => {
   if (!route.meta) route.meta = {}
 
-  const defaultMeta = {
+  const defaultMeta: RouteMeta = {
     requireLogin: true,
-    requireRole: ["tutorando"]
+    requireRole: "tutorando"
   }
 
-  defaults(route.meta, defaultMeta)
+  route.meta = { ...route.meta, ...defaultMeta }
 })
 
 export default rotas

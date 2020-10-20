@@ -1,4 +1,4 @@
-import { AxiosError } from "axios";
+import { AxiosError } from "axios"
 
 /**
  * A implementar...
@@ -8,14 +8,11 @@ import { AxiosError } from "axios";
  * @param error - erro de uma axios request
  * @param message - mensagem de erro a retornar caso o erro não contenha uma
  */
-export default (
-  error: AxiosError,
-  message = "Erro ao se conectar com o servidor"
-): string => {
+export default (error: AxiosError, message = "Erro ao se conectar com o servidor"): string => {
   // Apesar da tipagem, devo checar em runtime pra ter certeza
-  if (!error.isAxiosError) return message;
+  if (!error.isAxiosError) return message
 
-  if (error.response?.data?.message) message = error.response.data.message;
+  if (error.response?.data?.message) message = error.response.data.message
 
-  return message;
-};
+  return message
+}

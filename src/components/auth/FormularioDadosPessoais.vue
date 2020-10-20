@@ -118,17 +118,6 @@ export default class FormularioDadosPessoais extends Vue {
         </v-btn>
       </v-col>
     </v-row>
-    <v-row>
-      <v-col>
-        <v-divider class="my-5" />
-      </v-col>
-      <v-vol class="my-5" style="color: #34A853">
-        ou
-      </v-vol>
-      <v-col>
-        <v-divider class="my-5" />
-      </v-col>
-    </v-row>
     <h1 class="text-center headline mb-8">
       Passo 1 - Dados Pessoais
     </h1>

@@ -1,3 +1,17 @@
+// const VuetifyLoaderPlugin = require("vuetify-loader/lib/plugin")
+const path = require("path")
+
 module.exports = {
-  transpileDependencies: ["vuetify"]
-};
+  transpileDependencies: ["vuetify"],
+  configureWebpack: {
+    resolve: {
+      alias: {
+        "@a": path.resolve(__dirname, "src/api/"),
+        "@p": path.resolve(__dirname, "src/pages/"),
+        "@c": path.resolve(__dirname, "src/components/"),
+        "@s": path.resolve(__dirname, "src/sass/")
+      }
+    }
+    // plugins: [new VuetifyLoaderPlugin()]
+  }
+}

@@ -1,5 +1,4 @@
-import { defaults } from "lodash"
-import { RouteConfig } from "@/router"
+import { RouteConfig, RouteMeta } from "@/router"
 
 const rotas: RouteConfig[] = [
   {
@@ -15,13 +14,13 @@ const rotas: RouteConfig[] = [
 rotas.map(route => {
   if (!route.meta) route.meta = {}
 
-  const defaultMeta = {
+  const defaultMeta: RouteMeta = {
     requireLogin: true
     // @TODO: ao implementar com o back
     // requireRole: ["monitor"]
   }
 
-  defaults(route.meta, defaultMeta)
+  route.meta = { ...route.meta, ...defaultMeta }
 })
 
 export default rotas
