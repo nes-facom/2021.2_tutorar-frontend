@@ -1,61 +1,56 @@
-import {
-  IdentifiableItem,
-  BaseRepository
-} from "@/api/repositories/base-repository";
+import { IdentifiableItem, BaseRepository } from "@/api/repositories/base-repository"
 
-import { VuexModule, Mutation, Action } from "vuex-module-decorators";
+import { VuexModule, Mutation, Action } from "vuex-module-decorators"
 
 interface InsertOptions {
-  updateExistingRecord: boolean;
+  updateExistingRecord: boolean
 }
 
 export interface Items {
-  [x: string]: IdentifiableItem;
+  [x: string]: IdentifiableItem
 }
 
-export default abstract class RepositoryModule<
-  I extends IdentifiableItem
-> extends VuexModule {
-  ids: number[] = [];
-  items: Items = {};
+export default abstract class RepositoryModule<I extends IdentifiableItem> extends VuexModule {
+  ids: number[] = []
+  items: Items = {}
 
-  abstract repository: BaseRepository<I>;
+  abstract repository: BaseRepository<I>
 
   @Mutation
   SET_ITEMS(items: IdentifiableItem[]) {
     items.map(item => {
-      const id = item.id;
-      this.ids.push(id);
-      this.items[id] = item;
-    });
+      const id = item.id
+      this.ids.push(id)
+      this.items[id] = item
+    })
   }
 
   @Mutation
   INSERT(payload: { id: number; item: I; options: InsertOptions }) {
-    const { id, item, options } = payload;
+    const { id, item, options } = payload
 
-    if (!options.updateExistingRecord && this.items[id]) return;
+    if (!options.updateExistingRecord && this.items[id]) return
 
-    this.items[id] = Object.assign(this.items[id], item);
+    this.items[id] = Object.assign(this.items[id], item)
   }
 
   @Mutation
   UPDATE(payload: { id: number; item: I }) {
-    const { id, item: newItem } = payload;
-    let item = this.items[id];
+    const { id, item: newItem } = payload
+    let item = this.items[id]
 
-    if (!item) return;
+    if (!item) return
 
-    item = Object.assign(item, newItem);
+    item = Object.assign(item, newItem)
   }
 
   @Mutation
   DELETE(id: number) {
-    const { items, ids } = this;
+    const { items, ids } = this
 
-    delete items[id];
+    delete items[id]
 
-    ids.filter(id => id !== id);
+    ids.filter(id => id !== id)
   }
 
   @Action
@@ -63,14 +58,14 @@ export default abstract class RepositoryModule<
     await this.repository
       .get()
       .then(items => {
-        this.context.commit("SET_ITEMS", items);
+        this.context.commit("SET_ITEMS", items)
       })
       .catch(errorMessage => {
-        console.error(errorMessage);
-      });
+        console.error(errorMessage)
+      })
   }
 
   get getItemsArray() {
-    return Object.values(this.items);
+    return Object.values(this.items)
   }
 }

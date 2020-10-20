@@ -1,17 +1,17 @@
 <script lang="ts">
 // Validação
-import { StringFieldRules } from "@/utils/form";
-import isValidCpf from "@/utils/form/is-valid-cpf";
-import isValidDMY from "@/utils/form/is-valid-dd-mm-yyyy";
+import { StringFieldRules } from "@/utils/form"
+import isValidCpf from "@/utils/form/is-valid-cpf"
+import isValidDMY from "@/utils/form/is-valid-dd-mm-yyyy"
 
-import { Vue, Component, Watch } from "vue-property-decorator";
+import { Vue, Component, Watch } from "vue-property-decorator"
 
 export interface DadosPessoais {
-  cpf: string | undefined;
-  nome: string | undefined;
-  email: string | undefined;
-  genero: string | undefined;
-  celular: string | undefined;
+  cpf: string | undefined
+  nome: string | undefined
+  email: string | undefined
+  genero: string | undefined
+  celular: string | undefined
 }
 
 @Component({ name: "FormularioDadosPessoais" })
@@ -22,27 +22,27 @@ export default class FormularioDadosPessoais extends Vue {
     cpf: "",
     genero: "",
     celular: ""
-  };
+  }
 
-  isCpfEmUso = false;
-  isCheckingCpf = false;
+  isCpfEmUso = false
+  isCheckingCpf = false
 
   // @TODO: Rever quais são os tipos permitidos no back, transformar em dicionario depois
   opcoes = {
     genero: ["Masculino", "Feminino", "Prefiro não informar"]
-  };
+  }
 
   getCelularMask(telefone: string) {
-    if (!telefone) return "(##) ####-####";
-    return telefone.length > 14 ? "(##) #####-####" : "(##) ####-####";
+    if (!telefone) return "(##) ####-####"
+    return telefone.length > 14 ? "(##) #####-####" : "(##) ####-####"
   }
 
   verificaCpf(cpf: string | undefined): true | string {
-    if (!cpf) return "CPF é obrigatório";
+    if (!cpf) return "CPF é obrigatório"
 
-    if (!isValidCpf(cpf)) return "CPF inválido";
+    if (!isValidCpf(cpf)) return "CPF inválido"
 
-    return this.isCpfEmUso ? "CPF em uso" : true;
+    return this.isCpfEmUso ? "CPF em uso" : true
   }
 
   rules: { [x: string]: StringFieldRules } = {
@@ -52,30 +52,24 @@ export default class FormularioDadosPessoais extends Vue {
       v => (!!v && v.length <= 60) || "Nome deve ter no máximo 60 caracteres"
     ],
 
-    email: [
-      v => !!v || "E-mail é obrigatório",
-      v => (!!v && /.+@.+/.test(v)) || "E-mail inválido"
-    ],
+    email: [v => !!v || "E-mail é obrigatório", v => (!!v && /.+@.+/.test(v)) || "E-mail inválido"],
 
     dataNascimento: [
       v => !!v || "Data de nascimento é obrigatório",
       v => {
-        const maxYear = new Date().getFullYear() - 16;
-        return (!!v && isValidDMY(v, { maxYear })) || "Data inválida";
+        const maxYear = new Date().getFullYear() - 16
+        return (!!v && isValidDMY(v, { maxYear })) || "Data inválida"
       }
     ],
 
     genero: [v => !!v || "Gênero é obrigatório"],
 
-    celular: [
-      v => !!v || "Celular é obrigatório",
-      v => (!!v && v.length >= 14) || "Número inválido"
-    ]
-  };
+    celular: [v => !!v || "Celular é obrigatório", v => (!!v && v.length >= 14) || "Número inválido"]
+  }
 
   @Watch("dados", { deep: true })
   onFormDataChange(value: DadosPessoais) {
-    this.$emit("input", value);
+    this.$emit("input", value)
   }
 
   /**
@@ -86,15 +80,15 @@ export default class FormularioDadosPessoais extends Vue {
   @Watch("dados.cpf")
   onCpfChange(cpf: string | undefined) {
     if (!cpf || !isValidCpf(cpf)) {
-      this.isCpfEmUso = false;
+      this.isCpfEmUso = false
     } else {
-      this.isCheckingCpf = true;
+      this.isCheckingCpf = true
 
       // Mockup
       setTimeout(() => {
-        this.isCheckingCpf = false;
-        this.isCpfEmUso = false;
-      }, 2000);
+        this.isCheckingCpf = false
+        this.isCpfEmUso = false
+      }, 2000)
 
       // @TODO: implementar a call a api aqui...
     }
@@ -104,22 +98,20 @@ export default class FormularioDadosPessoais extends Vue {
 
 <template>
   <div>
-    <v-row align="center"
-           class="mx-auto">
+    <v-row align="center" class="mx-auto">
       <v-col>
         <h5>Registrar-se com:</h5>
       </v-col>
       <v-col>
         <v-btn
-            color="blue lighten-1"
-            outlined
-            class="white--text px-4 elevation-2"
-            style="text-transform: none"
-            block
-            x-large
+          color="blue lighten-1"
+          outlined
+          class="white--text px-4 elevation-2"
+          style="text-transform: none"
+          block
+          x-large
         >
-          <v-icon left dark
-                  color="red">
+          <v-icon left dark color="red">
             mdi-google
           </v-icon>
           Google
@@ -128,32 +120,22 @@ export default class FormularioDadosPessoais extends Vue {
     </v-row>
     <v-row>
       <v-col>
-        <v-divider class="my-5"/>
+        <v-divider class="my-5" />
       </v-col>
       <v-vol class="my-5" style="color: #34A853">
         ou
       </v-vol>
       <v-col>
-        <v-divider class="my-5"/>
+        <v-divider class="my-5" />
       </v-col>
     </v-row>
     <h1 class="text-center headline mb-8">
       Passo 1 - Dados Pessoais
     </h1>
 
-    <v-text-field
-      v-model="dados.nome"
-      :rules="rules.nome"
-      placeholder="Nome"
-      outlined
-    />
+    <v-text-field v-model="dados.nome" :rules="rules.nome" placeholder="Nome" outlined />
 
-    <v-text-field
-      v-model="dados.email"
-      :rules="rules.email"
-      placeholder="Email"
-      outlined
-    />
+    <v-text-field v-model="dados.email" :rules="rules.email" placeholder="Email" outlined />
 
     <!-- 
       :error -> Se o cpf esta em uso coloco em estado de erro manualmente

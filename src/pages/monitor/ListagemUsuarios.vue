@@ -1,5 +1,5 @@
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
+import { Vue, Component } from "vue-property-decorator"
 
 @Component({ name: "PageListagemUsuarios" })
 export default class PageListagemUsuarios extends Vue {
@@ -7,7 +7,7 @@ export default class PageListagemUsuarios extends Vue {
     nome: "",
     perfil: "",
     status: ""
-  };
+  }
 
   headers = [
     {
@@ -28,10 +28,10 @@ export default class PageListagemUsuarios extends Vue {
       value: "perfil",
       filter: (perfil: "Indiferente" | "Professor" | "Tutorando") => {
         if (!this.filtro.perfil || this.filtro.perfil === "Indiferente") {
-          return true;
+          return true
         }
-        console.log(this.filtro.perfil, perfil);
-        return this.filtro.perfil === perfil;
+        console.log(this.filtro.perfil, perfil)
+        return this.filtro.perfil === perfil
       }
     },
     {
@@ -44,19 +44,17 @@ export default class PageListagemUsuarios extends Vue {
       align: "center",
       filter: (status: boolean) => {
         if (!this.filtro.status || this.filtro.status === "Indiferente") {
-          return true;
+          return true
         }
-        return this.filtro.status === "Ativo"
-          ? status === true
-          : status === false;
+        return this.filtro.status === "Ativo" ? status === true : status === false
       }
     }
-  ];
+  ]
 
   footer = {
     itemsPerPageAllText: "Todas",
     itemsPerPageText: "Linhas por página"
-  };
+  }
 
   usuarios = [
     {
@@ -80,12 +78,12 @@ export default class PageListagemUsuarios extends Vue {
       email: "lanamaria18@gmail.com",
       ativo: true
     }
-  ];
+  ]
 
   opcoes = {
     perfil: ["Indiferente", "Professor", "Tutor"],
     status: ["Indiferente", "Ativo", "Inativo"]
-  };
+  }
 }
 </script>
 
@@ -110,24 +108,10 @@ export default class PageListagemUsuarios extends Vue {
           </div>
           <v-spacer />
           <div class="col-2">
-            <v-select
-              :items="opcoes.perfil"
-              v-model="filtro.perfil"
-              placeholder="Perfil"
-              hide-details
-              outlined
-              dense
-            />
+            <v-select :items="opcoes.perfil" v-model="filtro.perfil" placeholder="Perfil" hide-details outlined dense />
           </div>
           <div class="col-2">
-            <v-select
-              :items="opcoes.status"
-              v-model="filtro.status"
-              placeholder="Status"
-              hide-details
-              outlined
-              dense
-            />
+            <v-select :items="opcoes.status" v-model="filtro.status" placeholder="Status" hide-details outlined dense />
           </div>
         </div>
 
@@ -141,16 +125,12 @@ export default class PageListagemUsuarios extends Vue {
           no-results-text="Nenhum registro encontrado com esses filtros"
         >
           <template #item.avatar>
-            <v-avatar size="50" class="my-2 avatarClass" @click="$router.push({path: '/perfil'})">
+            <v-avatar size="50" class="my-2 avatarClass" @click="$router.push({ path: '/perfil' })">
               <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
             </v-avatar>
           </template>
           <template #item.ativo="{ item }">
-            <v-chip
-              :color="item.ativo ? '#448FF2' : '#89DCF6'"
-              text-color="white"
-              dense
-            >
+            <v-chip :color="item.ativo ? '#448FF2' : '#89DCF6'" text-color="white" dense>
               {{ item.ativo ? "ativo" : "inativo" }}
             </v-chip>
           </template>

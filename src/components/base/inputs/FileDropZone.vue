@@ -1,27 +1,27 @@
 <script lang="ts">
-import { Component, Vue, Prop, Ref, Watch } from "vue-property-decorator";
+import { Component, Vue, Prop, Ref, Watch } from "vue-property-decorator"
 
 @Component({ name: "FileDropZone" })
 export default class FileDropZone extends Vue {
   // Counter for enter/leave events (necessary due to issues with rippling)
-  hoverCounter = 0;
+  hoverCounter = 0
 
   // Reflects the files currently hovering over the box (used for type checking)
-  hoveringContent: DataTransferItemList | null = null;
+  hoveringContent: DataTransferItemList | null = null
 
   /**
    * Array of selected files
    * .sync/v-model not needed for :files="[]", because the array is passed by
    * reference and this component only uses reactive functions for modification
    */
-  @Prop(Array) readonly files!: File[];
+  @Prop(Array) readonly files!: File[]
 
-  @Ref() readonly filebtn!: HTMLInputElement;
-  @Ref() readonly dropzone!: HTMLDivElement;
+  @Ref() readonly filebtn!: HTMLInputElement
+  @Ref() readonly dropzone!: HTMLDivElement
 
   @Watch("hoverCounter")
   onHoverCounterChanged(val: number) {
-    if (val === 0) this.hoveringContent = null;
+    if (val === 0) this.hoveringContent = null
   }
 
   /**
@@ -29,19 +29,19 @@ export default class FileDropZone extends Vue {
    */
   upload() {
     for (let i = 0; i < this.filebtn.files!.length; i++) {
-      this.files.splice(0, this.files.length);
-      this.files.push(this.filebtn.files![i]);
+      this.files.splice(0, this.files.length)
+      this.files.push(this.filebtn.files![i])
     }
-    this.filebtn.value = "";
+    this.filebtn.value = ""
   }
 
   dragenter(e: DragEvent) {
-    this.hoveringContent = e.dataTransfer!.items;
-    this.hoverCounter++;
+    this.hoveringContent = e.dataTransfer!.items
+    this.hoverCounter++
   }
 
   dragleave(e: DragEvent) {
-    this.hoverCounter--;
+    this.hoverCounter--
   }
 
   /**
@@ -49,18 +49,18 @@ export default class FileDropZone extends Vue {
    */
   drop(e: DragEvent) {
     // Keep from leaving the page
-    e.preventDefault();
+    e.preventDefault()
 
     // Content can't be dragged out, so go ahead and reset the counter
-    this.hoverCounter = 0;
+    this.hoverCounter = 0
 
     if (e.dataTransfer!.items) {
       for (let i = 0; i < e.dataTransfer!.items.length; i++) {
         if (e.dataTransfer!.items[i].kind === "file") {
-          const file = e.dataTransfer!.items[i].getAsFile();
+          const file = e.dataTransfer!.items[i].getAsFile()
           if (file) {
-            this.files.splice(0, this.files.length);
-            this.files.push(file);
+            this.files.splice(0, this.files.length)
+            this.files.push(file)
           }
         }
       }
@@ -71,27 +71,16 @@ export default class FileDropZone extends Vue {
    * Removes attachment per user's request
    */
   remove(file: File) {
-    const arr = this.files as File[];
-    arr.splice(arr.indexOf(file), 1);
-    this.$emit("update", null);
+    const arr = this.files as File[]
+    arr.splice(arr.indexOf(file), 1)
+    this.$emit("update", null)
   }
 }
 </script>
 
 <template>
-  <div
-    class="dropzone"
-    @dragover.prevent
-    @dragleave="dragleave"
-    @dragenter="dragenter"
-    @drop="drop"
-    ref="dropzone"
-  >
-    <v-btn
-      @click="$refs.filebtn.click()"
-      class="mt-4 mb-3 white--text elevation-0"
-      color="#4285F4"
-    >
+  <div class="dropzone" @dragover.prevent @dragleave="dragleave" @dragenter="dragenter" @drop="drop" ref="dropzone">
+    <v-btn @click="$refs.filebtn.click()" class="mt-4 mb-3 white--text elevation-0" color="#4285F4">
       <v-icon left dark>mdi-cloud-upload</v-icon>
       <span>Upload</span>
     </v-btn>
@@ -106,24 +95,13 @@ export default class FileDropZone extends Vue {
 
     <!-- Indicate selected files -->
     <div class="input-container">
-      <v-input
-        v-for="file in files"
-        :key="file.name"
-        append-icon="close"
-        @click:append="remove(file)"
-      >
+      <v-input v-for="file in files" :key="file.name" append-icon="close" @click:append="remove(file)">
         <span>{{ file.name }}</span>
       </v-input>
     </div>
 
     <!-- Hidden upload button to bring up file selection dialog -->
-    <input
-      ref="filebtn"
-      class="filebtn"
-      type="file"
-      accept="image/png, image/jpeg"
-      @input="upload"
-    />
+    <input ref="filebtn" class="filebtn" type="file" accept="image/png, image/jpeg" @input="upload" />
   </div>
 </template>
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
+import { Vue, Component } from "vue-property-decorator"
 
 @Component({ name: "AppBarCadastro" })
 export default class AppBarCadastro extends Vue {}
@@ -8,12 +8,7 @@ export default class AppBarCadastro extends Vue {}
 <template>
   <v-app-bar height="50px" flat color="#f8f8f8">
     <a href="/login">
-      <v-img
-          src="@/assets/logos/tutorar_com_titulo.svg"
-          max-height="130"
-          max-width="130"
-          contain
-      />
+      <v-img src="@/assets/logos/tutorar_com_titulo.svg" max-height="130" max-width="130" contain />
     </a>
 
     <v-spacer />
@@ -22,7 +17,7 @@ export default class AppBarCadastro extends Vue {}
       <v-btn
         v-if="$route.path !== '/cadastro/professor'"
         class="font-weight-bold"
-        v-bind:class="{'mr-4': $route.path === '/cadastro/professor' || $route.path === '/login'}"
+        v-bind:class="{ 'mr-4': $route.path === '/cadastro/professor' || $route.path === '/login' }"
         color="#4285F4"
         text
         @click="$router.push({ path: '/cadastro/professor' })"

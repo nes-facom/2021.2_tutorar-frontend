@@ -9,7 +9,7 @@ export default {
   }),
 
   methods: {}
-};
+}
 </script>
 
 <template>
@@ -25,7 +25,7 @@ export default {
             <div class="py-6 px-4">
               <div class="d-flex align-center">
                 <v-avatar size="150px" class="mb-4 mx-auto">
-                  <v-img src="https://cdn.vuetifyjs.com/images/john.jpg"/>
+                  <v-img src="https://cdn.vuetifyjs.com/images/john.jpg" />
                 </v-avatar>
               </div>
 
@@ -49,38 +49,19 @@ export default {
           </v-col>
 
           <v-col cols="6" class="px-16">
-            <v-text-field
-                disabled
-                value="Leonardo Kauan Pereira"
-                label="Nome Completo"/>
-            <v-text-field
-                disabled
-                value="20 anos"
-                label="idade"/>
-            <v-text-field
-                disabled
-                value="Masculino"
-                label="Genêro"/>
-            <v-text-field
-                disabled
-                value="leonardo.12345@gmail.com"
-                label="E-mail"/>
-            <v-text-field
-                disabled
-                value="(67) 99234-5678"
-                label="Celular"/>
+            <v-text-field disabled value="Leonardo Kauan Pereira" label="Nome Completo" />
+            <v-text-field disabled value="20 anos" label="idade" />
+            <v-text-field disabled value="Masculino" label="Genêro" />
+            <v-text-field disabled value="leonardo.12345@gmail.com" label="E-mail" />
+            <v-text-field disabled value="(67) 99234-5678" label="Celular" />
           </v-col>
         </v-row>
         <v-card-actions>
-          <v-spacer/>
-          <v-btn
-              color="primary"
-              text
-              @click="$router.push({path: '/monitor/listagem-usuarios'})"
-          >
+          <v-spacer />
+          <v-btn color="primary" text @click="$router.push({ path: '/monitor/listagem-usuarios' })">
             Voltar
           </v-btn>
-          <v-spacer/>
+          <v-spacer />
         </v-card-actions>
       </v-card>
     </v-col>
@@ -104,23 +85,23 @@ export default {
   border-radius: 4px;
 
   background-image: repeating-linear-gradient(
-      to right,
-      #c4e17f 0px,
-      #c4e17f 50px,
-      #f7fdca 50px,
-      #f7fdca 100px,
-      #fad071 100px,
-      #fad071 150px,
-      #f0766b 150px,
-      #f0766b 200px,
-      #db9dbe 200px,
-      #db9dbe 250px,
-      #c49cdf 250px,
-      #c49cdf 300px,
-      #6599e2 300px,
-      #6599e2 350px,
-      #61c2e4 350px,
-      #61c2e4 400px
+    to right,
+    #c4e17f 0px,
+    #c4e17f 50px,
+    #f7fdca 50px,
+    #f7fdca 100px,
+    #fad071 100px,
+    #fad071 150px,
+    #f0766b 150px,
+    #f0766b 200px,
+    #db9dbe 200px,
+    #db9dbe 250px,
+    #c49cdf 250px,
+    #c49cdf 300px,
+    #6599e2 300px,
+    #6599e2 350px,
+    #61c2e4 350px,
+    #61c2e4 400px
   );
   background-size: 100% 10px;
   background-repeat: no-repeat;

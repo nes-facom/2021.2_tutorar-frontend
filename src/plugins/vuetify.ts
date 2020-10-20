@@ -1,14 +1,14 @@
-import Vue from "vue";
-import Vuetify from "vuetify";
+import Vue from "vue"
+import Vuetify from "vuetify"
 
-import "vuetify/dist/vuetify.min.css";
-import "@mdi/font/css/materialdesignicons.css";
+import "vuetify/dist/vuetify.min.css"
+import "@mdi/font/css/materialdesignicons.css"
 
-import { Iconfont } from "vuetify/types/services/icons";
+import { Iconfont } from "vuetify/types/services/icons"
 
-Vue.use(Vuetify);
+Vue.use(Vuetify)
 
-const iconfont: Iconfont = "mdi";
+const iconfont: Iconfont = "mdi"
 
 /**
  * Opções padrão do vuetify
@@ -68,6 +68,6 @@ const options = {
       }
     }
   }
-};
+}
 
-export default new Vuetify(options);
+export default new Vuetify(options)

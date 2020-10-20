@@ -9,5 +9,5 @@
  * ser interferido.
  */
 
-declare module "v-mask";
-declare module "vuetify-image-input";
+declare module "v-mask"
+declare module "vuetify-image-input"

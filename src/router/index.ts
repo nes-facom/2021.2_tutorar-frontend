@@ -1,43 +1,41 @@
-import Vue from "vue";
-import VueRouter from "vue-router";
+import Vue from "vue"
+import VueRouter from "vue-router"
 
-import store from "@/store";
-import routes, { AppRoute } from "@/router/rotas";
+import store from "@/store"
+import routes, { AppRoute } from "@/router/rotas"
 
-import { getModule } from "vuex-module-decorators";
-import Auth, { UserRoles } from "@/store/modules/auth";
-import { RouteConfigSingleView } from "vue-router/types/router";
+import { getModule } from "vuex-module-decorators"
+import Auth, { UserRoles } from "@/store/modules/auth"
+import { RouteConfigSingleView } from "vue-router/types/router"
 
-import fetchResourcesPreenptively, {
-  resources
-} from "@/router/utils/fetchResourcesPreenptively";
+import fetchResourcesPreenptively, { resources } from "@/router/utils/fetchResourcesPreenptively"
 
 export interface RouteMeta {
   // Auth
-  requireRole?: false | UserRoles;
-  requireLogin?: boolean;
-  requireLogoff?: boolean;
+  requireRole?: false | UserRoles
+  requireLogin?: boolean
+  requireLogoff?: boolean
 
   // Recursos
-  requiredResources?: resources[];
+  requiredResources?: resources[]
 
   // Styling
-  fullpage?: boolean;
-  centered?: boolean;
+  fullpage?: boolean
+  centered?: boolean
 
   // Roteamento
-  onFailRedirectTo?: string;
+  onFailRedirectTo?: string
 
   // Error
-  isErrorRoute?: boolean;
+  isErrorRoute?: boolean
 }
 
 export interface RouteConfig extends Omit<RouteConfigSingleView, "meta"> {
-  path: AppRoute;
-  meta?: RouteMeta;
+  path: AppRoute
+  meta?: RouteMeta
 }
 
-Vue.use(VueRouter);
+Vue.use(VueRouter)
 
 /**
  * Se a rota não é de redirect, tem um path e não tem um name específico
@@ -50,11 +48,11 @@ routes.map(route => {
       .split("/")
       .filter(v => v)
       .map(p => p.charAt(0).toUpperCase() + p.slice(1))
-      .join("_");
+      .join("_")
   }
-});
+})
 
-const router = new VueRouter({ mode: "history", base: "/", routes });
+const router = new VueRouter({ mode: "history", base: "/", routes })
 
 /**
  * Aqui acontece toda a lógica necessária antes de entrar em uma rota, como:
@@ -68,40 +66,40 @@ const router = new VueRouter({ mode: "history", base: "/", routes });
  * na rota desejada
  */
 router.beforeEach((to, from, next) => {
-  const meta: RouteMeta = to.meta || {};
-  const { isLoggedIn, user } = getModule(Auth, store);
+  const meta: RouteMeta = to.meta || {}
+  const { isLoggedIn, user } = getModule(Auth, store)
 
-  const defaultFallback = user ? `${user.role}/home` : "login";
+  const defaultFallback = user ? `${user.role}/home` : "login"
 
   /**
    * Refireciona para o fallback especificado caso a rota não tenha um próprio
    * @param fallback
    */
   function redirectWithFallback(fallback = defaultFallback) {
-    meta.onFailRedirectTo ? next(meta.onFailRedirectTo) : next(fallback);
+    meta.onFailRedirectTo ? next(meta.onFailRedirectTo) : next(fallback)
   }
 
   // Barra usuários logados tentando acessar login para home
   if (meta.requireLogoff && isLoggedIn) {
-    return redirectWithFallback();
+    return redirectWithFallback()
   }
 
   // Barra usuários deslogados se a rota requer login
   if (meta.requireLogin && !isLoggedIn) {
-    return redirectWithFallback("/login");
+    return redirectWithFallback("/login")
   }
 
   // Barro usuários sem papel necessário pra acessar a rota
   if (user && meta.requireRole && meta.requireRole !== user.role) {
-    return redirectWithFallback("/acesso-negado");
+    return redirectWithFallback("/acesso-negado")
   }
 
   // Se a rota requer alguns recursos eu a os pego
   if (meta.requiredResources && meta.requiredResources.length > 0) {
-    fetchResourcesPreenptively(meta.requiredResources);
+    fetchResourcesPreenptively(meta.requiredResources)
   }
 
-  return next();
-});
+  return next()
+})
 
-export default router;
+export default router

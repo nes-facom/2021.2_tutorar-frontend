@@ -1,38 +1,38 @@
 <script lang="ts">
-import { StringFieldRules } from "@/utils/form";
-import { Vue, Component, Watch } from "vue-property-decorator";
+import { StringFieldRules } from "@/utils/form"
+import { Vue, Component, Watch } from "vue-property-decorator"
 
 @Component({ name: "FormularioSenha" })
 export default class FormularioSenha extends Vue {
-  senha = "";
-  confirmacaoSenha = "";
+  senha = ""
+  confirmacaoSenha = ""
 
-  showSenha = false;
+  showSenha = false
 
   rules: StringFieldRules = [
     v => !!v || "Campo Obrigatório",
     v => (!!v && v.length >= 6) || "Senha deve ter no minimo 6 caracteres",
     v => (!!v && v.length < 60) || "Senha deve ter no minimo 60 caracteres"
-  ];
+  ]
 
   get errosConfirmacaoSenha(): string[] {
-    const erros = [];
+    const erros = []
 
     // Só valido se o usuário já digitou uma senha
     if (!this.confirmacaoSenha && this.senha) {
-      erros.push("Por favor confirme sua senha");
+      erros.push("Por favor confirme sua senha")
     }
 
     if (this.confirmacaoSenha !== this.senha) {
-      erros.push("Senhas não conferem");
+      erros.push("Senhas não conferem")
     }
 
-    return erros;
+    return erros
   }
 
   @Watch("senha")
   onSenhaChange(value: string | undefined) {
-    this.$emit("input", value);
+    this.$emit("input", value)
   }
 }
 </script>

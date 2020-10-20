@@ -1,12 +1,12 @@
-import error from "@/router/rotas/error";
-import comun from "@/router/rotas/comun";
-import tutorando from "@/router/rotas/tutorando";
-import professor from "@/router/rotas/professor";
-import monitor from "@/router/rotas/monitor";
+import error from "@/router/rotas/error"
+import comun from "@/router/rotas/comun"
+import tutorando from "@/router/rotas/tutorando"
+import professor from "@/router/rotas/professor"
+import monitor from "@/router/rotas/monitor"
 
-const rotas = [...error, ...comun, ...professor, ...tutorando, ...monitor];
+const rotas = [...error, ...comun, ...professor, ...tutorando, ...monitor]
 
-export default rotas;
+export default rotas
 
 // Infelizmente o TS não tem suporte a criar um tipo
 // com base nas rotas informadas no arquivos acima pois
@@ -27,6 +27,6 @@ const paths = [
   "/cadastro/tutor",
   "/monitor/listagem-usuarios",
   "*"
-] as const;
+] as const
 
-export type AppRoute = typeof paths[number];
+export type AppRoute = typeof paths[number]

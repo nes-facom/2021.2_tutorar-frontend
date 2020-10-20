@@ -1,42 +1,40 @@
 <script lang="ts">
-import Auth from "@/store/modules/auth";
-import { getModule } from "vuex-module-decorators";
-import { Vue, Component } from "vue-property-decorator";
+import Auth from "@/store/modules/auth"
+import { getModule } from "vuex-module-decorators"
+import { Vue, Component } from "vue-property-decorator"
 
-import GraduacaoProfessor from "@/pages/monitor/GraduacaoProfessor.vue";
-import GraduacaoTutor from "@/pages/monitor/GraduacaoTutor.vue";
+import GraduacaoProfessor from "@/pages/monitor/GraduacaoProfessor.vue"
+import GraduacaoTutor from "@/pages/monitor/GraduacaoTutor.vue"
 
 @Component({
   name: "Pageuser",
   components: { GraduacaoProfessor, GraduacaoTutor }
 })
 export default class Pageuser extends Vue {
-  private authModule = getModule(Auth, this.$store);
+  private authModule = getModule(Auth, this.$store)
 
-  data () {
+  data() {
     return {
       dialog: false,
       tab: null,
-      items: [
-        'Dados Pessoais', 'Graduação', 'Minha Conta',
-      ],
+      items: ["Dados Pessoais", "Graduação", "Minha Conta"]
     }
   }
 
-  isEditing = false;
-  userCopy = { ...this.authModule.user };
+  isEditing = false
+  userCopy = { ...this.authModule.user }
 
   get currentUserData() {
-    return this.authModule.user || {};
+    return this.authModule.user || {}
   }
 
   get user() {
-    return this.isEditing ? this.userCopy : this.currentUserData;
+    return this.isEditing ? this.userCopy : this.currentUserData
   }
 
   toggleEditMode() {
-    this.userCopy = { ...this.currentUserData };
-    this.isEditing = !this.isEditing;
+    this.userCopy = { ...this.currentUserData }
+    this.isEditing = !this.isEditing
   }
 }
 </script>
@@ -64,13 +62,9 @@ export default class Pageuser extends Vue {
             <p class="font-weight-light grey--text" v-text="user.descricao" />
 
             <div>
-              <v-btn class="ma-1" color="orange" dark rounded small
-                >100+ Tutorias</v-btn
-              >
+              <v-btn class="ma-1" color="orange" dark rounded small>100+ Tutorias</v-btn>
 
-              <v-btn class="ma-1" color="green" dark small rounded
-                >Avaliação 9.5</v-btn
-              >
+              <v-btn class="ma-1" color="green" dark small rounded>Avaliação 9.5</v-btn>
             </div>
           </v-card-text>
         </div>
@@ -78,10 +72,7 @@ export default class Pageuser extends Vue {
 
       <v-col cols="9" align-self="start">
         <v-tabs v-model="tab">
-          <v-tab
-              v-for="item in items"
-              :key="item"
-          >
+          <v-tab v-for="item in items" :key="item">
             {{ item }}
           </v-tab>
         </v-tabs>
@@ -92,68 +83,39 @@ export default class Pageuser extends Vue {
               <v-card-title class="mx-0 mt-0 mb-4 px-0 py-0">
                 <v-spacer />
 
-                <v-btn
-                    :color="isEditing ? 'red' : 'grey'"
-                    class="mb-auto"
-                    text
-                    @click="toggleEditMode"
-                >
+                <v-btn :color="isEditing ? 'red' : 'grey'" class="mb-auto" text @click="toggleEditMode">
                   <span>{{ isEditing ? "Cancelar Edição" : "Editar" }}</span>
 
-                  <v-icon
-                      class="ml-3"
-                      v-text="isEditing ? 'mdi-pencil-off-outline' : 'mdi-pencil'"
-                  />
+                  <v-icon class="ml-3" v-text="isEditing ? 'mdi-pencil-off-outline' : 'mdi-pencil'" />
                 </v-btn>
               </v-card-title>
 
               <v-form>
                 <v-row>
                   <v-col cols="12" md="3">
-                    <v-text-field
-                      v-model="user.nome"
-                      :disabled="!isEditing"
-                      label="Nome Completo"
-                    />
+                    <v-text-field v-model="user.nome" :disabled="!isEditing" label="Nome Completo" />
                   </v-col>
 
                   <v-col cols="12" md="3">
-                    <v-text-field
-                        v-model="user.dataNascimento"
-                        label="Data Nascimento"
-                        :disabled="!isEditing"
-                    />
+                    <v-text-field v-model="user.dataNascimento" label="Data Nascimento" :disabled="!isEditing" />
                   </v-col>
 
                   <v-col cols="12" md="3">
-                    <v-text-field
-                        v-model="user.genero"
-                        label="Gênero"
-                        :disabled="!isEditing"
-                    />
+                    <v-text-field v-model="user.genero" label="Gênero" :disabled="!isEditing" />
                   </v-col>
 
                   <v-col cols="12" md="3">
-                    <v-text-field
-                        v-model="user.cpf"
-                        label="CPF"
-                        :disabled="!isEditing"
-                    />
+                    <v-text-field v-model="user.cpf" label="CPF" :disabled="!isEditing" />
                   </v-col>
 
                   <v-col cols="12">
-                    <span class="subtitle-1 font-weight-light grey--text"
-                    >Sobre Mim</span
-                    >
+                    <span class="subtitle-1 font-weight-light grey--text">Sobre Mim</span>
                     <v-textarea
-                        @input="user.descricao = $event"
-                        :value="
-                    user.descricao ||
-                      'Digite uma descrição e enriqueça seu perfil !'
-                  "
-                        :disabled="!isEditing"
-                        rows="3"
-                        hide-details
+                      @input="user.descricao = $event"
+                      :value="user.descricao || 'Digite uma descrição e enriqueça seu perfil !'"
+                      :disabled="!isEditing"
+                      rows="3"
+                      hide-details
                     />
                   </v-col>
 
@@ -167,96 +129,56 @@ export default class Pageuser extends Vue {
             </div>
           </v-tab-item>
           <v-tab-item>
-            <GraduacaoProfessor v-if="user.role == 'professor'"/>
-            <GraduacaoTutor v-if="user.role == 'tutor'"/>
+            <GraduacaoProfessor v-if="user.role == 'professor'" />
+            <GraduacaoTutor v-if="user.role == 'tutor'" />
           </v-tab-item>
           <v-tab-item>
             <div class="pa-6">
               <v-card-title class="mx-0 mt-0 mb-4 px-0 py-0">
                 <v-spacer />
 
-                <v-btn
-                    :color="isEditing ? 'red' : 'grey'"
-                    class="mb-auto"
-                    text
-                    @click="toggleEditMode"
-                >
+                <v-btn :color="isEditing ? 'red' : 'grey'" class="mb-auto" text @click="toggleEditMode">
                   <span>{{ isEditing ? "Cancelar Edição" : "Editar" }}</span>
 
-                  <v-icon
-                      class="ml-3"
-                      v-text="isEditing ? 'mdi-pencil-off-outline' : 'mdi-pencil'"
-                  />
+                  <v-icon class="ml-3" v-text="isEditing ? 'mdi-pencil-off-outline' : 'mdi-pencil'" />
                 </v-btn>
               </v-card-title>
               <v-form>
                 <v-row>
                   <v-col cols="12" md="3">
-                    <v-text-field
-                        v-model="user.email"
-                        :disabled="!isEditing"
-                        label="E-mail"
-                    />
+                    <v-text-field v-model="user.email" :disabled="!isEditing" label="E-mail" />
                   </v-col>
 
                   <v-col cols="12" md="3">
-                    <v-text-field
-                        v-model="user.celular"
-                        label="Celular"
-                        :disabled="!isEditing"
-                    />
+                    <v-text-field v-model="user.celular" label="Celular" :disabled="!isEditing" />
                   </v-col>
 
                   <v-col cols="12" md="3">
-                    <v-text-field
-                        v-model="user.senha"
-                        type="password"
-                        label="Senha"
-                        :disabled="!isEditing"
-                    />
+                    <v-text-field v-model="user.senha" type="password" label="Senha" :disabled="!isEditing" />
                   </v-col>
 
                   <v-col cols="12">
-                    <v-dialog
-                        v-model="dialog"
-                        width="500"
-                    >
-                      <template v-slot:activator="{ on , attrs }">
-                        <v-btn color="red"
-                               class="mr-0 white--text"
-                               :disabled="isEditing"
-                               v-bind="attrs"
-                               v-on="on"
-                        >
+                    <v-dialog v-model="dialog" width="500">
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-btn color="red" class="mr-0 white--text" :disabled="isEditing" v-bind="attrs" v-on="on">
                           <span>Desativar Conta</span>
                         </v-btn>
                       </template>
                       <v-card>
                         <v-img max-height="200" max-width="500" src="@/assets/imagens/Alunos_Conexao.svg" />
-                          <v-card-title
-                              class="font-weight-bold headline"
-                              align="center"
-                          >
-                            Desativar Usuário?
-                          </v-card-title>
-                          <v-card-text>
-                            Desativando seu usuário você perderá seu acesso ao sistema
-                          </v-card-text>
+                        <v-card-title class="font-weight-bold headline" align="center">
+                          Desativar Usuário?
+                        </v-card-title>
+                        <v-card-text>
+                          Desativando seu usuário você perderá seu acesso ao sistema
+                        </v-card-text>
                         <v-divider></v-divider>
                         <v-card-actions>
                           <v-spacer></v-spacer>
-                          <v-btn
-                              color="primary"
-                              text
-                              @click="dialog = false"
-                          >
+                          <v-btn color="primary" text @click="dialog = false">
                             Cancelar
                           </v-btn>
-                          <v-btn
-                              color="error"
-                              text
-                              @click="dialog = false"
-                          >
+                          <v-btn color="error" text @click="dialog = false">
                             Desativar
                           </v-btn>
                         </v-card-actions>

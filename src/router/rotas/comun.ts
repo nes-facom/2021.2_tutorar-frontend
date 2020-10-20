@@ -1,4 +1,4 @@
-import { RouteConfig } from "@/router";
+import { RouteConfig } from "@/router"
 
 const rotas: RouteConfig[] = [
   {
@@ -7,13 +7,11 @@ const rotas: RouteConfig[] = [
   },
   {
     path: "/home",
-    component: () =>
-      import(/* webpackChunkName: "PageHome" */ "@/pages/Home.vue")
+    component: () => import(/* webpackChunkName: "PageHome" */ "@/pages/Home.vue")
   },
   {
     path: "/login",
-    component: () =>
-      import(/* webpackChunkName: "PageLogin" */ "@/pages/auth/Login.vue"),
+    component: () => import(/* webpackChunkName: "PageLogin" */ "@/pages/auth/Login.vue"),
     meta: {
       fullpage: true,
       requireLogoff: true
@@ -21,10 +19,7 @@ const rotas: RouteConfig[] = [
   },
   {
     path: "/cadastro/professor",
-    component: () =>
-      import(
-        /* webpackChunkName: "PageCadastroProfessor" */ "@/pages/auth/CadastroProfessor.vue"
-      ),
+    component: () => import(/* webpackChunkName: "PageCadastroProfessor" */ "@/pages/auth/CadastroProfessor.vue"),
     meta: {
       fullpage: true,
       requireLogoff: true
@@ -32,10 +27,7 @@ const rotas: RouteConfig[] = [
   },
   {
     path: "/cadastro/tutor",
-    component: () =>
-      import(
-        /* webpackChunkName: "PageCadastroTutor" */ "@/pages/auth/CadastroTutor.vue"
-      ),
+    component: () => import(/* webpackChunkName: "PageCadastroTutor" */ "@/pages/auth/CadastroTutor.vue"),
     meta: {
       fullpage: true,
       requireLogoff: true
@@ -43,9 +35,8 @@ const rotas: RouteConfig[] = [
   },
   {
     path: "/perfil",
-    component: () =>
-      import(/* webpackChunkName: "PageTeste" */ "@/pages/Perfil.vue")
+    component: () => import(/* webpackChunkName: "PageTeste" */ "@/pages/Perfil.vue")
   }
-];
+]
 
-export default rotas;
+export default rotas

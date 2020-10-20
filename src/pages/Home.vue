@@ -1,9 +1,9 @@
 <script lang="ts">
-import { Vue, Component, Prop } from "vue-property-decorator";
+import { Vue, Component, Prop } from "vue-property-decorator"
 
 @Component({ name: "Home" })
 export default class PageHome extends Vue {
-  @Prop({ default: "default value" }) message!: string;
+  @Prop({ default: "default value" }) message!: string
 }
 </script>
 

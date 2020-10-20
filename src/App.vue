@@ -1,5 +1,4 @@
 <script lang="ts">
-import { RouteMeta } from "./router";
 import { getModule } from "vuex-module-decorators";
 import { Vue, Component } from "vue-property-decorator";
 
