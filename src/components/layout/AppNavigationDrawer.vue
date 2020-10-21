@@ -1,48 +1,39 @@
-v<script lang="ts">
-import { getModule } from "vuex-module-decorators";
-import { Vue, Component } from "vue-property-decorator";
-import {
-  rotasProfessor,
-  rotasMonitor
-} from "@/components/layout/drawer-routes";
+<script lang="ts">
+import { getModule } from "vuex-module-decorators"
+import { Vue, Component } from "vue-property-decorator"
+import { rotasProfessor, rotasMonitor } from "@/components/layout/drawer-routes"
 
-import Auth from "@/store/modules/auth";
-import Theme from "@/store/modules/theme";
+import Auth from "@/store/modules/auth"
+import Theme from "@/store/modules/theme"
 
 @Component({ name: "NavigationDrawer" })
 export default class NavigationDrawer extends Vue {
-  private authModule = getModule(Auth, this.$store);
-  private themeModule = getModule(Theme, this.$store);
+  private authModule = getModule(Auth, this.$store)
+  private themeModule = getModule(Theme, this.$store)
 
   get currentRoute() {
-    return this.$route.path;
+    return this.$route.path
   }
 
   get navigationDrawer() {
-    return this.themeModule.isNavigationDrawerVisible;
+    return this.themeModule.isNavigationDrawerVisible
   }
 
   set navigationDrawer(value: boolean) {
-    this.themeModule.SET_DRAWER(value);
+    this.themeModule.SET_DRAWER(value)
   }
 
   get rotas() {
     // @TODO: verificar nivel de acesso do usuário e ajustar rotas de acordo
-    return [...rotasProfessor, ...rotasMonitor];
+    return [...rotasProfessor, ...rotasMonitor]
   }
 }
 </script>
 
 <template>
-  <v-navigation-drawer
-    v-model="navigationDrawer"
-    width="230"
-    color="#f8f8f8"
-    expand-on-hover
-    app
-  >
+  <v-navigation-drawer v-model="navigationDrawer" width="230" color="#f8f8f8" expand-on-hover app>
     <v-list dense>
-      <v-list-item class="px-2" @click="$router.push({path: '/home'})">
+      <v-list-item class="px-2" @click="$router.push({ path: '/home' })">
         <v-list-item-avatar color="white">
           <v-img src="@/assets/logos/tutorar.svg" height="50" width="50" />
         </v-list-item-avatar>
@@ -82,11 +73,7 @@ export default class NavigationDrawer extends Vue {
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-group
-          v-else
-          :key="rota.to"
-          :value="rota.subrotas.map(v => v.to).includes(currentRoute)"
-        >
+        <v-list-group v-else :key="rota.to" :value="rota.subrotas.map(v => v.to).includes(currentRoute)">
           <template #activator>
             <v-list-item-icon class="mr-3">
               <v-icon v-text="rota.icon" />

@@ -9,7 +9,7 @@ import FormularioDadosPessoais, { DadosPessoais } from "@/components/auth/Formul
 import LoginLink from "@/components/auth/LoginLink.vue"
 import AppBarCadastro from "@/components/auth/AppBarCadastro.vue"
 import FormularioSenha from "@/components/auth/FormularioSenha.vue"
-import FotoDropZone from "@/components/base/inputs/FotoDropZone.vue"
+import FotoDropZone from "@/components/inputs/FotoDropZone.vue"
 
 @Component({
   name: "CadastroProfessor",

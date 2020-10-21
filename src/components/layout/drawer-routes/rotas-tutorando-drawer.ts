@@ -20,6 +20,6 @@ const rotas = [
       }
     ]
   }
-];
+]
 
-export default rotas;
+export default rotas

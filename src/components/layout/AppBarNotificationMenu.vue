@@ -1,5 +1,5 @@
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
+import { Vue, Component } from "vue-property-decorator"
 
 @Component({ name: "AppBarNotificationMenu" })
 export default class AppBarNotificationMenu extends Vue {}
@@ -7,14 +7,7 @@ export default class AppBarNotificationMenu extends Vue {}
 
 <template>
   <div>
-    <v-menu
-      origin="top right"
-      transition="scale-transition"
-      max-width="370px"
-      offset-y
-      bottom
-      left
-    >
+    <v-menu origin="top right" transition="scale-transition" max-width="370px" offset-y bottom left>
       <template #activator="{ attrs, on }">
         <v-btn min-width="0" class="mr-2" text v-bind="attrs" v-on="on" color="grey">
           <v-badge color="red" overlap bordered>
@@ -33,9 +26,7 @@ export default class AppBarNotificationMenu extends Vue {}
               <v-icon class="mr-2" color="red">mdi-alert-circle-outline</v-icon>
               <span>Tutoria Cancelada</span>
             </v-list-item-title>
-            <v-list-item-subtitle
-              >Biologia II - às 19:00 de 12/10</v-list-item-subtitle
-            >
+            <v-list-item-subtitle>Biologia II - às 19:00 de 12/10</v-list-item-subtitle>
             <v-list-item-subtitle>
               <router-link to="/notificacoes" class="router-link">
                 <span>Visualizar agenda</span>
@@ -47,14 +38,10 @@ export default class AppBarNotificationMenu extends Vue {}
         <v-list-item two-line>
           <v-list-item-content>
             <v-list-item-title>
-              <v-icon class="mr-2" color="green"
-                >mdi-alert-circle-outline</v-icon
-              >
+              <v-icon class="mr-2" color="green">mdi-alert-circle-outline</v-icon>
               <span>Tutoria em 10 minutos !</span>
             </v-list-item-title>
-            <v-list-item-subtitle
-              >Química III - às 19:00 de 12/10</v-list-item-subtitle
-            >
+            <v-list-item-subtitle>Química III - às 19:00 de 12/10</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
 

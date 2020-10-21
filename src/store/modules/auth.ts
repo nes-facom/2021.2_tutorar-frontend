@@ -79,7 +79,6 @@ export default class Auth extends VuexModule {
   @Mutation
   AUTH_SUCCESS(payload: LoginResponse) {
     const { token, user } = payload
-
     window.localStorage.setItem("token", `Bearer ${token}`)
 
     this.user = user

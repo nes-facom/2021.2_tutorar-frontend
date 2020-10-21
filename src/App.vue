@@ -9,15 +9,15 @@ import AppBar from "@/components/layout/AppBar.vue"
 import AppFooter from "@/components/layout/AppFooter.vue"
 import AppNavigationDrawer from "@/components/layout/AppNavigationDrawer.vue"
 
-const authModule = getModule(Auth, store)
-
 @Component({
   name: "App",
   components: { AppBar, AppNavigationDrawer, AppFooter }
 })
 export default class App extends Vue {
+  authModule = getModule(Auth, store)
+
   get isLoggedIn() {
-    return authModule.isLoggedIn
+    return this.authModule.isLoggedIn
   }
 
   get routerViewContainerPadding() {

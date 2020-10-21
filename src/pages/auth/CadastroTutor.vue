@@ -5,9 +5,12 @@ import { Vue, Component } from "vue-property-decorator"
 // Componentes
 import LoginLink from "@/components/auth/LoginLink.vue"
 import AppBarCadastro from "@/components/auth/AppBarCadastro.vue"
-import FotoDropZone from "@/components/base/inputs/FotoDropZone.vue"
+import FotoDropZone from "@/components/inputs/FotoDropZone.vue"
 import FormularioSenha from "@/components/auth/FormularioSenha.vue"
 import FormularioDadosPessoais, { DadosPessoais } from "@/components/auth/FormularioDadosPessoais.vue"
+
+// Outros
+import siglasUniversidades from "@/utils/autocomplete/siglas-universidades"
 
 @Component({
   name: "CadastroTutor",
@@ -21,6 +24,8 @@ import FormularioDadosPessoais, { DadosPessoais } from "@/components/auth/Formul
 })
 export default class CadastroTutor extends Vue {
   currentStep = 0
+
+  siglasUniversidades = siglasUniversidades
 
   // Passo 0
   dadosPessoais: DadosPessoais = {
@@ -54,17 +59,13 @@ export default class CadastroTutor extends Vue {
   }
 
   opcoes = {
-    // @TODO:
-    universidade: ["UFMS", "SEJUSP"],
-
     semestre: []
   }
 
   rules = {}
 
   mounted() {
-    // this.currentStep++;
-    // this.currentStep++;
+    this.currentStep = 1
   }
 
   submit() {
@@ -111,11 +112,16 @@ export default class CadastroTutor extends Vue {
                     Passo 2 - Formação Acadêmica
                   </h1>
 
-                  <v-combobox
+                  <!--
+                    @TODO
+                    Se for pra apenas aceitar valores em items
+                    usar v-autocomplete senão v-combobox, verificar depois
+                    -->
+                  <v-autocomplete
                     v-model="tutor.universidade"
-                    :items="opcoes.universidade"
+                    :items="siglasUniversidades"
                     :rules="rules.universidade"
-                    placeholder="Universidade"
+                    placeholder="Universidade (digite ou selecione)"
                     outlined
                   />
 

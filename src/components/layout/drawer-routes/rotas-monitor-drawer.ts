@@ -1,4 +1,4 @@
-import { DrawerRoute } from ".";
+import { DrawerRoute } from "."
 
 const rotas: DrawerRoute[] = [
   {
@@ -6,6 +6,6 @@ const rotas: DrawerRoute[] = [
     title: "Usuários",
     to: "/monitor/listagem-usuarios"
   }
-];
+]
 
-export default rotas;
+export default rotas

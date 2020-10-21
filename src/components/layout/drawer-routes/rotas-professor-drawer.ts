@@ -1,4 +1,4 @@
-import { DrawerRoute } from ".";
+import { DrawerRoute } from "."
 
 const rotas: DrawerRoute[] = [
   {
@@ -32,6 +32,6 @@ const rotas: DrawerRoute[] = [
       }
     ]
   }
-];
+]
 
-export default rotas;
+export default rotas
