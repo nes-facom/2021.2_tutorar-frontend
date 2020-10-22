@@ -1,4 +1,4 @@
-import Store from "@/store"
+import store from "@/store"
 import router from "@/router"
 import AuthModule from "@/store/modules/auth"
 import { getModule } from "vuex-module-decorators"
@@ -26,7 +26,7 @@ jest.mock("@/api/auth/login", () => ({
 }))
 
 describe("Vuex Auth Module", () => {
-  let authModule = getModule(AuthModule, Store)
+  let authModule = getModule(AuthModule, store)
 
   describe("@Mutation AUTH_SUCCESS:", () => {
     const { user, token }: LoginRequestData = {
@@ -52,17 +52,16 @@ describe("Vuex Auth Module", () => {
     })
 
     beforeEach(() => {
-      authModule = getModule(AuthModule, Store)
+      authModule = getModule(AuthModule, store)
     })
 
-    it("Stores the user token in localStorage as 'Bearer: {token}'", () => {
-      expect(localStorage.getItem("token")).toBeNull()
+    it("Stores the user token in localStorage", () => {
+      expect(localStorage.getItem("api_token")).toBeNull()
 
       authModule.AUTH_SUCCESS({ user, token })
-      const prefixedToken = `Bearer ${token}`
 
-      expect(localStorage.setItem).toHaveBeenLastCalledWith("token", prefixedToken)
-      expect(window.localStorage.getItem("token")).toBe(prefixedToken)
+      expect(localStorage.setItem).toHaveBeenCalledWith("api_token", token)
+      expect(window.localStorage.getItem("api_token")).toBe(token)
     })
 
     it("Sets the state Token", () => {
@@ -102,7 +101,7 @@ describe("Vuex Auth Module", () => {
 
   describe("@Mutation AUTH_LOGOUT:", () => {
     beforeEach(() => {
-      authModule = getModule(AuthModule, Store)
+      authModule = getModule(AuthModule, store)
       localStorage.clear()
     })
 
@@ -112,11 +111,11 @@ describe("Vuex Auth Module", () => {
     })
 
     it("Removes the token from localstorage and state", () => {
-      localStorage.setItem("token", "This should be cleared")
+      localStorage.setItem("api_token", "This should be cleared")
       authModule.AUTH_LOGOUT()
 
       expect(localStorage.__STORE__.token).toBeUndefined()
-      expect(localStorage.getItem("token")).toBeNull()
+      expect(localStorage.getItem("api_token")).toBeNull()
       expect(authModule.token).toBeNull()
     })
 
@@ -166,13 +165,35 @@ describe("Vuex Auth Module", () => {
     const password = "dummy_password"
 
     beforeEach(() => {
-      authModule = getModule(AuthModule, Store)
+      authModule = getModule(AuthModule, store)
     })
 
     it("Should fire the loginService with the provided arguments", async () => {
       await authModule.LOGIN({ username, password })
 
       expect(loginService).toHaveBeenLastCalledWith("dummy_username", "dummy_password")
+    })
+  })
+
+  describe("@Action LOGOUT:", () => {
+    beforeEach(() => {
+      authModule = getModule(AuthModule, store)
+    })
+
+    it("Should call the AUTH_LOGOUT mutation with the same args", () => {
+      /**
+       * Importante !
+       * authModule é apenas uma classe, pra espiar nos commit tenho que
+       * utilizar a store em si
+       */
+      const spy = jest.spyOn(store, "commit")
+
+      const payload = { clearLocalStorage: false, redirectTo: "/some/page" }
+
+      authModule.LOGOUT(payload)
+
+      expect(spy).toHaveBeenCalledTimes(1)
+      expect(spy).toHaveBeenLastCalledWith("auth/AUTH_LOGOUT", payload, undefined)
     })
   })
 })

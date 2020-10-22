@@ -27,10 +27,7 @@ export default class PageListagemUsuarios extends Vue {
       text: "Perfil",
       value: "perfil",
       filter: (perfil: "Indiferente" | "Professor" | "Tutorando") => {
-        if (!this.filtro.perfil || this.filtro.perfil === "Indiferente") {
-          return true
-        }
-        console.log(this.filtro.perfil, perfil)
+        if (!this.filtro.perfil || this.filtro.perfil === "Indiferente") return true
         return this.filtro.perfil === perfil
       }
     },
@@ -43,9 +40,7 @@ export default class PageListagemUsuarios extends Vue {
       value: "ativo",
       align: "center",
       filter: (status: boolean) => {
-        if (!this.filtro.status || this.filtro.status === "Indiferente") {
-          return true
-        }
+        if (!this.filtro.status || this.filtro.status === "Indiferente") return true
         return this.filtro.status === "Ativo" ? status === true : status === false
       }
     }

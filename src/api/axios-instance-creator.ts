@@ -5,9 +5,15 @@ interface Options {
 }
 
 export default (options: Options): AxiosInstance => {
-  const axiosInstance = axios.create()
+  const token = localStorage.getItem("api_token")
 
-  axiosInstance.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest"
-  axiosInstance.defaults.baseURL = `http://127.0.0.1:7000/${options.baseUrl}`
-  return axiosInstance
+  const defaultOptions = {
+    baseURL: "http://localhost:7000/",
+    headers: {
+      "X-Requested-With": "XMLHttpRequest",
+      Authorization: token ? `Bearer ${token}` : null
+    }
+  }
+
+  return axios.create({ ...defaultOptions, ...options })
 }

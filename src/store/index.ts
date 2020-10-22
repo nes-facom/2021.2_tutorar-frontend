@@ -1,5 +1,6 @@
 import Vue from "vue"
 import Vuex from "vuex"
+import createPersistedState from "vuex-persistedstate"
 
 import auth from "@/store/modules/auth"
 import theme from "@/store/modules/theme"
@@ -9,4 +10,4 @@ Vue.use(Vuex)
 
 const modules = { auth, theme, tutorias }
 
-export default new Vuex.Store({ modules })
+export default new Vuex.Store({ modules, plugins: [createPersistedState()] })

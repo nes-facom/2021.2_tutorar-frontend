@@ -1,4 +1,3 @@
-// const VuetifyLoaderPlugin = require("vuetify-loader/lib/plugin")
 const path = require("path")
 
 module.exports = {
@@ -12,6 +11,5 @@ module.exports = {
         "@s": path.resolve(__dirname, "src/sass/")
       }
     }
-    // plugins: [new VuetifyLoaderPlugin()]
   }
 }

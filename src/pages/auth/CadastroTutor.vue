@@ -64,10 +64,6 @@ export default class CadastroTutor extends Vue {
 
   rules = {}
 
-  mounted() {
-    this.currentStep = 1
-  }
-
   submit() {
     const tutor = { ...this.dadosPessoais, ...this.tutor }
     console.log(tutor)
