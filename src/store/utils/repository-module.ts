@@ -1,5 +1,4 @@
 import { IdentifiableItem, BaseRepository } from "@/api/repositories/base-repository"
-
 import { VuexModule, Mutation, Action } from "vuex-module-decorators"
 
 interface InsertOptions {
@@ -11,8 +10,8 @@ export interface Items {
 }
 
 export default abstract class RepositoryModule<I extends IdentifiableItem> extends VuexModule {
-  ids: number[] = []
-  items: Items = {}
+  ids: (string | number)[] = []
+  byId: Items = {}
 
   abstract repository: BaseRepository<I>
 
@@ -21,23 +20,23 @@ export default abstract class RepositoryModule<I extends IdentifiableItem> exten
     items.map(item => {
       const id = item.id
       this.ids.push(id)
-      this.items[id] = item
+      this.byId[id] = item
     })
   }
 
   @Mutation
-  INSERT(payload: { id: number; item: I; options: InsertOptions }) {
+  ADD(payload: { id: number; item: I; options: InsertOptions }) {
     const { id, item, options } = payload
 
-    if (!options.updateExistingRecord && this.items[id]) return
+    if (!options.updateExistingRecord && this.byId[id]) return
 
-    this.items[id] = Object.assign(this.items[id], item)
+    this.byId[id] = Object.assign(this.byId[id], item)
   }
 
   @Mutation
   UPDATE(payload: { id: number; item: I }) {
     const { id, item: newItem } = payload
-    let item = this.items[id]
+    let item = this.byId[id]
 
     if (!item) return
 
@@ -46,9 +45,9 @@ export default abstract class RepositoryModule<I extends IdentifiableItem> exten
 
   @Mutation
   DELETE(id: number) {
-    const { items, ids } = this
+    const { byId, ids } = this
 
-    delete items[id]
+    delete byId[id]
 
     ids.filter(id => id !== id)
   }
@@ -65,7 +64,7 @@ export default abstract class RepositoryModule<I extends IdentifiableItem> exten
       })
   }
 
-  get getItemsArray() {
-    return Object.values(this.items)
+  get asArray() {
+    return Object.values(this.byId)
   }
 }

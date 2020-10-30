@@ -3,26 +3,12 @@ import { Vue, Component } from "vue-property-decorator"
 
 @Component({ name: "PageListagemUsuarios" })
 export default class PageListagemUsuarios extends Vue {
-  filtro = {
-    nome: "",
-    perfil: "",
-    status: ""
-  }
+  filtro = { nome: "", perfil: "", status: "" }
 
   headers = [
-    {
-      text: "Avatar",
-      value: "avatar"
-    },
-    {
-      text: "Nome",
-      value: "nome"
-    },
-    {
-      text: "Idade",
-      value: "idade",
-      filterable: false
-    },
+    { text: "Avatar", value: "avatar" },
+    { text: "Nome", value: "nome" },
+    { text: "Idade", value: "idade", filterable: false },
     {
       text: "Perfil",
       value: "perfil",
@@ -31,10 +17,7 @@ export default class PageListagemUsuarios extends Vue {
         return this.filtro.perfil === perfil
       }
     },
-    {
-      text: "Email",
-      value: "email"
-    },
+    { text: "Email", value: "email" },
     {
       text: "Status",
       value: "ativo",

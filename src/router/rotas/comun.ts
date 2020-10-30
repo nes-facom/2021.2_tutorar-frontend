@@ -1,5 +1,9 @@
 import { RouteConfig } from "@/router"
 
+export enum AUTH_ROUTES {
+  LOGIN = "/login"
+}
+
 const rotas: RouteConfig[] = [
   {
     path: "/",
@@ -10,7 +14,7 @@ const rotas: RouteConfig[] = [
     component: () => import(/* webpackChunkName: "PageHome" */ "@/pages/Home.vue")
   },
   {
-    path: "/login",
+    path: AUTH_ROUTES.LOGIN,
     component: () => import(/* webpackChunkName: "PageLogin" */ "@/pages/auth/Login.vue"),
     meta: {
       fullpage: true,

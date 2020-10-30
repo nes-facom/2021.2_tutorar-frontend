@@ -106,7 +106,7 @@ export default class AppBar extends Vue {
 
     <AppBarNotificationMenu />
 
-    <v-divider vertical></v-divider>
+    <v-divider vertical />
 
     <AppBarUserMenu />
   </v-app-bar>

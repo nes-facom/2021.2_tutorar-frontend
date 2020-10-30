@@ -1,13 +1,9 @@
-import axios, { AxiosInstance } from "axios"
+import axios, { AxiosInstance, AxiosRequestConfig } from "axios"
 
-interface Options {
-  baseUrl?: string
-}
-
-export default (options: Options): AxiosInstance => {
+export default (options?: AxiosRequestConfig): AxiosInstance => {
   const token = localStorage.getItem("api_token")
 
-  const defaultOptions = {
+  const defaultOptions: AxiosRequestConfig = {
     baseURL: "http://localhost:7000/",
     headers: {
       "X-Requested-With": "XMLHttpRequest",

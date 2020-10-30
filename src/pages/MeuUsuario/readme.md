@@ -1,1 +1,0 @@
-### O folder components/ deve ter componentes genéricos, caso uma página precise de componentes uteis sómente aquela página crie uma pasta em pages com o nome da página e dentro dela colocar todos os componentes e a página em si

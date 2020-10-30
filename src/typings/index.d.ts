@@ -10,4 +10,3 @@
  */
 
 declare module "v-mask"
-declare module "vuetify-image-input"

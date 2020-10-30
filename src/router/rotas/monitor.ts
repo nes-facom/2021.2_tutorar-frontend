@@ -16,7 +16,6 @@ rotas.map(route => {
 
   const defaultMeta: RouteMeta = {
     requireLogin: true
-    // @TODO: ao implementar com o back
     // requireRole: ["monitor"]
   }
 

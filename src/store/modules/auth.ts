@@ -1,10 +1,7 @@
-import router from "@/router"
-import { Module, VuexModule, Mutation, Action } from "vuex-module-decorators"
 import loginService, { ExpectedResponseData as LoginResponse } from "@/api/auth/login"
-import store from ".."
+import { Module, VuexModule, Mutation, Action } from "vuex-module-decorators"
 
 interface LogoutOptions {
-  redirectTo?: string
   clearLocalStorage?: boolean
 }
 
@@ -15,6 +12,7 @@ interface LogoutOptions {
  * implementar tipagem
  */
 interface BaseUser {
+  id: string
   role: UserRoles
 
   cpf: string
@@ -43,8 +41,7 @@ export interface UserTutor extends BaseUser {
 /**
  * @TODO Tipagem temporaria, ver acima
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type User = UserProfessor | UserTutor | null | any
+export type User = UserProfessor | UserTutor | null
 
 export type UserRoles = "tutorando" | "professor"
 
@@ -54,6 +51,7 @@ export default class Auth extends VuexModule {
 
   // Implementando sem tipagem por enquanto
   user: User = {
+    id: "1",
     role: "professor",
 
     cpf: "03690208122",
@@ -86,14 +84,11 @@ export default class Auth extends VuexModule {
 
     this.user = user
     this.token = token
-
-    if (router.currentRoute.path !== "/home") router.push({ path: "/home" })
   }
 
   /**
    * Chamado quando o usuário realiza logout:
    *
-   * @param payload.redirectTo - path da rota ao redirecionar após logout
    * @param payload.clearLocalStorage - se a localStorage deve ser limpa
    */
   @Mutation
@@ -102,15 +97,13 @@ export default class Auth extends VuexModule {
 
     this.token = null
     const def = { redirectTo: "/home", clearLocalStorage: true }
-    const { redirectTo, clearLocalStorage } = { ...def, ...payload }
+    const { clearLocalStorage } = { ...def, ...payload }
 
     if (clearLocalStorage) localStorage.clear()
-
-    if (router.currentRoute.path !== redirectTo) router.push({ path: redirectTo })
   }
 
   @Action({ rawError: true })
-  async LOGIN({ username, password }: { username: string; password: string }) {
+  async login({ username, password }: { username: string; password: string }) {
     return loginService(username, password).then(response => {
       this.context.commit("AUTH_SUCCESS", response)
     })

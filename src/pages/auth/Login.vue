@@ -3,6 +3,7 @@ import Auth from "@/store/modules/auth"
 import { getModule } from "vuex-module-decorators"
 import { Component, Vue } from "vue-property-decorator"
 import AppBarCadastro from "@/components/auth/AppBarCadastro.vue"
+import getHomeRoute from "@/router/utils/get-home-route"
 
 @Component({
   name: "PageLogin",
@@ -44,7 +45,7 @@ export default class PageLogin extends Vue {
 
     const { username, password } = this
 
-    this.authModule.LOGIN({ username, password })
+    this.authModule.login({ username, password }).then(() => this.$router.push(getHomeRoute()))
   }
 }
 </script>

@@ -1,24 +1,26 @@
-import { IdentifiableItem, BaseRepository } from "@/api/repositories/base-repository"
-import createAxiosInstance from "@/api/axios-instance-creator"
-import handleAxiosError from "@/api/axios-error-handler"
+import { BaseRepository } from "@/api/repositories/base-repository"
+import { UserTutor } from "@/store/modules/auth"
 import { AxiosInstance } from "axios"
 
-export interface Tutoria extends IdentifiableItem {
-  otherProp?: string
-}
+import createAxiosInstance from "@/api/axios-instance-creator"
+import handleAxiosError from "@/api/axios-error-handler"
 
-export class TutoriaRepository extends BaseRepository<Tutoria> {
+export class TutorRepository extends BaseRepository<UserTutor> {
   axiosInstance: AxiosInstance = createAxiosInstance()
 
-  create(tutoria: Tutoria) {
+  create(tutor: UserTutor, foto: File) {
+    const formData = new FormData()
+    formData.append("user", JSON.stringify(tutor))
+    formData.append("foto_perfil", foto)
+
     return new Promise<boolean>((resolve, reject) => {
-      this.axiosInstance.post("", tutoria).then(res => {
+      this.axiosInstance.post("users", formData).then(res => {
         res ? resolve(true) : reject()
       })
     })
   }
 
-  update(id: number, tutoria: Tutoria) {
+  update(id: number, tutoria: UserTutor) {
     return new Promise<boolean>((resolve, reject) => {
       this.axiosInstance.post("", { id, tutoria }).then(res => {
         res ? resolve(true) : reject()
@@ -35,11 +37,11 @@ export class TutoriaRepository extends BaseRepository<Tutoria> {
   }
 
   get(options?: object) {
-    return new Promise<Tutoria[]>((resolve, reject) => {
+    return new Promise<UserTutor[]>((resolve, reject) => {
       this.axiosInstance
         .post("", options)
         .then(res => {
-          res ? resolve([{ id: 1 }]) : reject()
+          res ? resolve([]) : reject()
         })
         .catch(error => {
           const errorMessage = handleAxiosError(error, "Ocorreu um erro ao buscar as Tutorias")
@@ -49,9 +51,9 @@ export class TutoriaRepository extends BaseRepository<Tutoria> {
   }
 
   find(id: number) {
-    return new Promise<Tutoria>((resolve, reject) => {
+    return new Promise<UserTutor>((resolve, reject) => {
       this.axiosInstance.post("", id).then(res => {
-        res ? resolve({ id: 1 }) : reject()
+        reject()
       })
     })
   }

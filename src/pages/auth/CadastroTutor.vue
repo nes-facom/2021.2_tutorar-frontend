@@ -11,6 +11,9 @@ import FormularioDadosPessoais, { DadosPessoais } from "@/components/auth/Formul
 
 // Outros
 import siglasUniversidades from "@/utils/autocomplete/siglas-universidades"
+import { StringFieldRules } from "@/utils/form"
+import { getModule } from "vuex-module-decorators"
+import TutorModule from "@/store/modules/repositories/tutor"
 
 @Component({
   name: "CadastroTutor",
@@ -23,51 +26,74 @@ import siglasUniversidades from "@/utils/autocomplete/siglas-universidades"
   }
 })
 export default class CadastroTutor extends Vue {
+  tutorModule = getModule(TutorModule, this.$store)
+
   currentStep = 0
+
+  mounted() {
+    // this.currentStep++
+    // this.currentStep++
+  }
 
   siglasUniversidades = siglasUniversidades
 
   // Passo 0
-  dadosPessoais: DadosPessoais = {
-    nome: "",
-    email: "",
-    cpf: "",
-    genero: "",
-    celular: ""
-  }
+  dadosPessoais: DadosPessoais = { nome: "", email: "", cpf: "", genero: "", celular: "" }
 
-  validadePassos = {
-    0: false,
-    1: false,
-    2: false
-  }
+  validadePassos = { 0: false, 1: false, 2: false }
 
   // @TODO: aplicar tipagem, esperando back
-  tutor: { [x: string]: unknown; foto: File | null } = {
+  tutor: { [x: string]: unknown; foto?: File | null } = {
     // Passo 1
     universidade: "",
-    cursoLicensiatura: "",
     semestreAtual: "",
+    cursoLicensiatura: "",
 
     // Passo 2
-    anoInicioLicensiatura: "",
-    anoFimLicensiatura: "",
     senha: "",
+    anoFimLicensiatura: "",
+    anoInicioLicensiatura: "",
 
     // Passo 3
     foto: null
   }
 
-  opcoes = {
-    semestre: []
+  rules: { [x: string]: StringFieldRules } = {
+    campoObrigatorio: [v => !!v || "Campo Obrigatório"]
   }
 
-  rules = {}
+  opcoes = {
+    semestreAtual: [...Array(16).keys()]
+  }
 
   submit() {
-    const tutor = { ...this.dadosPessoais, ...this.tutor }
+    const formData = new FormData()
+
+    const mock: any = {
+      anoFimLicensiatura: "",
+      anoInicioLicensiatura: "",
+      celular: "(67) 99880-1996",
+      cpf: "036.902.081-22",
+      cursoLicensiatura: "Meme",
+      dataNascimento: "23/10/1996",
+      email: "vitor.guidorizzi@hotmail.com",
+      genero: "Masculino",
+      nome: "Vitor Andrade",
+      semestreAtual: 10,
+      senha: "contafake3",
+      universidade: "UTFPR",
+      foto: "s"
+    }
+
+    // const tutor = { ...this.dadosPessoais, ...this.tutor }
+    const tutor = mock
+
     console.log(tutor)
-    console.log("A integrar com o back !")
+
+    const foto = tutor.foto
+    delete tutor.foto
+
+    this.tutorModule.cadastraTutor(tutor, foto)
   }
 
   gotoNextStep() {
@@ -108,25 +134,25 @@ export default class CadastroTutor extends Vue {
                     Passo 2 - Formação Acadêmica
                   </h1>
 
-                  <!--
-                    @TODO
-                    Se for pra apenas aceitar valores em items
-                    usar v-autocomplete senão v-combobox, verificar depois
-                    -->
                   <v-autocomplete
                     v-model="tutor.universidade"
                     :items="siglasUniversidades"
-                    :rules="rules.universidade"
+                    :rules="rules.campoObrigatorio"
                     placeholder="Universidade (digite ou selecione)"
                     outlined
                   />
 
-                  <v-text-field v-model="tutor.c" :rules="rules.nivel" placeholder="Curso de licensiatura" outlined />
+                  <v-text-field
+                    v-model="tutor.cursoLicensiatura"
+                    :rules="rules.campoObrigatorio"
+                    placeholder="Curso de licensiatura"
+                    outlined
+                  />
 
                   <v-select
-                    v-model="tutor.tempoEnsino"
-                    :rules="rules.tempoEnsino"
-                    :items="opcoes.tempoEnsino"
+                    v-model="tutor.semestreAtual"
+                    :rules="rules.campoObrigatorio"
+                    :items="opcoes.semestreAtual"
                     placeholder="Semestre Atual"
                     outlined
                   />
@@ -148,6 +174,7 @@ export default class CadastroTutor extends Vue {
             <v-spacer />
 
             <LoginLink />
+
             <v-card-actions class="mb-2 mt-5">
               <v-spacer />
 

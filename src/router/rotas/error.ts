@@ -1,8 +1,12 @@
 import { RouteConfig, RouteMeta } from "@/router"
 
+export enum ERROR_ROUTES {
+  FORBIDDEN = "/acesso-negado"
+}
+
 const rotas: RouteConfig[] = [
   {
-    path: "/acesso-negado",
+    path: ERROR_ROUTES.FORBIDDEN,
     component: () =>
       import(/* webpackChunkName: "DefaultUnauthorizedPage" */ "@/pages/errors/DefaultUnauthorizedPage.vue")
   },
