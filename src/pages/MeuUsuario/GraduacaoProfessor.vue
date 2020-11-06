@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Vue, Component, Prop } from "vue-property-decorator"
-import { UserProfessor } from "@/store/modules/auth"
+import { Professor } from "@/store/modules/auth-types"
 
 @Component({ name: "GraduacaoProfessor" })
 export default class GraduacaoProfessor extends Vue {
@@ -8,7 +8,7 @@ export default class GraduacaoProfessor extends Vue {
   isEditing = false
 
   @Prop({ required: true })
-  user!: UserProfessor
+  user!: Professor
 }
 </script>
 

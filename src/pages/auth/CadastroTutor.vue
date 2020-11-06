@@ -13,7 +13,7 @@ import FormularioDadosPessoais, { DadosPessoais } from "@/components/auth/Formul
 import siglasUniversidades from "@/utils/autocomplete/siglas-universidades"
 import { StringFieldRules } from "@/utils/form"
 import { getModule } from "vuex-module-decorators"
-import TutorModule from "@/store/modules/repositories/tutor"
+import TutorModule from "@/store/modules/tutor-module"
 
 @Component({
   name: "CadastroTutor",
@@ -67,8 +67,6 @@ export default class CadastroTutor extends Vue {
   }
 
   submit() {
-    const formData = new FormData()
-
     const mock: any = {
       anoFimLicensiatura: "",
       anoInicioLicensiatura: "",
@@ -77,7 +75,7 @@ export default class CadastroTutor extends Vue {
       cursoLicensiatura: "Meme",
       dataNascimento: "23/10/1996",
       email: "vitor.guidorizzi@hotmail.com",
-      genero: "Masculino",
+      genero: "M",
       nome: "Vitor Andrade",
       semestreAtual: 10,
       senha: "contafake3",
@@ -88,12 +86,10 @@ export default class CadastroTutor extends Vue {
     // const tutor = { ...this.dadosPessoais, ...this.tutor }
     const tutor = mock
 
-    console.log(tutor)
-
     const foto = tutor.foto
     delete tutor.foto
 
-    this.tutorModule.cadastraTutor(tutor, foto)
+    // this.tutorModule.cadastraTutor(tutor, foto)
   }
 
   gotoNextStep() {
@@ -105,6 +101,7 @@ export default class CadastroTutor extends Vue {
 <template>
   <div class="page-container">
     <AppBarCadastro />
+
     <v-container fill-height>
       <v-row align="center" justify="end">
         <v-col cols="4">
@@ -116,7 +113,7 @@ export default class CadastroTutor extends Vue {
           </h1>
 
           <span class="subtitle-1 grey--text text--darken-1">
-            Aqui você pode oferecer sua tutoria a professores do brasil inteiro ! algum texto emocionante aqui, uau !
+            Aqui você pode oferecer sua tutoria a professores do brasil inteiro !
           </span>
         </v-col>
         <v-col cols="4">

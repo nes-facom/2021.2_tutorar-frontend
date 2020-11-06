@@ -4,10 +4,11 @@ export default (options?: AxiosRequestConfig): AxiosInstance => {
   const token = localStorage.getItem("api_token")
 
   const defaultOptions: AxiosRequestConfig = {
-    baseURL: "http://localhost:7000/",
+    baseURL: "http://localhost:8625/",
     headers: {
       "X-Requested-With": "XMLHttpRequest",
-      Authorization: token ? `Bearer ${token}` : null
+      Authorization: token ? `Bearer ${token}` : null,
+      "Access-Control-Allow-Origin": "*"
     }
   }
 

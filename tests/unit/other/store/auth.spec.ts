@@ -3,6 +3,8 @@ import router from "@/router"
 import AuthModule from "@/store/modules/auth"
 import { getModule } from "vuex-module-decorators"
 import loginService, { ExpectedResponseData as LoginRequestData } from "@/api/auth/login"
+import { FORMACAO_ACADEMICA } from "@/utils/constants/formacao-academica"
+import { NIVEL_LECIONAMENTO } from "@/utils/constants/nivel-lecionamento"
 
 // Mockup do módulo de login
 jest.mock("@/api/auth/login", () => ({
@@ -31,7 +33,8 @@ describe("Vuex Auth Module", () => {
   describe("@Mutation AUTH_SUCCESS:", () => {
     const { user, token }: LoginRequestData = {
       user: {
-        id: "2",
+        _id: "2",
+
         role: "professor",
 
         cpf: "03690208122",
@@ -39,11 +42,13 @@ describe("Vuex Auth Module", () => {
         email: "fulano.silva@hotmail.com",
         celular: "67998801996",
         dataNascimento: "23/10/1996",
-        genero: "masculino",
+        genero: "M",
 
         dataInicioEnsino: "12/04/2015",
-        formacaoAcademica: "superior",
-        nivelLecionamento: "superior"
+        formacaoAcademica: FORMACAO_ACADEMICA.BACHARELADO,
+        nivelLecionamento: NIVEL_LECIONAMENTO.EDUCACAO_INFANTIL,
+
+        isAdmin: false
       },
       token: "eyJhbGciOiJIUzI1NiVCJ9.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV"
     }

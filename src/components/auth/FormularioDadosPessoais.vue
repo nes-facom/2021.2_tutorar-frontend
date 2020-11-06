@@ -29,7 +29,10 @@ export default class FormularioDadosPessoais extends Vue {
 
   // @TODO: Rever quais são os tipos permitidos no back, transformar em dicionario depois
   opcoes = {
-    genero: ["Masculino", "Feminino", "Prefiro não informar"]
+    genero: [
+      { text: "Masculino", value: "M" },
+      { text: "Feminino", value: "F" }
+    ]
   }
 
   getCelularMask(telefone: string) {

@@ -1,5 +1,5 @@
 <script lang="ts">
-import Auth, { UserProfessor, UserTutor } from "@/store/modules/auth"
+import Auth, { Professor, Tutor } from "@/store/modules/auth-types"
 import { getModule } from "vuex-module-decorators"
 import { Vue, Component, Prop } from "vue-property-decorator"
 
@@ -11,7 +11,7 @@ export default class DadosPessoais extends Vue {
   isEditing = false
 
   @Prop({ required: true })
-  user!: UserProfessor | UserTutor
+  user!: Professor | Tutor
 }
 </script>
 

@@ -1,9 +1,12 @@
 import createAxiosInstance from "@/api/axios-instance-creator"
 import handleAxiosError from "@/api/axios-error-handler"
-import { User } from "@/store/modules/auth"
+import { User } from "@/store/modules/auth-types"
+import { FORMACAO_ACADEMICA } from "@/utils/constants/formacao-academica"
+import { NIVEL_LECIONAMENTO } from "@/utils/constants/nivel-lecionamento"
 
 const userMock: User = {
-  id: "2",
+  _id: "2",
+
   role: "professor",
 
   cpf: "03690208122",
@@ -11,11 +14,13 @@ const userMock: User = {
   email: "fulano.silva@hotmail.com",
   celular: "67998801996",
   dataNascimento: "23/10/1996",
-  genero: "masculino",
+  genero: "M",
 
   dataInicioEnsino: "12/04/2015",
-  formacaoAcademica: "superior",
-  nivelLecionamento: "superior"
+  formacaoAcademica: FORMACAO_ACADEMICA.BACHARELADO,
+  nivelLecionamento: NIVEL_LECIONAMENTO.EDUCACAO_INFANTIL,
+
+  isAdmin: false
 }
 
 export interface ExpectedResponseData {

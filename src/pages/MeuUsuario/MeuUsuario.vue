@@ -1,5 +1,5 @@
 <script lang="ts">
-import Auth, { User } from "@/store/modules/auth"
+import Auth from "@/store/modules/auth"
 import { getModule } from "vuex-module-decorators"
 import { Vue, Component } from "vue-property-decorator"
 

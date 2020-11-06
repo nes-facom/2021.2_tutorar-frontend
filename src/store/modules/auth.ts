@@ -1,70 +1,15 @@
 import loginService, { ExpectedResponseData as LoginResponse } from "@/api/auth/login"
 import { Module, VuexModule, Mutation, Action } from "vuex-module-decorators"
+import { LogoutOptions, User } from "./auth-types"
 
-interface LogoutOptions {
-  clearLocalStorage?: boolean
-}
-
-/**
- * @TODO: Rascunho de tipagem de usuário
- * quando o formulário / padrão / tipo
- * dos dados de professor tiver 100%
- * implementar tipagem
- */
-interface BaseUser {
-  id: string
-  role: UserRoles
-
-  cpf: string
-  nome: string
-  email: string
-  celular: string
-  dataNascimento: string
-  genero: "masculino" | "feminino" | "não informado"
-}
-
-export interface UserProfessor extends BaseUser {
-  dataInicioEnsino: string
-  formacaoAcademica: "basica" | "tecnica" | "superior"
-  nivelLecionamento: "infantil" | "fundamental" | "médio" | "superior"
-}
-
-export interface UserTutor extends BaseUser {
-  universidade: string
-  cursoLicensiatura: string
-  semestreNoCadastro: string
-
-  anoFimLicensiatura: string
-  anoInicioLicensiatura: string
-}
-
-/**
- * @TODO Tipagem temporaria, ver acima
- */
-export type User = UserProfessor | UserTutor | null
-
-export type UserRoles = "tutorando" | "professor"
-
-@Module({ namespaced: true, name: "auth" })
+@Module({
+  namespaced: true,
+  name: "auth"
+})
 export default class Auth extends VuexModule {
   token: string | null = null
 
-  // Implementando sem tipagem por enquanto
-  user: User = {
-    id: "1",
-    role: "professor",
-
-    cpf: "03690208122",
-    nome: "Fulano Da Silva Sanches",
-    email: "fulano.silva@hotmail.com",
-    celular: "67998801996",
-    dataNascimento: "23/10/1996",
-    genero: "masculino",
-
-    dataInicioEnsino: "12/04/2015",
-    formacaoAcademica: "superior",
-    nivelLecionamento: "superior"
-  }
+  user: User | null = null
 
   get isLoggedIn() {
     return !!this.token

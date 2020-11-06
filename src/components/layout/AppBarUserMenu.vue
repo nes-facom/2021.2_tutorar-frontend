@@ -3,6 +3,7 @@ import { getModule } from "vuex-module-decorators"
 import { Vue, Component } from "vue-property-decorator"
 
 import Auth from "@/store/modules/auth"
+import { HOME_ROUTES } from "@/router/utils/get-home-route"
 
 @Component({ name: "AppBarUserMenu" })
 export default class AppBarUserMenu extends Vue {
@@ -11,25 +12,26 @@ export default class AppBarUserMenu extends Vue {
   user = this.authModule.user
 
   menuItems: { to: string; icon: string; text: string }[] = [
-    {
-      to: `${this.user?.role}/perfil`,
-      icon: "mdi-account",
-      text: "Minha conta"
-    },
-    {
-      to: `${this.user?.role}/perfil`,
-      icon: "mdi-calendar",
-      text: "Agenda"
-    },
-    {
-      to: `${this.user?.role}/perfil`,
-      icon: "mdi-account",
-      text: "Minhas habilidades"
-    }
+    // {
+    //   to: `${this.user?.role}/perfil`,
+    //   icon: "mdi-account",
+    //   text: "Minha conta"
+    // },
+    // {
+    //   to: `${this.user?.role}/perfil`,
+    //   icon: "mdi-calendar",
+    //   text: "Agenda"
+    // },
+    // {
+    //   to: `${this.user?.role}/perfil`,
+    //   icon: "mdi-lightbulb-on-outline",
+    //   text: "Minhas habilidades"
+    // }
   ]
 
   logout() {
     this.authModule.LOGOUT()
+    if (this.$route.path !== HOME_ROUTES.DEFAULT) this.$router.push(HOME_ROUTES.DEFAULT)
   }
 }
 </script>
@@ -59,16 +61,15 @@ export default class AppBarUserMenu extends Vue {
       <v-divider />
 
       <v-list>
-        <v-list-item link>
+        <v-list-item v-for="item in menuItems" :key="item.icon" link>
           <v-list-item-icon class="mr-3">
-            <v-icon>mdi-account</v-icon>
+            <v-icon v-text="item.icon" />
           </v-list-item-icon>
 
           <v-list-item-content>
-            <v-list-item-title>Minha conta</v-list-item-title>
+            <v-list-item-title v-text="item.text" />
           </v-list-item-content>
         </v-list-item>
-        <v-list-item>Agenda</v-list-item>
       </v-list>
 
       <v-card-actions>

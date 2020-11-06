@@ -1,8 +1,12 @@
 <script lang="ts">
+import UsersModule from "@/store/modules/users-module"
 import { Vue, Component } from "vue-property-decorator"
+import { getModule } from "vuex-module-decorators"
 
 @Component({ name: "PageListagemUsuarios" })
 export default class PageListagemUsuarios extends Vue {
+  userModule = getModule(UsersModule, this.$store)
+
   filtro = { nome: "", perfil: "", status: "" }
 
   headers = [
@@ -34,33 +38,13 @@ export default class PageListagemUsuarios extends Vue {
     itemsPerPageText: "Linhas por página"
   }
 
-  usuarios = [
-    {
-      nome: "Leonardo Kauan Pereira",
-      idade: 20,
-      perfil: "Professor",
-      email: "leonardo.12345@gmail.com",
-      ativo: true
-    },
-    {
-      nome: "Maria Fatima Mello",
-      idade: 25,
-      perfil: "Professor",
-      email: "mariafatima2012.@uol.com",
-      ativo: false
-    },
-    {
-      nome: "Lana Maria Oliveira Silva",
-      idade: 19,
-      perfil: "Tutor",
-      email: "lanamaria18@gmail.com",
-      ativo: true
-    }
-  ]
-
   opcoes = {
     perfil: ["Indiferente", "Professor", "Tutor"],
     status: ["Indiferente", "Ativo", "Inativo"]
+  }
+
+  mounted() {
+    this.userModule.getAll()
   }
 }
 </script>
@@ -96,14 +80,14 @@ export default class PageListagemUsuarios extends Vue {
         <v-data-table
           class="elevation-0"
           :headers="headers"
-          :items="usuarios"
+          :items="userModule.asArray"
           :search="filtro.nome"
           :footer-props="footer"
           no-data-text="Nenhum registro encontrado"
           no-results-text="Nenhum registro encontrado com esses filtros"
         >
           <template #item.avatar>
-            <v-avatar size="50" class="my-2 avatarClass" @click="$router.push({ path: '/perfil' })">
+            <v-avatar size="50" class="my-2 avatar-usuario" @click="$router.push({ path: '/perfil' })">
               <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
             </v-avatar>
           </template>
@@ -119,7 +103,7 @@ export default class PageListagemUsuarios extends Vue {
 </template>
 
 <style scoped>
-.avatarClass:hover {
+.avatar-usuario:hover {
   cursor: pointer;
 }
 </style>

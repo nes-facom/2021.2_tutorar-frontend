@@ -1,5 +1,5 @@
 <script lang="ts">
-import { rotasProfessor, rotasTutorando, DrawerRoute } from "@/components/layout/drawer-routes"
+import { rotasProfessor, rotasTutorando, rotasMonitor, DrawerRoute } from "@/components/layout/drawer-routes"
 import { Vue, Component } from "vue-property-decorator"
 import { getModule } from "vuex-module-decorators"
 import Theme from "@/store/modules/theme"
@@ -24,10 +24,12 @@ export default class NavigationDrawer extends Vue {
 
   get rotas(): DrawerRoute[] {
     let routes: DrawerRoute[] = []
+
     const { user } = this.authModule
 
-    if (user?.role === "tutorando") routes = [...routes, ...rotasTutorando]
+    if (user?.role === "tutor") routes = [...routes, ...rotasTutorando]
     if (user?.role === "professor") routes = [...routes, ...rotasProfessor]
+    if (user?.role === "monitor") routes = [...routes, ...rotasMonitor]
 
     return routes
   }
