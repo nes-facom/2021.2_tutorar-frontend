@@ -10,6 +10,14 @@ export default class ProfileSidebar extends Vue {
   private authModule = getModule(Auth, this.$store)
 
   user = this.authModule.user
+
+  chips = [
+    {name: 'Google', color: 'primary'},
+    {name: 'Yahoo', color: 'deep-purple'},
+    {name: 'Gmail', color: 'primary'},
+    {name: 'Canvas', color: 'error'},
+    {name: 'Java', color: 'orange'},
+  ];
 }
 </script>
 
@@ -22,21 +30,21 @@ export default class ProfileSidebar extends Vue {
     </div>
 
     <v-card-text class="text-center">
-      <h6 class="headline mb-4 grey--text">
+      <h4 class="font-weight-light grey--text mb-3">
         Professora Bacharellado Química
-      </h6>
-
-      <h4 class="display-1 font-weight-light blue--text mb-3">
-        Fulana da Silva
       </h4>
+
+      <h2 class="font-weight-light blue--text mb-3">
+        Fulana da Silva
+      </h2>
 
       <p class="font-weight-light grey--text" v-text="user.descricao" />
 
-      <div>
-        <v-btn class="ma-1" color="orange" dark rounded small>100+ Tutorias</v-btn>
+      <v-divider class="mx-4"></v-divider>
 
-        <v-btn class="ma-1" color="green" dark small rounded>Avaliação 9.5</v-btn>
-      </div>
+      <v-chip-group column>
+        <v-chip v-for="chip in chips" :color="chip.color" text-color="white" :key="chip.name">{{ chip.name }}</v-chip>
+      </v-chip-group>
     </v-card-text>
   </div>
 </template>

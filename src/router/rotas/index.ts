@@ -26,6 +26,7 @@ const paths = [
   "/cadastro/professor",
   "/cadastro/tutor",
   "/monitor/listagem-usuarios",
+  "/agenda",
   "*"
 ] as const
 

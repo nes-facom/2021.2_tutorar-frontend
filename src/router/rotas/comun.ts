@@ -36,6 +36,10 @@ const rotas: RouteConfig[] = [
   {
     path: "/perfil",
     component: () => import(/* webpackChunkName: "PageTeste" */ "@/pages/Perfil.vue")
+  },
+  {
+    path: "/agenda",
+    component: () => import(/* webpackChunkName: "PageTeste" */ "@/pages/agenda/Agenda.vue")
   }
 ]
 

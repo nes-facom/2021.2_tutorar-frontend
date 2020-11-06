@@ -9,7 +9,7 @@ const rotas: DrawerRoute[] = [
   {
     title: "Agenda",
     icon: "mdi-calendar",
-    to: "/professor/agenda"
+    to: "/agenda"
   },
   {
     title: "Mensagens",
