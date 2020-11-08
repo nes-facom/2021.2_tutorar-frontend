@@ -23,8 +23,8 @@ export default (): HOME_ROUTES => {
 
   const { user } = authModule
 
-  // if (user?.role === "professor") return HOME_ROUTES.PROFESSOR
-  // if (user?.role === "tutorando") return HOME_ROUTES.TUTOR
+  if (user?.role === "professor") return HOME_ROUTES.PROFESSOR
+  if (user?.role === "tutor") return HOME_ROUTES.TUTOR
 
   return HOME_ROUTES.DEFAULT
 }

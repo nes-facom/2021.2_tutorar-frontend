@@ -3,17 +3,17 @@ import Auth from "@/store/modules/auth"
 import { getModule } from "vuex-module-decorators"
 import { Vue, Component } from "vue-property-decorator"
 
-import DadosUsuario from "@/pages/MeuUsuario/DadosUsuario.vue"
-import DadosPessoais from "@/pages/MeuUsuario/DadosPessoais.vue"
-import ProfileSidebar from "@/pages/MeuUsuario/ProfileSidebar.vue"
-import GraduacaoTutor from "@/pages/MeuUsuario/GraduacaoTutor.vue"
-import GraduacaoProfessor from "@/pages/MeuUsuario/GraduacaoProfessor.vue"
+import DadosUsuario from "@/pages/common/MeuPerfil/DadosUsuario.vue"
+import DadosPessoais from "@/pages/common/MeuPerfil/DadosPessoais.vue"
+import ProfileSidebar from "@/pages/common/MeuPerfil/ProfileSidebar.vue"
+import GraduacaoTutor from "@/pages/common/MeuPerfil/GraduacaoTutor.vue"
+import GraduacaoProfessor from "@/pages/common/MeuPerfil/GraduacaoProfessor.vue"
 
 @Component({
-  name: "PageUser",
+  name: "MeuPerfil",
   components: { GraduacaoProfessor, GraduacaoTutor, DadosPessoais, ProfileSidebar, DadosUsuario }
 })
-export default class PageUser extends Vue {
+export default class MeuPerfil extends Vue {
   private authModule = getModule(Auth, this.$store)
 
   tab = 0

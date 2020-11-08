@@ -1,4 +1,4 @@
-import { VuexModule, Mutation, Action } from "vuex-module-decorators"
+import { VuexModule, Mutation } from "vuex-module-decorators"
 
 interface InsertOptions {
   updateExistingRecord: boolean
@@ -16,6 +16,13 @@ export default abstract class CrudModule<Item extends Identifiable> extends Vuex
 
   get asArray() {
     return Object.values(this.byId)
+  }
+
+  @Mutation
+  RESET_STATE() {
+    console.log("reseting")
+    this.ids = []
+    this.byId = {}
   }
 
   @Mutation

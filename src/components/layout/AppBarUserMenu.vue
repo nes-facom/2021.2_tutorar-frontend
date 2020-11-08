@@ -12,16 +12,16 @@ export default class AppBarUserMenu extends Vue {
   user = this.authModule.user
 
   menuItems: { to: string; icon: string; text: string }[] = [
-    // {
-    //   to: `${this.user?.role}/perfil`,
-    //   icon: "mdi-account",
-    //   text: "Minha conta"
-    // },
-    // {
-    //   to: `${this.user?.role}/perfil`,
-    //   icon: "mdi-calendar",
-    //   text: "Agenda"
-    // },
+    {
+      to: "meu-perfil",
+      icon: "mdi-account",
+      text: "Minha conta"
+    },
+    {
+      to: "minha-agenda",
+      icon: "mdi-calendar",
+      text: "Agenda"
+    }
     // {
     //   to: `${this.user?.role}/perfil`,
     //   icon: "mdi-lightbulb-on-outline",
@@ -30,8 +30,11 @@ export default class AppBarUserMenu extends Vue {
   ]
 
   logout() {
-    this.authModule.LOGOUT()
     if (this.$route.path !== HOME_ROUTES.DEFAULT) this.$router.push(HOME_ROUTES.DEFAULT)
+
+    // Importante realizar logout depois de alterar a página para não quebrar a exibição
+    // da página atual que pode depender do usuário
+    this.authModule.logout()
   }
 }
 </script>

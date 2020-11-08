@@ -12,6 +12,7 @@ export default class UsersModule extends CrudModule<User> {
   async getAll() {
     return getAllUsers()
       .then(users => {
+        console.log(users)
         this.SET_ITEMS(users)
       })
       .catch(error => {

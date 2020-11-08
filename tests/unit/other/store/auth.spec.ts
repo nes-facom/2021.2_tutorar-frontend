@@ -100,13 +100,6 @@ describe("Vuex Auth Module", () => {
       expect(localStorage.getItem("api_token")).toBeNull()
       expect(authModule.token).toBeNull()
     })
-
-    it("Clears the localStorage when 'clearLocalStorage' is true", () => {
-      authModule.AUTH_LOGOUT({ clearLocalStorage: true })
-
-      // Espero 2 pois a chamo em beforeEach
-      expect(localStorage.clear).toHaveBeenCalledTimes(2)
-    })
   })
 
   describe("@Action login:", () => {
@@ -139,7 +132,7 @@ describe("Vuex Auth Module", () => {
 
       const payload = { clearLocalStorage: false, redirectTo: "/some/page" }
 
-      authModule.LOGOUT(payload)
+      authModule.logout(payload)
 
       expect(spy).toHaveBeenCalledTimes(1)
       expect(spy).toHaveBeenLastCalledWith("auth/AUTH_LOGOUT", payload, undefined)

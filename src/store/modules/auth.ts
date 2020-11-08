@@ -33,18 +33,13 @@ export default class Auth extends VuexModule {
 
   /**
    * Chamado quando o usuário realiza logout:
-   *
-   * @param payload.clearLocalStorage - se a localStorage deve ser limpa
    */
   @Mutation
-  AUTH_LOGOUT(payload?: LogoutOptions) {
+  AUTH_LOGOUT() {
     localStorage.removeItem("api_token")
 
     this.token = null
-    const def = { redirectTo: "/home", clearLocalStorage: true }
-    const { clearLocalStorage } = { ...def, ...payload }
-
-    if (clearLocalStorage) localStorage.clear()
+    this.user = null
   }
 
   @Action({ rawError: true })
@@ -55,11 +50,20 @@ export default class Auth extends VuexModule {
   }
 
   /**
-   * Essa action existe pois provavelmente vou ter mais lógica
-   * ex: chamar outras mutações aqui
+   * Realiza logout, unica diferença de chamar AUTH_LOGOUT é que aqui podemos
+   * especificar se queremos limpar todo o state da aplicação
+   *
+   * @fires AUTH_LOGOUT
+   * @fires root/RESET_VUEX_STATE - se payload.clearState é true
+   *
+   * @param payload.clearState - defaults to true
    */
   @Action({ rawError: true })
-  LOGOUT(payload?: LogoutOptions) {
-    this.context.commit("AUTH_LOGOUT", payload)
+  logout(payload?: LogoutOptions) {
+    const options = { ...{ clearState: true }, ...payload }
+
+    if (options?.clearState) this.context.dispatch("RESET_VUEX_STATE", null, { root: true })
+
+    this.context.commit("AUTH_LOGOUT")
   }
 }

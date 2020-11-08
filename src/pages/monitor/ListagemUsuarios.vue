@@ -15,8 +15,8 @@ export default class PageListagemUsuarios extends Vue {
     { text: "Idade", value: "idade", filterable: false },
     {
       text: "Perfil",
-      value: "perfil",
-      filter: (perfil: "Indiferente" | "Professor" | "Tutorando") => {
+      value: "role",
+      filter: (perfil: "Indiferente" | "professor" | "tutor") => {
         if (!this.filtro.perfil || this.filtro.perfil === "Indiferente") return true
         return this.filtro.perfil === perfil
       }
@@ -24,11 +24,11 @@ export default class PageListagemUsuarios extends Vue {
     { text: "Email", value: "email" },
     {
       text: "Status",
-      value: "ativo",
+      value: "isActive",
       align: "center",
       filter: (status: boolean) => {
         if (!this.filtro.status || this.filtro.status === "Indiferente") return true
-        return this.filtro.status === "Ativo" ? status === true : status === false
+        return this.filtro.status === "Ativo" ? status : !status
       }
     }
   ]
@@ -39,8 +39,19 @@ export default class PageListagemUsuarios extends Vue {
   }
 
   opcoes = {
-    perfil: ["Indiferente", "Professor", "Tutor"],
+    perfil: ["Indiferente", "professor", "tutor"],
     status: ["Indiferente", "Ativo", "Inativo"]
+  }
+
+  getAgeFromYYYYMMDD(date: string): number {
+    date = date.substring(0, 10)
+    const today = new Date()
+    const birthDate = new Date(date)
+    let idade = today.getFullYear() - birthDate.getFullYear()
+    const m = today.getMonth() - birthDate.getMonth()
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) idade--
+
+    return idade
   }
 
   mounted() {
@@ -91,9 +102,14 @@ export default class PageListagemUsuarios extends Vue {
               <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
             </v-avatar>
           </template>
-          <template #item.ativo="{ item }">
-            <v-chip :color="item.ativo ? '#448FF2' : '#89DCF6'" text-color="white" dense>
-              {{ item.ativo ? "ativo" : "inativo" }}
+
+          <template #item.idade="{ item }">
+            <span v-text="getAgeFromYYYYMMDD(item.dataNascimento)" />
+          </template>
+
+          <template #item.isActive="{ item }">
+            <v-chip :color="item.isActive ? '#448FF2' : '#89DCF6'" text-color="white" dense>
+              {{ item.isActive ? "ativo" : "inativo" }}
             </v-chip>
           </template>
         </v-data-table>

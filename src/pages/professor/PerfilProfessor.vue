@@ -19,7 +19,6 @@ export default {
         <v-card-title class="font-weight-bold pb-2">
           Informações do Usuário
         </v-card-title>
-        <v-divider></v-divider>
         <v-row align="center" justify="center" class="my-10" no-gutters>
           <v-col cols="6" class="pa-0" style="border-right: 1px solid #e3e3e3;">
             <div class="py-6 px-4">

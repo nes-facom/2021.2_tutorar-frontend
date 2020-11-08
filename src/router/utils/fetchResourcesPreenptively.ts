@@ -8,10 +8,9 @@ interface Options {
 
 export default (resources: resources[], options?: Options) => {
   resources.forEach(resource => {
-    if (!options?.forceLoad) {
-      const isResourceLoaded = Object.values(store.state[resource].items).length > 0
-
-      if (!isResourceLoaded) store.dispatch(resource + "/fetch")
-    }
+    // if (!options?.forceLoad) {
+    //   const isResourceLoaded = Object.values(store.state[resource].items).length > 0
+    //   if (!isResourceLoaded) store.dispatch(resource + "/fetch")
+    // }
   })
 }
