@@ -11,6 +11,9 @@ import AppBarCadastro from "@/components/auth/AppBarCadastro.vue"
 import FormularioSenha from "@/components/auth/FormularioSenha.vue"
 import FotoDropZone from "@/components/inputs/FotoDropZone.vue"
 
+import { NIVEL_LECIONAMENTO } from "@/utils/constants/nivel-lecionamento"
+import { FORMACAO_ACADEMICA } from "@/utils/constants/formacao-academica"
+
 @Component({
   name: "CadastroProfessor",
   components: {
@@ -50,16 +53,22 @@ export default class CadastroProfessor extends Vue {
     foto: null
   }
 
-  // @TODO: REVER https://www.vestibulandoweb.com.br/formacao.htm
-  // @TODO: Rever quais são os tipos permitidos no back, transformar em dicionario depois
+  // @see https://www.vestibulandoweb.com.br/formacao.htm
   opcoes = {
     formacao: [
-      "Bacharelado",
-      "Licenciatura",
-      "Tecnológico",
-      "Seqüencial",
-      "Graduação Modulada",
-      "Educação à Distância"
+      FORMACAO_ACADEMICA.BACHARELADO,
+      FORMACAO_ACADEMICA.LICENSIATURA,
+      FORMACAO_ACADEMICA.TECNOLOGICO,
+      FORMACAO_ACADEMICA.SEQUENCIAL,
+      FORMACAO_ACADEMICA.GRADUACAO_A_DISTANCIA,
+      FORMACAO_ACADEMICA.EDUCACAO_A_DISTANCIA
+    ],
+
+    nivelEnsino: [
+      NIVEL_LECIONAMENTO.ENSINO_MEDIO,
+      NIVEL_LECIONAMENTO.ENSINO_SUPERIOR,
+      NIVEL_LECIONAMENTO.ENSINO_FUNDAMENTAL,
+      NIVEL_LECIONAMENTO.EDUCACAO_INFANTIL
     ],
 
     tempoEnsino: ["menos de 1 ano", "entre 1 a 5 anos", "entre 5 a 10 anos", "mais de 10 anos"]
@@ -70,13 +79,11 @@ export default class CadastroProfessor extends Vue {
    * na mão ou ambos, como as desse form é simples fiz na mão.
    */
   rules: { [x: string]: StringFieldRules } = {
-    nivel: [v => !!v || "Campo Obrigatório"]
+    campoObrigatorio: [v => !!v || "Campo Obrigatório"]
   }
 
   submit() {
     const professor = { ...this.dadosPessoais, ...this.professor }
-    console.log(professor)
-    console.log("A integrar com o back !")
   }
 
   gotoNextStep() {
@@ -125,9 +132,10 @@ export default class CadastroProfessor extends Vue {
                     outlined
                   />
 
-                  <v-text-field
+                  <v-select
                     v-model="professor.nivel"
-                    :rules="rules.nivel"
+                    :items="opcoes.nivelEnsino"
+                    :rules="rules.campoObrigatorio"
                     placeholder="Qual nível você leciona ?"
                     outlined
                   />

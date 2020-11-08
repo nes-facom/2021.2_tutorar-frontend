@@ -1,5 +1,13 @@
+<script>
+import { AUTH_ROUTES } from "@/router/rotas/comun"
+
+export default {
+  data: () => ({ loginroute: AUTH_ROUTES.LOGIN })
+}
+</script>
+
 <template>
-  <div class="text-center" @click="$router.push({ path: '/login' })">
+  <div class="text-center" @click="$router.push(loginroute)">
     <span class="link">
       Já possui uma conta ? Faça login.
     </span>

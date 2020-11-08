@@ -1,8 +1,10 @@
-import Store from "@/store"
+import store from "@/store"
 import router from "@/router"
 import AuthModule from "@/store/modules/auth"
 import { getModule } from "vuex-module-decorators"
 import loginService, { ExpectedResponseData as LoginRequestData } from "@/api/auth/login"
+import { FORMACAO_ACADEMICA } from "@/utils/constants/formacao-academica"
+import { NIVEL_LECIONAMENTO } from "@/utils/constants/nivel-lecionamento"
 
 // Mockup do módulo de login
 jest.mock("@/api/auth/login", () => ({
@@ -26,11 +28,13 @@ jest.mock("@/api/auth/login", () => ({
 }))
 
 describe("Vuex Auth Module", () => {
-  let authModule = getModule(AuthModule, Store)
+  let authModule = getModule(AuthModule, store)
 
   describe("@Mutation AUTH_SUCCESS:", () => {
     const { user, token }: LoginRequestData = {
       user: {
+        _id: "2",
+
         role: "professor",
 
         cpf: "03690208122",
@@ -38,11 +42,13 @@ describe("Vuex Auth Module", () => {
         email: "fulano.silva@hotmail.com",
         celular: "67998801996",
         dataNascimento: "23/10/1996",
-        genero: "masculino",
+        genero: "M",
 
         dataInicioEnsino: "12/04/2015",
-        formacaoAcademica: "superior",
-        nivelLecionamento: "superior"
+        formacaoAcademica: FORMACAO_ACADEMICA.BACHARELADO,
+        nivelLecionamento: NIVEL_LECIONAMENTO.EDUCACAO_INFANTIL,
+
+        isAdmin: false
       },
       token: "eyJhbGciOiJIUzI1NiVCJ9.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV"
     }
@@ -52,17 +58,16 @@ describe("Vuex Auth Module", () => {
     })
 
     beforeEach(() => {
-      authModule = getModule(AuthModule, Store)
+      authModule = getModule(AuthModule, store)
     })
 
-    it("Stores the user token in localStorage as 'Bearer: {token}'", () => {
-      expect(localStorage.getItem("token")).toBeNull()
+    it("Stores the user token in localStorage", () => {
+      expect(localStorage.getItem("api_token")).toBeNull()
 
       authModule.AUTH_SUCCESS({ user, token })
-      const prefixedToken = `Bearer ${token}`
 
-      expect(localStorage.setItem).toHaveBeenLastCalledWith("token", prefixedToken)
-      expect(window.localStorage.getItem("token")).toBe(prefixedToken)
+      expect(localStorage.setItem).toHaveBeenCalledWith("api_token", token)
+      expect(window.localStorage.getItem("api_token")).toBe(token)
     })
 
     it("Sets the state Token", () => {
@@ -74,35 +79,11 @@ describe("Vuex Auth Module", () => {
       authModule.AUTH_SUCCESS({ user, token })
       expect(authModule.user).toBe(user)
     })
-
-    it("Calls the router to redirect the user to '/home' when he's not there", async () => {
-      // Faço um push para uma rota dummy apenas para que a rota atual seja != de '/home'
-      await router.push({ path: "rota/exemplo" })
-
-      // Agora faço um spy na function 'push' do router
-      const spy = jest.spyOn(router, "push")
-
-      authModule.AUTH_SUCCESS({ user, token })
-      expect(spy).toHaveBeenLastCalledWith({ path: "/home" })
-    })
-
-    it("Should NOT call the router to redirect the user to '/home' when he's there", async () => {
-      // Isso deve acontecer antes de eu criar o spy, pois essa execução não deve ser capturada
-      if (router.currentRoute.path !== "/home") {
-        await router.push({ path: "/home" })
-      }
-
-      const spy = jest.spyOn(router, "push")
-      authModule.AUTH_SUCCESS({ user, token })
-
-      // Espero 1 e não 0 pois o jest chama o método ao criar o spy...
-      expect(spy).toHaveBeenCalledTimes(1)
-    })
   })
 
   describe("@Mutation AUTH_LOGOUT:", () => {
     beforeEach(() => {
-      authModule = getModule(AuthModule, Store)
+      authModule = getModule(AuthModule, store)
       localStorage.clear()
     })
 
@@ -112,67 +93,49 @@ describe("Vuex Auth Module", () => {
     })
 
     it("Removes the token from localstorage and state", () => {
-      localStorage.setItem("token", "This should be cleared")
+      localStorage.setItem("api_token", "This should be cleared")
       authModule.AUTH_LOGOUT()
 
       expect(localStorage.__STORE__.token).toBeUndefined()
-      expect(localStorage.getItem("token")).toBeNull()
+      expect(localStorage.getItem("api_token")).toBeNull()
       expect(authModule.token).toBeNull()
-    })
-
-    it("Clears the localStorage when 'clearLocalStorage' is true", () => {
-      authModule.AUTH_LOGOUT({ clearLocalStorage: true })
-
-      // Espero 2 pois a chamo em beforeEach
-      expect(localStorage.clear).toHaveBeenCalledTimes(2)
-    })
-
-    it("Calls the router to redirect to '/home' when redirectTo is not specified", async () => {
-      await router.push({ path: "/not/home" })
-
-      const spy = jest.spyOn(router, "push")
-      authModule.AUTH_LOGOUT()
-
-      expect(spy).toHaveBeenCalledTimes(2)
-      expect(spy).toHaveBeenLastCalledWith({ path: "/home" })
-    })
-
-    it("Calls the router to redirect to the route specified on redirectTo", async () => {
-      const spy = jest.spyOn(router, "push")
-      authModule.AUTH_LOGOUT({ redirectTo: "some/fancy/route" })
-
-      expect(spy).toHaveBeenCalledTimes(1)
-      expect(spy).toHaveBeenLastCalledWith({ path: "some/fancy/route" })
-    })
-
-    it("Should NOT call the router to redirect to the route user is currently in", async () => {
-      await router.push({ path: "/home" })
-      const spy = jest.spyOn(router, "push")
-
-      // Tento redirecionar para a mesma rota ('/home') especificando-a
-      authModule.AUTH_LOGOUT({ redirectTo: "/home" })
-
-      // Tento redirecionar para a mesma rota ('/home') sem especifica-la
-      // pois ela é a rota default
-      authModule.AUTH_LOGOUT()
-
-      // Só espero 1 call que é a do spyOn
-      expect(spy).toHaveBeenCalledTimes(1)
     })
   })
 
-  describe("@Action LOGIN:", () => {
+  describe("@Action login:", () => {
     const username = "dummy_username"
     const password = "dummy_password"
 
     beforeEach(() => {
-      authModule = getModule(AuthModule, Store)
+      authModule = getModule(AuthModule, store)
     })
 
     it("Should fire the loginService with the provided arguments", async () => {
-      await authModule.LOGIN({ username, password })
+      await authModule.login({ username, password })
 
       expect(loginService).toHaveBeenLastCalledWith("dummy_username", "dummy_password")
+    })
+  })
+
+  describe("@Action LOGOUT:", () => {
+    beforeEach(() => {
+      authModule = getModule(AuthModule, store)
+    })
+
+    it("Should call the AUTH_LOGOUT mutation with the same args", () => {
+      /**
+       * Importante !
+       * authModule é apenas uma classe, pra espiar nos commit tenho que
+       * utilizar a store em si
+       */
+      const spy = jest.spyOn(store, "commit")
+
+      const payload = { clearLocalStorage: false, redirectTo: "/some/page" }
+
+      authModule.logout(payload)
+
+      expect(spy).toHaveBeenCalledTimes(1)
+      expect(spy).toHaveBeenLastCalledWith("auth/AUTH_LOGOUT", payload, undefined)
     })
   })
 })

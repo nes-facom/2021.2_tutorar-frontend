@@ -36,24 +36,27 @@ export default class FotoDropZone extends Vue {
     if (!this.validateFile(file)) return
     this.value = file
     this.preview = file ? URL.createObjectURL(file) : null
+
+    this.$emit("input", this.value)
   }
 
   removeImage() {
     this.value = null
     this.preview = null
+    this.$emit("input", this.value)
   }
 
-  validateFile(file: File) {
+  validateFile(file: File): boolean {
     if (this.allowedTypesArray.indexOf(file.type) === -1) return false
     if (file.size > this.maxSize) return false
     return true
   }
 
-  get draggingFile() {
+  get draggingFile(): boolean {
     return this.dragEnterCounter > 0 && !this.value
   }
 
-  get allowedTypesArray() {
+  get allowedTypesArray(): string[] {
     return this.allowedMimeTypes.split(",").map(type => type.trim())
   }
 

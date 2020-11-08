@@ -3,13 +3,38 @@ import { getModule } from "vuex-module-decorators"
 import { Vue, Component } from "vue-property-decorator"
 
 import Auth from "@/store/modules/auth"
+import { HOME_ROUTES } from "@/router/utils/get-home-route"
 
 @Component({ name: "AppBarUserMenu" })
 export default class AppBarUserMenu extends Vue {
   private authModule = getModule(Auth, this.$store)
 
+  user = this.authModule.user
+
+  menuItems: { to: string; icon: string; text: string }[] = [
+    {
+      to: "meu-perfil",
+      icon: "mdi-account",
+      text: "Minha conta"
+    },
+    {
+      to: "minha-agenda",
+      icon: "mdi-calendar",
+      text: "Agenda"
+    }
+    // {
+    //   to: `${this.user?.role}/perfil`,
+    //   icon: "mdi-lightbulb-on-outline",
+    //   text: "Minhas habilidades"
+    // }
+  ]
+
   logout() {
-    this.authModule.LOGOUT({ redirectTo: "/login" })
+    if (this.$route.path !== HOME_ROUTES.DEFAULT) this.$router.push(HOME_ROUTES.DEFAULT)
+
+    // Importante realizar logout depois de alterar a página para não quebrar a exibição
+    // da página atual que pode depender do usuário
+    this.authModule.logout()
   }
 }
 </script>
@@ -22,7 +47,7 @@ export default class AppBarUserMenu extends Vue {
       </v-btn>
     </template>
 
-    <v-card width="350px">
+    <v-card width="300px">
       <v-list>
         <v-list-item @click="$router.push({ path: '/' + authModule.user.role + '/usuario' })">
           <v-list-item-avatar>
@@ -30,8 +55,8 @@ export default class AppBarUserMenu extends Vue {
           </v-list-item-avatar>
 
           <v-list-item-content>
-            <v-list-item-title>João das Neves</v-list-item-title>
-            <v-list-item-subtitle>joao.neves@gmail.com</v-list-item-subtitle>
+            <v-list-item-title v-text="user.nome" />
+            <v-list-item-subtitle v-text="user.email" />
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -39,26 +64,25 @@ export default class AppBarUserMenu extends Vue {
       <v-divider />
 
       <v-list>
-        <v-subheader class="pb-0 mb-0">Próximas Tutorias:</v-subheader>
+        <v-list-item v-for="item in menuItems" :key="item.icon" link>
+          <v-list-item-icon class="mr-3">
+            <v-icon v-text="item.icon" />
+          </v-list-item-icon>
 
-        <v-list-item two-line>
           <v-list-item-content>
-            <v-list-item-title>Deltrano da silva - Biologia II</v-list-item-title>
-            <v-list-item-subtitle>23/10/20 - 18:00</v-list-item-subtitle>
-          </v-list-item-content>
-        </v-list-item>
-
-        <v-list-item two-line>
-          <v-list-item-content>
-            <v-list-item-title>Fulano das Neves - Química Molecular</v-list-item-title>
-            <v-list-item-subtitle>25/10/20 - 19:30</v-list-item-subtitle>
+            <v-list-item-title v-text="item.text" />
           </v-list-item-content>
         </v-list-item>
       </v-list>
 
       <v-card-actions>
         <v-spacer />
-        <v-btn text @click="logout"> <v-icon left>mdi-logout</v-icon>Logout </v-btn>
+        <v-btn text @click="logout">
+          <v-icon left>mdi-logout</v-icon>
+          <span>
+            sair
+          </span>
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-menu>

@@ -1,4 +1,6 @@
-const rotas = [
+import { DrawerRoute } from "."
+
+const rotas: DrawerRoute[] = [
   {
     icon: "mdi-chart-bar",
     title: "Informações Gerais",

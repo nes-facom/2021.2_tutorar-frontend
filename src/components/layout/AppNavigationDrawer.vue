@@ -1,15 +1,14 @@
 <script lang="ts">
-import { getModule } from "vuex-module-decorators"
+import { rotasProfessor, rotasTutorando, rotasMonitor, DrawerRoute } from "@/components/layout/drawer-routes"
 import { Vue, Component } from "vue-property-decorator"
-import { rotasProfessor, rotasMonitor } from "@/components/layout/drawer-routes"
-
-import Auth from "@/store/modules/auth"
+import { getModule } from "vuex-module-decorators"
 import Theme from "@/store/modules/theme"
+import Auth from "@/store/modules/auth"
 
 @Component({ name: "NavigationDrawer" })
 export default class NavigationDrawer extends Vue {
-  private authModule = getModule(Auth, this.$store)
-  private themeModule = getModule(Theme, this.$store)
+  authModule = getModule(Auth, this.$store)
+  themeModule = getModule(Theme, this.$store)
 
   get currentRoute() {
     return this.$route.path
@@ -23,9 +22,16 @@ export default class NavigationDrawer extends Vue {
     this.themeModule.SET_DRAWER(value)
   }
 
-  get rotas() {
-    // @TODO: verificar nivel de acesso do usuário e ajustar rotas de acordo
-    return [...rotasProfessor, ...rotasMonitor]
+  get rotas(): DrawerRoute[] {
+    let routes: DrawerRoute[] = []
+
+    const { user } = this.authModule
+
+    if (user?.role === "tutor") routes = [...routes, ...rotasTutorando]
+    if (user?.role === "professor") routes = [...routes, ...rotasProfessor]
+    if (user?.role === "monitor") routes = [...routes, ...rotasMonitor]
+
+    return routes
   }
 }
 </script>

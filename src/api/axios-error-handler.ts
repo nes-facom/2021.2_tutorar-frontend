@@ -1,9 +1,7 @@
 import { AxiosError } from "axios"
 
 /**
- * A implementar...
- *
- * @see https://www.baeldung.com/rest-api-error-handling-best-practices
+ * A implementar, esperando padronização de erros do back
  *
  * @param error - erro de uma axios request
  * @param message - mensagem de erro a retornar caso o erro não contenha uma

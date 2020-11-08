@@ -15,7 +15,7 @@ export default class PageHome extends Vue {
   <v-container fill-height fluid>
     <v-row align="center" justify="center" class="text-center">
       <v-col>
-        <v-btn v-if="!authModule.isLoggedIn" @click="$router.push({ path: '/login' })">login</v-btn>
+        <v-btn v-if="!authModule.isLoggedIn" @click="$router.push({ path: '/login' })">ir pra login</v-btn>
         <div v-else>Olá fulano !</div>
       </v-col>
     </v-row>

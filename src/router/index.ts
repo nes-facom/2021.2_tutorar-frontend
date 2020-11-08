@@ -2,17 +2,20 @@ import Vue from "vue"
 import VueRouter from "vue-router"
 
 import store from "@/store"
-import routes, { AppRoute } from "@/router/rotas"
+import routes from "@/router/rotas"
 
 import { getModule } from "vuex-module-decorators"
-import Auth, { UserRoles } from "@/store/modules/auth"
+import Auth from "@/store/modules/auth"
 import { RouteConfigSingleView } from "vue-router/types/router"
 
 import fetchResourcesPreenptively, { resources } from "@/router/utils/fetchResourcesPreenptively"
+import { AUTH_ROUTES } from "./rotas/comun"
+import getHomeRoute from "./utils/get-home-route"
+import { ERROR_ROUTES } from "./rotas/error"
 
 export interface RouteMeta {
   // Auth
-  requireRole?: false | UserRoles
+  requireRole?: false | string
   requireLogin?: boolean
   requireLogoff?: boolean
 
@@ -31,7 +34,7 @@ export interface RouteMeta {
 }
 
 export interface RouteConfig extends Omit<RouteConfigSingleView, "meta"> {
-  path: AppRoute
+  path: string
   meta?: RouteMeta
 }
 
@@ -69,30 +72,14 @@ router.beforeEach((to, from, next) => {
   const meta: RouteMeta = to.meta || {}
   const { isLoggedIn, user } = getModule(Auth, store)
 
-  const defaultFallback = user ? `${user.role}/home` : "login"
-
-  /**
-   * Refireciona para o fallback especificado caso a rota não tenha um próprio
-   * @param fallback
-   */
-  function redirectWithFallback(fallback = defaultFallback) {
-    meta.onFailRedirectTo ? next(meta.onFailRedirectTo) : next(fallback)
-  }
-
   // Barra usuários logados tentando acessar login para home
-  if (meta.requireLogoff && isLoggedIn) {
-    return redirectWithFallback()
-  }
+  if (meta.requireLogoff && isLoggedIn) return next(getHomeRoute())
 
   // Barra usuários deslogados se a rota requer login
-  if (meta.requireLogin && !isLoggedIn) {
-    return redirectWithFallback("/login")
-  }
+  if (meta.requireLogin && !isLoggedIn) return next(AUTH_ROUTES.LOGIN)
 
   // Barro usuários sem papel necessário pra acessar a rota
-  if (user && meta.requireRole && meta.requireRole !== user.role) {
-    return redirectWithFallback("/acesso-negado")
-  }
+  // if (user && meta.requireRole && meta.requireRole !== user.role) return next(ERROR_ROUTES.FORBIDDEN)
 
   // Se a rota requer alguns recursos eu a os pego
   if (meta.requiredResources && meta.requiredResources.length > 0) {

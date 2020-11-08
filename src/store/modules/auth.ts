@@ -1,70 +1,15 @@
-import router from "@/router"
-import { Module, VuexModule, Mutation, Action } from "vuex-module-decorators"
 import loginService, { ExpectedResponseData as LoginResponse } from "@/api/auth/login"
+import { Module, VuexModule, Mutation, Action } from "vuex-module-decorators"
+import { LogoutOptions, User } from "./auth-types"
 
-interface LogoutOptions {
-  redirectTo?: string
-  clearLocalStorage?: boolean
-}
-
-/**
- * @TODO: Rascunho de tipagem de usuário
- * quando o formulário / padrão / tipo
- * dos dados de professor tiver 100%
- * implementar tipagem
- */
-interface BaseUser {
-  role: UserRoles
-
-  cpf: string
-  nome: string
-  email: string
-  celular: string
-  dataNascimento: string
-  genero: "masculino" | "feminino" | "não informado"
-}
-
-export interface UserProfessor extends BaseUser {
-  dataInicioEnsino: string
-  formacaoAcademica: "basica" | "tecnica" | "superior"
-  nivelLecionamento: "infantil" | "fundamental" | "médio" | "superior"
-}
-
-export interface UserTutor extends BaseUser {
-  universidade: string
-  cursoLicensiatura: string
-  semestreNoCadastro: string
-
-  anoFimLicensiatura: string
-  anoInicioLicensiatura: string
-}
-
-/**
- * @TODO Tipagem temporaria, ver acima
- */
-export type User = UserProfessor | UserTutor | null | any
-
-export type UserRoles = "tutorando" | "professor"
-
-@Module({ namespaced: true, name: "auth" })
+@Module({
+  namespaced: true,
+  name: "auth"
+})
 export default class Auth extends VuexModule {
-  token = window.localStorage.getItem("token")
+  token: string | null = null
 
-  // Implementando sem tipagem por enquanto
-  user: User = {
-    role: "professor",
-
-    cpf: "03690208122",
-    nome: "Fulano Da Silva Sanches",
-    email: "fulano.silva@hotmail.com",
-    celular: "67998801996",
-    dataNascimento: "23/10/1996",
-    genero: "masculino",
-
-    dataInicioEnsino: "12/04/2015",
-    formacaoAcademica: "superior",
-    nivelLecionamento: "superior"
-  }
+  user: User | null = null
 
   get isLoggedIn() {
     return !!this.token
@@ -79,64 +24,46 @@ export default class Auth extends VuexModule {
   @Mutation
   AUTH_SUCCESS(payload: LoginResponse) {
     const { token, user } = payload
-    window.localStorage.setItem("token", `Bearer ${token}`)
+
+    localStorage.setItem("api_token", token)
 
     this.user = user
     this.token = token
-
-    if (router.currentRoute.path !== "/home") {
-      router.push({ path: "/home" })
-    }
   }
 
   /**
    * Chamado quando o usuário realiza logout:
-   *
-   * @param payload.redirectTo - path da rota ao redirecionar após logout
-   * @param payload.clearLocalStorage - se a localStorage deve ser limpa
    */
   @Mutation
-  AUTH_LOGOUT(payload?: LogoutOptions) {
-    let path = "/home"
+  AUTH_LOGOUT() {
+    localStorage.removeItem("api_token")
 
     this.token = null
-    window.localStorage.removeItem("token")
-
-    if (payload) {
-      const { redirectTo, clearLocalStorage } = payload
-
-      if (clearLocalStorage) localStorage.clear()
-      if (redirectTo) path = redirectTo
-    }
-
-    if (router.currentRoute.path !== path) {
-      router.push({ path })
-    }
+    this.user = null
   }
 
-  /**
-   * @param payload.username - o nome de usuário
-   * @param payload.password - a senha do usuário
-   */
   @Action({ rawError: true })
-  async LOGIN({ username, password }: { username: string; password: string }) {
+  async login({ username, password }: { username: string; password: string }) {
     return loginService(username, password).then(response => {
       this.context.commit("AUTH_SUCCESS", response)
     })
   }
 
   /**
-   * @param payload.resetState - se todo o estado da aplicação deve ser resetado
-   * @param payload.clearLocalStorage - se toda a localStorage deve ser limpa
+   * Realiza logout, unica diferença de chamar AUTH_LOGOUT é que aqui podemos
+   * especificar se queremos limpar todo o state da aplicação
+   *
+   * @fires AUTH_LOGOUT
+   * @fires root/RESET_VUEX_STATE - se payload.clearState é true
+   *
+   * @param payload.clearState - defaults to true
    */
   @Action({ rawError: true })
-  LOGOUT(payload?: LogoutOptions) {
+  logout(payload?: LogoutOptions) {
+    const options = { ...{ clearState: true }, ...payload }
+
+    if (options?.clearState) this.context.dispatch("RESET_VUEX_STATE", null, { root: true })
+
     this.context.commit("AUTH_LOGOUT")
-
-    const redirectTo = payload?.redirectTo || "/home"
-
-    if (redirectTo && router.currentRoute.path !== redirectTo) {
-      router.push({ path: redirectTo })
-    }
   }
 }

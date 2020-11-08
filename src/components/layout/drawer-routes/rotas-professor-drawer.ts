@@ -4,7 +4,7 @@ const rotas: DrawerRoute[] = [
   {
     icon: "mdi-account",
     title: "Meu Usuário",
-    to: "/professor/usuario"
+    to: "/meu-perfil"
   },
   {
     title: "Agenda",

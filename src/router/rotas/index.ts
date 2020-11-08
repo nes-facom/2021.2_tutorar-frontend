@@ -1,12 +1,13 @@
 import error from "@/router/rotas/error"
 import comun from "@/router/rotas/comun"
+import monitor from "@/router/rotas/monitor"
 import tutorando from "@/router/rotas/tutorando"
 import professor from "@/router/rotas/professor"
-import monitor from "@/router/rotas/monitor"
 
 const rotas = [...error, ...comun, ...professor, ...tutorando, ...monitor]
 
 export default rotas
+<<<<<<< HEAD
 
 // Infelizmente o TS não tem suporte a criar um tipo
 // com base nas rotas informadas no arquivos acima pois
@@ -31,3 +32,5 @@ const paths = [
 ] as const
 
 export type AppRoute = typeof paths[number]
+=======
+>>>>>>> DV-004

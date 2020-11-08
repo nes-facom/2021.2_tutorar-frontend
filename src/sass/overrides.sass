@@ -1,0 +1,23 @@
+// Arquivo carregado automaticamente pelo vuetify-loader
+
+// Corrige "Bug" https://github.com/vuetifyjs/vuetify/issues/8875 
+.v-slide-group__prev
+    display: none !important
+
+// Remove a scrollbar do navigation drawer
+.v-navigation-drawer
+    overflow: scroll
+    overflow-x: hidden
+
+// Remove a scrollbar da main view sistema 
+::-webkit-scrollbar
+    width: 0
+    background: transparent
+
+// ------------------------------ TEMA CLARO  ------------------------------
+.theme--light .v-content
+    background-color: #f8fafc
+
+// Borda mais clara / acizentada para os inputs
+.theme--light.v-text-field>.v-input__control>.v-input__slot:before
+    border-color: #d2d2d2

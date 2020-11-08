@@ -1,15 +1,6 @@
 import { RouteConfig, RouteMeta } from "@/router"
 
-const rotas: RouteConfig[] = [
-  {
-    path: "/tutorando/usuario",
-    component: () => import(/* webpackChunkName: "PageUsuario" */ "@/pages/MeuUsuario/MeuUsuario.vue"),
-    meta: {
-      requireRole: false,
-      requireLogin: false
-    }
-  }
-]
+const rotas: RouteConfig[] = []
 
 rotas.map(route => {
   if (!route.meta) route.meta = {}

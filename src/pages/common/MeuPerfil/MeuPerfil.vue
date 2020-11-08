@@ -3,22 +3,35 @@ import Auth from "@/store/modules/auth"
 import { getModule } from "vuex-module-decorators"
 import { Vue, Component } from "vue-property-decorator"
 
-import DadosUsuario from "@/pages/MeuUsuario/DadosUsuario.vue"
-import DadosPessoais from "@/pages/MeuUsuario/DadosPessoais.vue"
-import ProfileSidebar from "@/pages/MeuUsuario/ProfileSidebar.vue"
-import GraduacaoTutor from "@/pages/MeuUsuario/GraduacaoTutor.vue"
-import GraduacaoProfessor from "@/pages/MeuUsuario/GraduacaoProfessor.vue"
+import DadosUsuario from "@/pages/common/MeuPerfil/DadosUsuario.vue"
+import DadosPessoais from "@/pages/common/MeuPerfil/DadosPessoais.vue"
+import ProfileSidebar from "@/pages/common/MeuPerfil/ProfileSidebar.vue"
+import GraduacaoTutor from "@/pages/common/MeuPerfil/GraduacaoTutor.vue"
+import GraduacaoProfessor from "@/pages/common/MeuPerfil/GraduacaoProfessor.vue"
 
 @Component({
-  name: "PageUser",
+  name: "MeuPerfil",
   components: { GraduacaoProfessor, GraduacaoTutor, DadosPessoais, ProfileSidebar, DadosUsuario }
 })
-export default class PageUser extends Vue {
+export default class MeuPerfil extends Vue {
   private authModule = getModule(Auth, this.$store)
 
-  user = this.authModule.user
-
   tab = 0
+  isEditing = false
+
+  userCopy = { ...this.authModule.user }
+
+  // Casting é safe nessa caso pois esse componente só é exibido se
+  // o usuário logado é do tipo professor
+
+  get user() {
+    return this.isEditing ? this.userCopy : this.authModule.user
+  }
+
+  toggleEditMode() {
+    this.userCopy = { ...this.authModule.user }
+    this.isEditing = !this.isEditing
+  }
 }
 </script>
 
@@ -34,18 +47,25 @@ export default class PageUser extends Vue {
           <v-tab>Dados Pessoais</v-tab>
           <v-tab>Graduação</v-tab>
           <v-tab>Minha Conta</v-tab>
+          <v-spacer />
+          <v-btn :color="isEditing ? 'red' : 'grey'" x-large text @click="toggleEditMode">
+            <span>{{ isEditing ? "Cancelar Edição" : "Editar" }}</span>
+            <v-icon class="ml-3" v-text="isEditing ? 'mdi-pencil-off-outline' : 'mdi-pencil'" />
+          </v-btn>
         </v-tabs>
 
         <v-tabs-items v-model="tab">
           <v-tab-item>
-            <DadosPessoais />
+            <DadosPessoais :isEditing="isEditing" :user="user" />
           </v-tab-item>
+
           <v-tab-item>
-            <GraduacaoProfessor v-if="user.role == 'professor'" />
-            <GraduacaoTutor v-if="user.role == 'tutor'" />
+            <GraduacaoProfessor v-if="user.role == 'professor'" :isEditing="isEditing" :user="user" />
+            <GraduacaoTutor v-if="user.role == 'tutor'" :isEditing="isEditing" :user="user" />
           </v-tab-item>
+
           <v-tab-item>
-            <DadosUsuario />
+            <DadosUsuario :isEditing="isEditing" :user="user" />
           </v-tab-item>
         </v-tabs-items>
       </v-col>

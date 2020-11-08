@@ -1,13 +1,16 @@
-import axios, { AxiosInstance } from "axios"
+import axios, { AxiosInstance, AxiosRequestConfig } from "axios"
 
-interface Options {
-  baseUrl?: string
-}
+export default (options?: AxiosRequestConfig): AxiosInstance => {
+  const token = localStorage.getItem("api_token")
 
-export default (options: Options): AxiosInstance => {
-  const axiosInstance = axios.create()
+  const defaultOptions: AxiosRequestConfig = {
+    baseURL: "http://localhost:8625/",
+    headers: {
+      "X-Requested-With": "XMLHttpRequest",
+      Authorization: token ? `Bearer ${token}` : null,
+      "Access-Control-Allow-Origin": "*"
+    }
+  }
 
-  axiosInstance.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest"
-  axiosInstance.defaults.baseURL = `http://127.0.0.1:7000/${options.baseUrl}`
-  return axiosInstance
+  return axios.create({ ...defaultOptions, ...options })
 }
