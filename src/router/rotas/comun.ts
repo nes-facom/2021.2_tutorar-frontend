@@ -7,6 +7,10 @@ export enum AUTH_ROUTES {
   CADASTRO_PROFESSOR = "/cadastro/professor"
 }
 
+export enum COMMON_ROUTES {
+  MEU_PERFIL = "/meu-perfil"
+}
+
 const rotas: RouteConfig[] = [
   {
     path: "/",
@@ -25,14 +29,6 @@ const rotas: RouteConfig[] = [
     }
   },
   {
-    path: "/meu-perfil",
-    component: () =>
-      import(/* webpackChunkName: "PageExibicaoPerfilUsuario" */ "@/pages/common/MeuPerfil/MeuPerfil.vue"),
-    meta: {
-      requireLogoff: false
-    }
-  },
-  {
     path: AUTH_ROUTES.CADASTRO_PROFESSOR,
     component: () => import(/* webpackChunkName: "PageCadastroProfessor" */ "@/pages/auth/CadastroProfessor.vue"),
     meta: {
@@ -47,17 +43,18 @@ const rotas: RouteConfig[] = [
       fullpage: true,
       requireLogoff: true
     }
-<<<<<<< HEAD
   },
   {
-    path: "/perfil",
-    component: () => import(/* webpackChunkName: "PageTeste" */ "@/pages/Perfil.vue")
+    path: COMMON_ROUTES.MEU_PERFIL,
+    component: () =>
+      import(/* webpackChunkName: "PageExibicaoPerfilUsuario" */ "@/pages/common/MeuPerfil/MeuPerfil.vue"),
+    meta: {
+      requireLogoff: false
+    }
   },
   {
     path: "/agenda",
-    component: () => import(/* webpackChunkName: "PageTeste" */ "@/pages/agenda/Agenda.vue")
-=======
->>>>>>> DV-004
+    component: () => import(/* webpackChunkName: "PageAgenda" */ "@/pages/agenda/Agenda.vue")
   }
 ]
 

@@ -1,10 +1,11 @@
+import { COMMON_ROUTES } from "@/router/rotas/comun"
 import { DrawerRoute } from "."
 
 const rotas: DrawerRoute[] = [
   {
     icon: "mdi-account",
     title: "Meu Usuário",
-    to: "/meu-perfil"
+    to: COMMON_ROUTES.MEU_PERFIL
   },
   {
     title: "Agenda",
