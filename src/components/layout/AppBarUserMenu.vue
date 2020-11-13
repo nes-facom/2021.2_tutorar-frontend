@@ -11,16 +11,24 @@ export default class AppBarUserMenu extends Vue {
 
   user = this.authModule.user
 
-  menuItems: { to: string; icon: string; text: string }[] = [
+  menuItems: { to: string; icon: string; text: string, path: string }[] = [
     {
       to: "meu-perfil",
       icon: "mdi-account",
-      text: "Minha conta"
+      text: "Minha conta",
+      path: "meu-perfil"
     },
     {
       to: "minha-agenda",
       icon: "mdi-calendar",
-      text: "Agenda"
+      text: "Agenda",
+      path: "agenda"
+    },
+    {
+      to: "minhas-habilidades",
+      icon: "mdi-account-details",
+      text: "Habilidades",
+      path: "minhas-habilidades"
     }
     // {
     //   to: `${this.user?.role}/perfil`,
@@ -46,10 +54,9 @@ export default class AppBarUserMenu extends Vue {
         <v-icon>mdi-account</v-icon>
       </v-btn>
     </template>
-
     <v-card width="300px">
       <v-list>
-        <v-list-item @click="$router.push({ path: '/' + authModule.user.role + '/usuario' })">
+        <v-list-item @click="$router.push({ path: '/meu-perfil' })">
           <v-list-item-avatar>
             <v-img src="@/assets/dog.jpg" alt="Usuário" />
           </v-list-item-avatar>
@@ -64,7 +71,7 @@ export default class AppBarUserMenu extends Vue {
       <v-divider />
 
       <v-list>
-        <v-list-item v-for="item in menuItems" :key="item.icon" link>
+        <v-list-item v-for="item in menuItems" :key="item.icon" @click="$router.push({ path: '/'+ item.path })" link>
           <v-list-item-icon class="mr-3">
             <v-icon v-text="item.icon" />
           </v-list-item-icon>

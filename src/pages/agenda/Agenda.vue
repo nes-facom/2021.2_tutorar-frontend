@@ -16,11 +16,7 @@
           <v-divider class="mx-4"></v-divider>
 
           <v-card-text align="center">
-            <v-chip-group
-                v-model="selection"
-                active-class="primary accent-4 white--text"
-                column
-            >
+            <v-chip-group v-model="selection" active-class="primary accent-4 white--text" column>
               <v-chip v-for="dia in diasSemana" :key="dia.diaExt" :value="dia.diaExt">{{ dia.dia }}</v-chip>
             </v-chip-group>
 
@@ -28,89 +24,91 @@
 
             <v-row v-if="selection">
               <v-col cols="4">
-                <v-text-field
-                  disabled
-                  readonly
-                  v-model="selection"
-                  prepend-icon="mdi-calendar"
-                >
-                </v-text-field>
+                <v-text-field disabled readonly v-model="selection" prepend-icon="mdi-calendar"> </v-text-field>
               </v-col>
               <v-col cols="3">
                 <v-menu
-                    ref="primMenu"
-                    :close-on-content-click="false"
-                    :nudge-right="40"
-                    :return-value.sync="primHorario"
-                    transition="scale-transition"
-                    offset-y
-                    max-width="290px"
-                    min-width="290px"
+                  ref="primMenu"
+                  :close-on-content-click="false"
+                  :nudge-right="40"
+                  :return-value.sync="primHorario"
+                  transition="scale-transition"
+                  offset-y
+                  max-width="290px"
+                  min-width="290px"
                 >
                   <template v-slot:activator="{ on, attrs }">
                     <v-text-field
-                        :disabled="diaTodo"
-                        v-model="primHorario"
-                        label="Inicio"
-                        prepend-icon="mdi-clock-time-four-outline"
-                        readonly
-                        v-bind="attrs"
-                        v-on="on"
+                      :disabled="diaTodo"
+                      v-model="primHorario"
+                      label="Inicio"
+                      prepend-icon="mdi-clock-time-four-outline"
+                      readonly
+                      v-bind="attrs"
+                      v-on="on"
                     ></v-text-field>
                   </template>
                   <v-time-picker
-                      format="24hr"
-                      v-model="primHorario"
-                      @click:minute="$refs.primMenu.save(primHorario)"
+                    format="24hr"
+                    v-model="primHorario"
+                    @click:minute="$refs.primMenu.save(primHorario)"
                   ></v-time-picker>
                 </v-menu>
               </v-col>
               <v-col cols="3">
                 <v-menu
-                    ref="segMenu"
-                    :close-on-content-click="false"
-                    :nudge-right="40"
-                    :return-value.sync="segHorario"
-                    transition="scale-transition"
-                    offset-y
-                    max-width="290px"
-                    min-width="290px"
+                  ref="segMenu"
+                  :close-on-content-click="false"
+                  :nudge-right="40"
+                  :return-value.sync="segHorario"
+                  transition="scale-transition"
+                  offset-y
+                  max-width="290px"
+                  min-width="290px"
                 >
                   <template v-slot:activator="{ on, attrs }">
                     <v-text-field
-                        :disabled="diaTodo"
-                        v-model="segHorario"
-                        label="Fim"
-                        prepend-icon="mdi-clock-time-four-outline"
-                        readonly
-                        v-bind="attrs"
-                        v-on="on"
+                      :disabled="diaTodo"
+                      v-model="segHorario"
+                      label="Fim"
+                      prepend-icon="mdi-clock-time-four-outline"
+                      readonly
+                      v-bind="attrs"
+                      v-on="on"
                     ></v-text-field>
                   </template>
                   <v-time-picker
-                      format="24hr"
-                      v-model="segHorario"
-                      @click:minute="$refs.segMenu.save(segHorario)"
+                    format="24hr"
+                    v-model="segHorario"
+                    @click:minute="$refs.segMenu.save(segHorario)"
                   ></v-time-picker>
                 </v-menu>
               </v-col>
               <v-col cols="12">
+                <v-text-field
+                  label="Nome para seu horário"
+                  placeholder="Escreva aqui"
+                  outlined
+                  v-model="nomeEvento"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12">
                 <v-checkbox
-                    label="O dia todo"
-                    v-model="diaTodo"
-                    @change="diaTodo ? (segHorario = null, primHorario = null) : null"
+                  class="my-0"
+                  label="O dia todo"
+                  v-model="diaTodo"
+                  @change="diaTodo ? ((segHorario = null), (primHorario = null)) : null"
                 ></v-checkbox>
               </v-col>
             </v-row>
-
           </v-card-text>
           <v-divider></v-divider>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="error" text @click="dialogAgenda = false, selection = null">
+            <v-btn color="error" text @click="limpaCampos()">
               Cancelar
             </v-btn>
-            <v-btn color="primary" text @click="dialogAgenda = false">
+            <v-btn color="primary" text @click="salvaElimpaCampos()">
               Salvar
             </v-btn>
           </v-card-actions>
@@ -119,35 +117,16 @@
     </v-col>
     <v-col>
       <v-sheet height="64">
-        <v-toolbar
-            flat
-        >
-          <v-btn
-              outlined
-              class="mr-4"
-              color="grey darken-2"
-              @click="setToday"
-          >
+        <v-toolbar flat>
+          <v-btn outlined class="mr-4" color="grey darken-2" @click="setToday">
             Hoje
           </v-btn>
-          <v-btn
-              fab
-              text
-              small
-              color="grey darken-2"
-              @click="prev"
-          >
+          <v-btn fab text small color="grey darken-2" @click="prev">
             <v-icon small>
               mdi-chevron-left
             </v-icon>
           </v-btn>
-          <v-btn
-              fab
-              text
-              small
-              color="grey darken-2"
-              @click="next"
-          >
+          <v-btn fab text small color="grey darken-2" @click="next">
             <v-icon small>
               mdi-chevron-right
             </v-icon>
@@ -156,17 +135,9 @@
             {{ $refs.calendar.title }}
           </v-toolbar-title>
           <v-spacer></v-spacer>
-          <v-menu
-              bottom
-              right
-          >
+          <v-menu bottom right>
             <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                  outlined
-                  color="grey darken-2"
-                  v-bind="attrs"
-                  v-on="on"
-              >
+              <v-btn outlined color="grey darken-2" v-bind="attrs" v-on="on">
                 <span>{{ typeToLabel[type] }}</span>
                 <v-icon right>
                   mdi-menu-down
@@ -189,31 +160,19 @@
       </v-sheet>
       <v-sheet height="600">
         <v-calendar
-            ref="calendar"
-            v-model="focus"
-            color="primary"
-            :events="events"
-            :event-color="getEventColor"
-            :type="type"
-            @click:event="showEvent"
-            @click:more="viewDay"
-            @click:date="viewDay"
+          ref="calendar"
+          v-model="focus"
+          color="primary"
+          :events="events"
+          :event-color="getEventColor"
+          :type="type"
+          @click:event="showEvent"
+          @click:more="viewDay"
+          @click:date="viewDay"
         ></v-calendar>
-        <v-menu
-            v-model="selectedOpen"
-            :close-on-content-click="false"
-            :activator="selectedElement"
-            offset-x
-        >
-          <v-card
-              color="grey lighten-4"
-              min-width="350px"
-              flat
-          >
-            <v-toolbar
-                :color="selectedEvent.color"
-                dark
-            >
+        <v-menu v-model="selectedOpen" :close-on-content-click="false" :activator="selectedElement" offset-x>
+          <v-card color="grey lighten-4" min-width="350px" flat>
+            <v-toolbar :color="selectedEvent.color" dark>
               <v-btn icon>
                 <v-icon>mdi-pencil</v-icon>
               </v-btn>
@@ -230,11 +189,7 @@
               <span v-html="selectedEvent.details"></span>
             </v-card-text>
             <v-card-actions>
-              <v-btn
-                  text
-                  color="secondary"
-                  @click="selectedOpen = false"
-              >
+              <v-btn text color="secondary" @click="selectedOpen = false">
                 Fechar
               </v-btn>
             </v-card-actions>
@@ -246,61 +201,59 @@
 </template>
 
 <script>
+//TODO: Arrumar Código Agenda.
 export default {
   name: "Agenda.vue",
   data: () => ({
     dialogAgenda: false,
-    focus: '',
-    type: 'month',
+    focus: "",
+    type: "month",
     typeToLabel: {
-      month: 'Mensal',
-      week: 'Semanal',
-      day: 'Dia'
+      month: "Mensal",
+      week: "Semanal",
+      day: "Dia"
     },
     selectedEvent: {},
     selectedElement: null,
     selectedOpen: false,
-    selection: '',
+    selection: "",
     events: [],
 
     diasSemana: [
-      {dia: 'Domingo', diaExt: 'Domingo', diaPeq: 'Dom'},
-      {dia: 'Segunda', diaExt: 'Segunda-Feira', diaPeq: 'Seg'},
-      {dia: 'Terça', diaExt: 'Terça-Feira', diaPeq: 'Ter'},
-      {dia: 'Quarta', diaExt: 'Quarta-Feira', diaPeq: 'Qua'},
-      {dia: 'Quinta', diaExt: 'Quinta-Feira', diaPeq: 'Qui'},
-      {dia: 'Sexta', diaExt: 'Sexta-Feira', diaPeq: 'Sex'},
-      {dia: 'Sábado', diaExt: 'Sábado', diaPeq: 'Sab'},
+      { dia: "Domingo", diaExt: "Domingo", diaPeq: "Dom", num: 0 },
+      { dia: "Segunda", diaExt: "Segunda-Feira", diaPeq: "Seg", num: 1 },
+      { dia: "Terça", diaExt: "Terça-Feira", diaPeq: "Ter", num: 2 },
+      { dia: "Quarta", diaExt: "Quarta-Feira", diaPeq: "Qua", num: 3 },
+      { dia: "Quinta", diaExt: "Quinta-Feira", diaPeq: "Qui", num: 4 },
+      { dia: "Sexta", diaExt: "Sexta-Feira", diaPeq: "Sex", num: 5 },
+      { dia: "Sábado", diaExt: "Sábado", diaPeq: "Sab", num: 6 }
     ],
     primHorario: null,
     segHorario: null,
     diaTodo: null,
+    nomeEvento: null
   }),
-  mounted () {
+  mounted() {
     this.$refs.calendar.checkChange()
-    const date = new Date();
-    const date2 =  new Date();
-    date2.setDate(date.getDate()+31)
-    this.setEvent('Vinicius', date, date2, 'blue', false);
   },
   methods: {
-    viewDay ({ date }) {
+    viewDay({ date }) {
       this.focus = date
-      this.type = 'day'
+      this.type = "day"
     },
-    getEventColor (event) {
+    getEventColor(event) {
       return event.color
     },
-    setToday () {
-      this.focus = '';
+    setToday() {
+      this.focus = ""
     },
-    prev () {
+    prev() {
       this.$refs.calendar.prev()
     },
-    next () {
+    next() {
       this.$refs.calendar.next()
     },
-    showEvent ({ nativeEvent, event }) {
+    showEvent({ nativeEvent, event }) {
       const open = () => {
         this.selectedEvent = event
         this.selectedElement = nativeEvent.target
@@ -318,15 +271,34 @@ export default {
 
       nativeEvent.stopPropagation()
     },
-    setEvent (nome, inicio, fim, cor, diaTodo) {
+    setEvent(nome, inicio, fim, cor, diaTodo) {
       this.events.push({
         name: nome,
         color: cor,
         timed: !diaTodo,
         start: inicio,
-        end: fim,
+        end: fim
       })
     },
+    limpaCampos() {
+      this.dialogAgenda = false
+      this.selection = null
+      this.diaTodo = null
+      this.primHorario = null
+      this.segHorario = null
+      this.nomeEvento = null
+    },
+    salvaElimpaCampos() {
+      if (this.selection) {
+        this.setEvent(this.nomeEvento, new Date(), new Date(), "blue", this.diaTodo)
+      }
+      this.dialogAgenda = false
+      this.selection = null
+      this.diaTodo = null
+      this.primHorario = null
+      this.segHorario = null
+      this.nomeEvento = null
+    }
 
     // updateRange ({ start, end }) {
     //   const events = []
@@ -354,10 +326,8 @@ export default {
     // rnd (a, b) {
     //   return Math.floor((b - a + 1) * Math.random()) + a
     // },
-  },
+  }
 }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
