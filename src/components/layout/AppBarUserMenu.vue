@@ -12,24 +12,24 @@ export default class AppBarUserMenu extends Vue {
 
   user = this.authModule.user
 
-  // Para utilizar na template
-  COMMON_ROUTES = COMMON_ROUTES
-
-  menuItems: { to: string; icon: string; text: string }[] = [
+  menuItems: { to: string; icon: string; text: string; path: string }[] = [
     {
       to: COMMON_ROUTES.MEU_PERFIL,
       icon: "mdi-account",
-      text: "Minha conta"
+      text: "Minha conta",
+      path: "meu-perfil"
     },
     {
-      to: COMMON_ROUTES.MINHA_AGENDA,
+      to: COMMON_ROUTES.AGENDA,
       icon: "mdi-calendar",
-      text: "Agenda"
+      text: "Agenda",
+      path: "agenda"
     },
     {
-      to: "minhas-habilidades",
-      icon: "mdi-lightbulb-on-outline",
-      text: "Minhas habilidades"
+      to: "/minhas-habilidades",
+      icon: "mdi-account-details",
+      text: "Habilidades",
+      path: "minhas-habilidades"
     }
   ]
 
@@ -54,10 +54,9 @@ export default class AppBarUserMenu extends Vue {
         <v-icon>mdi-account</v-icon>
       </v-btn>
     </template>
-
     <v-card width="300px">
       <v-list>
-        <v-list-item @click="goToRoute(COMMON_ROUTES.MEU_PERFIL)">
+        <v-list-item @click="$router.push({ path: '/meu-perfil' })">
           <v-list-item-avatar>
             <v-img src="@/assets/dog.jpg" alt="Usuário" />
           </v-list-item-avatar>
