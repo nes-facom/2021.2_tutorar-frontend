@@ -10,7 +10,7 @@ const rotas: DrawerRoute[] = [
   {
     title: "Agenda",
     icon: "mdi-calendar",
-    to: "/agenda"
+    to: COMMON_ROUTES.MINHA_AGENDA
   },
   {
     title: "Mensagens",

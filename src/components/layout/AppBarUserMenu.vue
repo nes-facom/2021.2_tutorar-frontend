@@ -4,6 +4,7 @@ import { Vue, Component } from "vue-property-decorator"
 
 import Auth from "@/store/modules/auth"
 import { HOME_ROUTES } from "@/router/utils/get-home-route"
+import { COMMON_ROUTES } from "@/router/rotas/comun"
 
 @Component({ name: "AppBarUserMenu" })
 export default class AppBarUserMenu extends Vue {
@@ -11,23 +12,30 @@ export default class AppBarUserMenu extends Vue {
 
   user = this.authModule.user
 
+  // Para utilizar na template
+  COMMON_ROUTES = COMMON_ROUTES
+
   menuItems: { to: string; icon: string; text: string }[] = [
     {
-      to: "meu-perfil",
+      to: COMMON_ROUTES.MEU_PERFIL,
       icon: "mdi-account",
       text: "Minha conta"
     },
     {
-      to: "minha-agenda",
+      to: COMMON_ROUTES.MINHA_AGENDA,
       icon: "mdi-calendar",
       text: "Agenda"
+    },
+    {
+      to: "minhas-habilidades",
+      icon: "mdi-lightbulb-on-outline",
+      text: "Minhas habilidades"
     }
-    // {
-    //   to: `${this.user?.role}/perfil`,
-    //   icon: "mdi-lightbulb-on-outline",
-    //   text: "Minhas habilidades"
-    // }
   ]
+
+  goToRoute(route: string) {
+    if (this.$route.path !== route) this.$router.push(route)
+  }
 
   logout() {
     if (this.$route.path !== HOME_ROUTES.DEFAULT) this.$router.push(HOME_ROUTES.DEFAULT)
@@ -49,7 +57,7 @@ export default class AppBarUserMenu extends Vue {
 
     <v-card width="300px">
       <v-list>
-        <v-list-item @click="$router.push({ path: '/' + authModule.user.role + '/usuario' })">
+        <v-list-item @click="goToRoute(COMMON_ROUTES.MEU_PERFIL)">
           <v-list-item-avatar>
             <v-img src="@/assets/dog.jpg" alt="Usuário" />
           </v-list-item-avatar>
@@ -64,7 +72,7 @@ export default class AppBarUserMenu extends Vue {
       <v-divider />
 
       <v-list>
-        <v-list-item v-for="item in menuItems" :key="item.icon" link>
+        <v-list-item v-for="item in menuItems" :key="item.icon" @click="goToRoute(item.to)" link>
           <v-list-item-icon class="mr-3">
             <v-icon v-text="item.icon" />
           </v-list-item-icon>

@@ -8,7 +8,8 @@ export enum AUTH_ROUTES {
 }
 
 export enum COMMON_ROUTES {
-  MEU_PERFIL = "/meu-perfil"
+  MEU_PERFIL = "/meu-perfil",
+  MINHA_AGENDA = "/minha-agenda"
 }
 
 const rotas: RouteConfig[] = [
@@ -53,7 +54,7 @@ const rotas: RouteConfig[] = [
     }
   },
   {
-    path: "/agenda",
+    path: COMMON_ROUTES.MINHA_AGENDA,
     component: () => import(/* webpackChunkName: "PageAgenda" */ "@/pages/agenda/Agenda.vue")
   }
 ]

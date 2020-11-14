@@ -39,16 +39,16 @@ export default class DadosUsuario extends Vue {
             </v-btn>
           </template>
           <v-card>
-            <v-img max-height="200" max-width="500" src="@/assets/imagens/Alunos_Conexao.svg" />
+            <v-img max-height="500" max-width="500" src="@/assets/imagens/Alunos_Conexao.svg" />
             <v-card-title class="font-weight-bold headline" align="center">
               Desativar Usuário?
             </v-card-title>
             <v-card-text>
               Desativando seu usuário você perderá seu acesso ao sistema
             </v-card-text>
-            <v-divider></v-divider>
+            <v-divider />
             <v-card-actions>
-              <v-spacer></v-spacer>
+              <v-spacer />
               <v-btn color="primary" text @click="dialog = false">
                 Cancelar
               </v-btn>

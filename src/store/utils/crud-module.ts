@@ -1,5 +1,5 @@
 import { VuexModule, Mutation } from "vuex-module-decorators"
-
+import Vue from "vue"
 interface InsertOptions {
   updateExistingRecord: boolean
 }
@@ -10,7 +10,7 @@ interface Identifiable {
   [x: string]: any
 }
 
-export default abstract class CrudModule<Item extends Identifiable> extends VuexModule {
+export default class CrudModule<Item extends Identifiable> extends VuexModule {
   ids: (string | number)[] = []
   byId: { [x: string]: Item } = {}
 
@@ -20,7 +20,6 @@ export default abstract class CrudModule<Item extends Identifiable> extends Vuex
 
   @Mutation
   RESET_STATE() {
-    console.log("reseting")
     this.ids = []
     this.byId = {}
   }
@@ -30,7 +29,7 @@ export default abstract class CrudModule<Item extends Identifiable> extends Vuex
     items.map(item => {
       const id = item._id
       this.ids.push(id)
-      this.byId[id] = item
+      Vue.set(this.byId, id, item)
     })
   }
 
@@ -40,7 +39,7 @@ export default abstract class CrudModule<Item extends Identifiable> extends Vuex
 
     if (!options.updateExistingRecord && this.byId[id]) return
 
-    this.byId[id] = Object.assign(this.byId[id], item)
+    Vue.set(this.byId, id, { ...this.byId[id], ...item })
   }
 
   @Mutation
@@ -50,7 +49,7 @@ export default abstract class CrudModule<Item extends Identifiable> extends Vuex
 
     if (!item) return
 
-    item = Object.assign(item, newItem)
+    item = { ...item, ...newItem }
   }
 
   @Mutation

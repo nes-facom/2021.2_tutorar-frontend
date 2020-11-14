@@ -1,4 +1,5 @@
 <script lang="ts">
+import { User } from "@/store/modules/auth-types"
 import UsersModule from "@/store/modules/users-module"
 import { Vue, Component } from "vue-property-decorator"
 import { getModule } from "vuex-module-decorators"
@@ -54,6 +55,10 @@ export default class PageListagemUsuarios extends Vue {
     return idade
   }
 
+  get users(): User[] {
+    return this.userModule.asArray
+  }
+
   mounted() {
     this.userModule.getAll()
   }
@@ -91,7 +96,7 @@ export default class PageListagemUsuarios extends Vue {
         <v-data-table
           class="elevation-0"
           :headers="headers"
-          :items="userModule.asArray"
+          :items="users"
           :search="filtro.nome"
           :footer-props="footer"
           no-data-text="Nenhum registro encontrado"
