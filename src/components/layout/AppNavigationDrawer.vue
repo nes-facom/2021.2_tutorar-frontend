@@ -7,8 +7,8 @@ import Auth from "@/store/modules/auth"
 
 @Component({ name: "NavigationDrawer" })
 export default class NavigationDrawer extends Vue {
-  authModule = getModule(Auth, this.$store)
   themeModule = getModule(Theme, this.$store)
+  authModule = getModule(Auth, this.$store)
 
   get currentRoute() {
     return this.$route.path
@@ -23,15 +23,13 @@ export default class NavigationDrawer extends Vue {
   }
 
   get rotas(): DrawerRoute[] {
-    let routes: DrawerRoute[] = []
-
     const { user } = this.authModule
 
-    if (user?.role === "tutor") routes = [...routes, ...rotasTutorando]
-    if (user?.role === "professor") routes = [...routes, ...rotasProfessor]
-    if (user?.role === "monitor") routes = [...routes, ...rotasMonitor]
+    if (user?.role === "tutor") return rotasTutorando
+    if (user?.role === "monitor") return rotasMonitor
+    if (user?.role === "professor") return rotasProfessor
 
-    return routes
+    return []
   }
 }
 </script>

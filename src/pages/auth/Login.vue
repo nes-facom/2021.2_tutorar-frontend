@@ -1,7 +1,7 @@
 <script lang="ts">
 import Auth from "@/store/modules/auth"
 import { getModule } from "vuex-module-decorators"
-import { Component, Vue } from "vue-property-decorator"
+import { Component, Ref, Vue } from "vue-property-decorator"
 import AppBarCadastro from "@/components/auth/AppBarCadastro.vue"
 import getHomeRoute from "@/router/utils/get-home-route"
 
@@ -12,8 +12,10 @@ import getHomeRoute from "@/router/utils/get-home-route"
 export default class PageLogin extends Vue {
   private authModule = getModule(Auth, this.$store)
 
-  username = ""
-  password = ""
+  @Ref("loginForm") _loginFormRef!: HTMLFormElement
+
+  username = "preto@gmail.com"
+  password = "1234567"
 
   isFormValid = false
   showSenha = false
@@ -27,19 +29,14 @@ export default class PageLogin extends Vue {
     (v: string) => v.length >= 6 || "Senha deve ter no mínimo 6 caracteres"
   ]
 
-  $refs!: {
-    loginForm: HTMLFormElement
-  }
-
   canSendLoginRequest() {
     return this.isFormValid || this.loginAttempts === 0
   }
 
   sendLoginRequest() {
-    if (!this.isFormValid) {
-      this.$refs.loginForm.validate()
-      return
-    }
+    this._loginFormRef.validate()
+
+    if (!this.isFormValid) return
 
     this.loginAttempts++
 
@@ -53,15 +50,14 @@ export default class PageLogin extends Vue {
 <template>
   <div class="page-container">
     <AppBarCadastro />
+
     <v-container fill-height>
       <v-row align="center" justify="end">
         <v-col cols="4">
           <v-img contain src="@/assets/imagens/Aluno_VideoAula.svg" alt="img" />
         </v-col>
         <v-col cols="4">
-          <h1 class="display-1 mb-2 font-weight-bold">
-            Abra sua sala de aula para
-          </h1>
+          <h1 class="display-1 mb-2 font-weight-bold">Abra sua sala de aula para</h1>
           <h1 class="display-3 font-weight-bold">
             <span class="green--text">I</span>
             <span class="blue--text">N</span>
@@ -106,9 +102,7 @@ export default class PageLogin extends Vue {
               <v-col>
                 <v-divider class="my-5" />
               </v-col>
-              <div class="my-5" style="color: #34A853">
-                ou
-              </div>
+              <div class="my-5" style="color: #34A853">ou</div>
               <v-col>
                 <v-divider class="my-5" />
               </v-col>
@@ -145,9 +139,7 @@ export default class PageLogin extends Vue {
             </v-card-actions>
 
             <div class="text-center mt-5" @click="$router.push({ path: '/login' })">
-              <span class="link">
-                Esqueceu sua senha ?
-              </span>
+              <span class="link">Esqueceu sua senha ?</span>
             </div>
           </v-card>
         </v-col>

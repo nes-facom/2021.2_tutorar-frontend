@@ -9,8 +9,7 @@ export enum AUTH_ROUTES {
 
 export enum COMMON_ROUTES {
   MEU_PERFIL = "/meu-perfil",
-  AGENDA = "/agenda",
-  MINHAS_HABILIDAES = "/minhas-habilidades"
+  AGENDA = "/agenda"
 }
 
 const rotas: RouteConfig[] = [
@@ -57,10 +56,6 @@ const rotas: RouteConfig[] = [
   {
     path: COMMON_ROUTES.AGENDA,
     component: () => import(/* webpackChunkName: "PageAgenda" */ "@/pages/agenda/Agenda.vue")
-  },
-  {
-    path: COMMON_ROUTES.MINHAS_HABILIDAES,
-    component: () => import(/* webpackChunkName: "PageHabilidades" */ "@/pages/auth/SelecaoHabilidades.vue")
   }
 ]
 

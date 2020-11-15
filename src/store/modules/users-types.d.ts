@@ -1,25 +1,23 @@
-export interface RawUser {
+import { NIVEL_LECIONAMENTO } from "@/utils/constants/nivel-lecionamento"
+import { Pessoa } from "./auth-types"
+
+export interface RawUser extends Pessoa {
   _id: string
-  nome: string
-  email: string
-  dataNascimento: string
-  cpf: string
-  genero: "M" | "F"
-  isAdmin: boolean
-  celular: string
+  __v: number
+
   tutor?: RawTutor
   professor?: RawProfessor
-  __v: number
 }
 
 export interface RawTutor {
   universidade: string
   semestreAtual: number
   cursoLicensiatura: string
+  habilidades: string[]
 }
 
 export interface RawProfessor {
-  formacaoAcademica: string
-  nivelLecionamento: string
+  formacaoAcademica: FORMACAO_ACADEMICA
+  nivelLecionamento: NIVEL_LECIONAMENTO
   tempoLecionamento: string
 }

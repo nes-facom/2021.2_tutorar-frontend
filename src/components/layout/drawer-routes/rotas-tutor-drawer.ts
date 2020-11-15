@@ -1,4 +1,5 @@
 import { COMMON_ROUTES } from "@/router/rotas/comun"
+import { TUTOR_ROUTES } from "@/router/rotas/tutor"
 import { DrawerRoute } from "."
 
 const rotas: DrawerRoute[] = [
@@ -13,14 +14,9 @@ const rotas: DrawerRoute[] = [
     to: COMMON_ROUTES.AGENDA
   },
   {
-    title: "Mensagens",
-    icon: "mdi-android-messages",
-    to: "/professor/mensagens"
-  },
-  {
-    title: "Procurar Tutoria",
-    icon: "mdi-google-classroom",
-    to: "/professor/procurar-tutoria"
+    title: "Minhas Habilidades",
+    icon: "mdi-account-details",
+    to: TUTOR_ROUTES.MINHAS_HABILIDAES
   },
   {
     title: "Dev",

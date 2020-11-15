@@ -93,6 +93,8 @@ export default class PageListagemUsuarios extends Vue {
           </div>
         </div>
 
+        <v-divider class="mt-2" />
+
         <v-data-table
           class="elevation-0"
           :headers="headers"

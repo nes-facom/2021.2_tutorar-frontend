@@ -1,4 +1,4 @@
-import loginService, { ExpectedResponseData as LoginResponse } from "@/api/auth/login"
+import loginService, { LoginResponse } from "@/api/auth/login"
 import { Module, VuexModule, Mutation, Action } from "vuex-module-decorators"
 import { LogoutOptions, User } from "./auth-types"
 

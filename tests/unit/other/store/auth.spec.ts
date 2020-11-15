@@ -1,8 +1,7 @@
 import store from "@/store"
-import router from "@/router"
 import AuthModule from "@/store/modules/auth"
 import { getModule } from "vuex-module-decorators"
-import loginService, { ExpectedResponseData as LoginRequestData } from "@/api/auth/login"
+import loginService, { LoginResponse } from "@/api/auth/login"
 import { FORMACAO_ACADEMICA } from "@/utils/constants/formacao-academica"
 import { NIVEL_LECIONAMENTO } from "@/utils/constants/nivel-lecionamento"
 
@@ -31,9 +30,10 @@ describe("Vuex Auth Module", () => {
   let authModule = getModule(AuthModule, store)
 
   describe("@Mutation AUTH_SUCCESS:", () => {
-    const { user, token }: LoginRequestData = {
+    const { user, token }: LoginResponse = {
       user: {
         _id: "2",
+        _v: "1",
 
         role: "professor",
 
@@ -44,7 +44,6 @@ describe("Vuex Auth Module", () => {
         dataNascimento: "23/10/1996",
         genero: "M",
 
-        dataInicioEnsino: "12/04/2015",
         formacaoAcademica: FORMACAO_ACADEMICA.BACHARELADO,
         nivelLecionamento: NIVEL_LECIONAMENTO.EDUCACAO_INFANTIL,
 

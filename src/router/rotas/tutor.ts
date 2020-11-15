@@ -1,6 +1,15 @@
 import { RouteConfig, RouteMeta } from "@/router"
 
-const rotas: RouteConfig[] = []
+export enum TUTOR_ROUTES {
+  MINHAS_HABILIDAES = "/minhas-habilidades"
+}
+
+const rotas: RouteConfig[] = [
+  {
+    path: TUTOR_ROUTES.MINHAS_HABILIDAES,
+    component: () => import(/* webpackChunkName: "PageHabilidades" */ "@/pages/tutor/SelecaoHabilidades.vue")
+  }
+]
 
 rotas.map(route => {
   if (!route.meta) route.meta = {}

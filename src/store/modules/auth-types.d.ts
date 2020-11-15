@@ -7,6 +7,7 @@ interface LogoutOptions {
 
 interface Pessoa {
   _id: string
+  _v: string
 
   nome: string
   email: string
@@ -18,17 +19,24 @@ interface Pessoa {
 }
 
 export interface Professor extends Pessoa {
-  dataInicioEnsino: string
+  role: "professor"
+  // dataInicioEnsino: string
   formacaoAcademica: FORMACAO_ACADEMICA
   nivelLecionamento: NIVEL_LECIONAMENTO
 }
 
 export interface Tutor extends Pessoa {
+  role: "tutor"
+  habilidades: string[]
   universidade: string
   semestreAtual: number
   cursoLicensiatura: string
 }
 
-export type User = (Professor | Tutor) & {
-  role: "professor" | "tutor" | "monitor"
+export interface Monitor extends Pessoa {
+  role: "monitor"
+}
+
+export type User = (Professor | Tutor | Monitor) & {
+  isAdmin: boolean
 }
