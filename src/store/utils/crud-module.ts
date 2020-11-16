@@ -43,7 +43,7 @@ export default class CrudModule<Item extends Identifiable> extends VuexModule {
   }
 
   @Mutation
-  UPDATE(payload: { id: number; item: Item }) {
+  UPDATE(payload: { id: string; item: Item }) {
     const { id, item: newItem } = payload
     let item = this.byId[id]
 

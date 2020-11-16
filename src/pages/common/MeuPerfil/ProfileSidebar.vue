@@ -1,7 +1,9 @@
 <script lang="ts">
+import fetchHabilidades, { Habilidade } from "@/api/habilidades/get-all"
 import Auth from "@/store/modules/auth"
 import { getModule } from "vuex-module-decorators"
 import { Vue, Component } from "vue-property-decorator"
+import { isTutor } from "@/store/modules/tutor-module"
 
 @Component({
   name: "ProfileSidebar"
@@ -11,13 +13,22 @@ export default class ProfileSidebar extends Vue {
 
   user = this.authModule.user
 
-  chips = [
-    { name: "Google", color: "primary" },
-    { name: "Yahoo", color: "deep-purple" },
-    { name: "Gmail", color: "primary" },
-    { name: "Canvas", color: "error" },
-    { name: "Java", color: "orange" }
-  ]
+  habilidades: Habilidade[] = []
+
+  get habilidadesUsuario() {
+    const { user } = this.authModule
+    if (!user || !isTutor(user)) return []
+
+    return this.habilidades.filter(h => user.habilidades.findIndex(id => id === h._id) !== -1)
+  }
+
+  cores = ["blue", "green", "orange", "deep-orange", "deep-purple"]
+
+  mounted() {
+    fetchHabilidades().then(habilidades => {
+      this.habilidades = habilidades
+    })
+  }
 }
 </script>
 
@@ -38,11 +49,13 @@ export default class ProfileSidebar extends Vue {
 
       <p class="font-weight-light grey--text" v-text="user.descricao" />
 
-      <v-divider class="mx-4" />
+      <template v-if="habilidadesUsuario.length > 0">
+        <v-divider class="ma-4" />
 
-      <v-chip-group class="align-center" column>
-        <v-chip v-for="chip in chips" :color="chip.color" text-color="white" :key="chip.name">{{ chip.name }}</v-chip>
-      </v-chip-group>
+        <v-chip class="ma-1" v-for="habilidade in habilidadesUsuario" :key="habilidade._id" filter outlined>
+          <span v-text="habilidade.nome" />
+        </v-chip>
+      </template>
     </v-card-text>
   </div>
 </template>

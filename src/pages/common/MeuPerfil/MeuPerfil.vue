@@ -36,41 +36,45 @@ export default class MeuPerfil extends Vue {
 </script>
 
 <template>
-  <v-card class="pa-0">
-    <v-row align="center" justify="center" no-gutters>
-      <v-col cols="3" class="pa-0" style="border-right: 1px solid #e3e3e3;">
-        <ProfileSidebar />
-      </v-col>
+  <v-row align="center" justify="center" no-gutters>
+    <v-col cols="12" md="8">
+      <v-card class="pa-0">
+        <v-row align="center" justify="center" no-gutters>
+          <v-col cols="3" class="pa-0" style="border-right: 1px solid #e3e3e3;">
+            <ProfileSidebar />
+          </v-col>
 
-      <v-col cols="9" align-self="start">
-        <v-tabs v-model="tab">
-          <v-tab>Dados Pessoais</v-tab>
-          <v-tab>Graduação</v-tab>
-          <v-tab>Minha Conta</v-tab>
-          <v-spacer />
-          <v-btn :color="isEditing ? 'red' : 'grey'" x-large text @click="toggleEditMode">
-            <span>{{ isEditing ? "Cancelar Edição" : "Editar" }}</span>
-            <v-icon class="ml-3" v-text="isEditing ? 'mdi-pencil-off-outline' : 'mdi-pencil'" />
-          </v-btn>
-        </v-tabs>
+          <v-col cols="9" align-self="start">
+            <v-tabs v-model="tab">
+              <v-tab>Dados Pessoais</v-tab>
+              <v-tab>Graduação</v-tab>
+              <v-tab>Minha Conta</v-tab>
+              <v-spacer />
+              <v-btn :color="isEditing ? 'red' : 'grey'" x-large text @click="toggleEditMode">
+                <span>{{ isEditing ? "Cancelar Edição" : "Editar" }}</span>
+                <v-icon class="ml-3" v-text="isEditing ? 'mdi-pencil-off-outline' : 'mdi-pencil'" />
+              </v-btn>
+            </v-tabs>
 
-        <v-tabs-items v-model="tab">
-          <v-tab-item>
-            <DadosPessoais :isEditing="isEditing" :user="user" />
-          </v-tab-item>
+            <v-tabs-items v-model="tab">
+              <v-tab-item>
+                <DadosPessoais :isEditing="isEditing" :user="user" />
+              </v-tab-item>
 
-          <v-tab-item>
-            <GraduacaoProfessor v-if="user.role == 'professor'" :isEditing="isEditing" :user="user" />
-            <GraduacaoTutor v-if="user.role == 'tutor'" :isEditing="isEditing" :user="user" />
-          </v-tab-item>
+              <v-tab-item>
+                <GraduacaoProfessor v-if="user.role == 'professor'" :isEditing="isEditing" :user="user" />
+                <GraduacaoTutor v-if="user.role == 'tutor'" :isEditing="isEditing" :user="user" />
+              </v-tab-item>
 
-          <v-tab-item>
-            <DadosUsuario :isEditing="isEditing" :user="user" />
-          </v-tab-item>
-        </v-tabs-items>
-      </v-col>
-    </v-row>
-  </v-card>
+              <v-tab-item>
+                <DadosUsuario :isEditing="isEditing" :user="user" />
+              </v-tab-item>
+            </v-tabs-items>
+          </v-col>
+        </v-row>
+      </v-card>
+    </v-col>
+  </v-row>
 </template>
 
 <style scoped>

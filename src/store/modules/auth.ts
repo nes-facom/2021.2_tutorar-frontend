@@ -1,6 +1,9 @@
 import loginService, { LoginResponse } from "@/api/auth/login"
-import { Module, VuexModule, Mutation, Action } from "vuex-module-decorators"
-import { LogoutOptions, User } from "./auth-types"
+import { Module, VuexModule, Mutation, Action, getModule } from "vuex-module-decorators"
+import { LogoutPayload, UpdateUserPayload, User } from "./auth-types"
+import TutorModule, { isProfessor, isTutor } from "./tutor-module"
+import { UpdateTutorPayload } from "@/store/modules/tutor-module"
+import store from ".."
 
 @Module({
   namespaced: true,
@@ -32,6 +35,17 @@ export default class Auth extends VuexModule {
   }
 
   /**
+   * Atualiza o usuário e o seu JWT
+   */
+  @Mutation
+  AUTH_UPDATE(payload: { user: User; token?: string }) {
+    const { user, token } = payload
+
+    if (token) this.token = token
+    this.user = user
+  }
+
+  /**
    * Chamado quando o usuário realiza logout:
    */
   @Mutation
@@ -45,7 +59,7 @@ export default class Auth extends VuexModule {
   @Action({ rawError: true })
   async login({ username, password }: { username: string; password: string }) {
     return loginService(username, password).then(response => {
-      this.context.commit("AUTH_SUCCESS", response)
+      this.AUTH_SUCCESS(response)
     })
   }
 
@@ -59,11 +73,30 @@ export default class Auth extends VuexModule {
    * @param payload.clearState - defaults to true
    */
   @Action({ rawError: true })
-  logout(payload?: LogoutOptions) {
+  logout(payload?: LogoutPayload) {
     const options = { ...{ clearState: true }, ...payload }
 
     if (options?.clearState) this.context.dispatch("RESET_VUEX_STATE", null, { root: true })
 
-    this.context.commit("AUTH_LOGOUT")
+    this.AUTH_LOGOUT()
+  }
+
+  @Action({ rawError: true })
+  updateUser(payload: UpdateUserPayload) {
+    const { user, id, foto } = payload
+
+    if (isTutor(user)) {
+      const payload: UpdateTutorPayload = {
+        data: { tutor: user, id, foto },
+        options: { updateRecord: false }
+      }
+      const tutorModule = getModule(TutorModule, store)
+
+      tutorModule.updateTutor(payload).then(updatedUser => {
+        this.AUTH_UPDATE({ user: updatedUser })
+      })
+    }
+
+    if (isProfessor(user)) console.log("A implementar update de usuario professor")
   }
 }

@@ -3,28 +3,6 @@ import handleAxiosError from "@/api/axios-error-handler"
 import { Professor, Tutor, User } from "@/store/modules/auth-types"
 import { RawUser } from "@/store/modules/users-types"
 
-const userMock: User = {
-  _id: "5fb07bd6951cf60186e4df2d",
-  _v: "a",
-
-  role: "tutor",
-
-  cpf: "03690208122",
-  nome: "Fulano Da Silva Sanches",
-  email: "fulano.silva@hotmail.com",
-  celular: "67998801996",
-  dataNascimento: "1996-10-23",
-  genero: "M",
-
-  universidade: "UFMS",
-  cursoLicensiatura: "batata",
-  semestreAtual: 7,
-
-  isAdmin: false,
-
-  habilidades: ["5fb002fbda264700ecec5677", "5fb002fbda264700ecec5694"]
-}
-
 export interface LoginResponse {
   user: User
   token: string
@@ -56,8 +34,6 @@ function normalizaUsuario(rawUser: RawUser): User {
  * @param password - A senha do usuario
  */
 export default (username: string, password: string): Promise<LoginResponse> => {
-  console.log("loggin IN", username, password)
-
   return new Promise((resolve, reject) => {
     axios()
       // .post("users/5fb07bd6951cf60186e4df2d", { username, password })

@@ -1,28 +1,24 @@
-import { Tutor } from "@/store/modules/auth-types"
 import handleAxiosError from "@/api/axios-error-handler"
 import axios from "@/api/axios-instance-creator"
+import { Tutor } from "@/store/modules/auth-types"
+import { DadosTutor, RawTutor } from "@/store/modules/users-types"
 
 interface RequestBody {
-  nome?: string
   cpf?: string
-  dataNascimento?: string
+  nome?: string
   genero?: "M" | "F"
   email?: string
   celular?: string
   password?: string
-  fotoPerfil?: string
-  isMonitor?: boolean
   isActive?: boolean
+  isMonitor?: boolean
+  fotoPerfil?: string
+  dataNascimento?: string
 
-  tutor?: {
-    universidade?: string
-    cursoLicensiatura?: string
-    semestreAtual?: number
-    habilidades?: string[]
-  }
+  tutor?: Partial<DadosTutor>
 }
 
-export default (id: string, tutor: Tutor): any => {
+export default (id: string, tutor: Tutor): Promise<RawTutor> => {
   const { universidade, cursoLicensiatura, semestreAtual, habilidades, ...copiaTutor } = tutor
   const body: RequestBody = { ...copiaTutor, tutor: { universidade, cursoLicensiatura, semestreAtual, habilidades } }
 
@@ -30,11 +26,9 @@ export default (id: string, tutor: Tutor): any => {
     axios()
       .put(`users/tutores/${id}`, body)
       .then(res => {
-        console.log(res.data)
         resolve(res.data)
       })
       .catch(error => {
-        console.log(error)
         const errorMessage = handleAxiosError(error, "Erro ao atualizar tutor")
         reject(errorMessage)
       })

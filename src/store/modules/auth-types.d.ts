@@ -1,8 +1,14 @@
 import { FORMACAO_ACADEMICA } from "@/utils/constants/formacao-academica"
 import { NIVEL_LECIONAMENTO } from "@/utils/constants/nivel-lecionamento"
 
-interface LogoutOptions {
+interface LogoutPayload {
   clearLocalStorage?: boolean
+}
+
+interface UpdateUserPayload {
+  id: string
+  user: User
+  foto?: File
 }
 
 interface Pessoa {

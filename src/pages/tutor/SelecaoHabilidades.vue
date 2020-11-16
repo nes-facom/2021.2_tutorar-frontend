@@ -1,10 +1,9 @@
 <script lang="ts">
 import fetchHabilidades, { CATEGORIAS, Habilidade } from "@/api/habilidades/get-all"
-import Auth from "@/store/modules/auth"
-import TutorModule, { isTutor } from "@/store/modules/tutor-module"
+import { isTutor } from "@/store/modules/tutor-module"
 import { Component, Vue } from "vue-property-decorator"
-import { use } from "vue/types/umd"
 import { getModule } from "vuex-module-decorators"
+import Auth from "@/store/modules/auth"
 
 interface Categoria {
   cor: string
@@ -19,14 +18,13 @@ const { GOOGLE, EDUCACAO, COMUNICACAO, ORGANIZACAO, PROGRAMACAO, EDICAO_DE_VIDEO
   name: "SelecaoHabilidades"
 })
 export default class SelecaoHabilidades extends Vue {
-  tutorModule = getModule(TutorModule, this.$store)
   authModule = getModule(Auth, this.$store)
 
-  categorias: Categoria[] = []
-
-  habilidadesSelecionadas: Habilidade[] = []
+  habilidades: Habilidade[] = []
 
   currentTab = 0
+
+  isLoading = false
 
   props: { [x: string]: { cor: string; icon: string } } = {
     [GOOGLE]: {
@@ -59,9 +57,6 @@ export default class SelecaoHabilidades extends Vue {
     }
   }
 
-  /**
-   * As habilidades que o usuário tem atualmente
-   */
   get habilidadesUsuario(): Habilidade[] {
     const { user } = this.authModule
     if (!user || !isTutor(user)) return []
@@ -82,24 +77,21 @@ export default class SelecaoHabilidades extends Vue {
    * Formata array de habilidades retornado pela api em um array
    * de categorias com suas respectivas habilidades para exibição
    */
-  formatarHabilidadesPorCategoria(habilidades: Habilidade[]): Categoria[] {
-    const categorias: Categoria[] = []
+  get categorias(): Categoria[] {
+    const val: Categoria[] = []
 
-    const nomesCategorias: CATEGORIAS[] = [...new Set(habilidades.map(item => item.categoria))]
+    const categorias: CATEGORIAS[] = [...new Set(this.habilidades.map(item => item.categoria))]
 
-    nomesCategorias.map(categoria => {
+    categorias.map(categoria => {
       const { cor, icon } = this.props[categoria]
-      const filtered = habilidades.filter(h => h.categoria === categoria)
-      categorias.push({ cor, icon, nome: categoria, habilidades: filtered })
+      const habilidades = this.habilidades.filter(h => h.categoria === categoria)
+      val.push({ cor, icon, nome: categoria, habilidades })
     })
 
-    return categorias
+    return val
   }
 
-  /**
-   * Envia request para adicionar essa habilidade ao usuario
-   */
-  async toggleHabilidade(habilidade: Habilidade) {
+  addHabilidade(habilidade: Habilidade) {
     const { user } = this.authModule
 
     if (!user || !isTutor(user) || user.habilidades.length >= 5) return
@@ -108,17 +100,36 @@ export default class SelecaoHabilidades extends Vue {
 
     tutor.habilidades.push(habilidade._id)
 
-    await this.tutorModule.updateTutor({ id: user._id, tutor })
+    this.authModule.updateUser({ id: user._id, user: tutor })
+  }
 
-    const idx = this.habilidadesSelecionadas.indexOf(habilidade)
+  removeHabilidade(habilidade: Habilidade) {
+    const { user } = this.authModule
 
-    idx === -1 ? this.habilidadesSelecionadas.push(habilidade) : this.habilidadesSelecionadas.splice(idx, 1)
+    if (!user || !isTutor(user) || user.habilidades.length === 0) return
+
+    const tutor = { ...user }
+
+    const idx = tutor.habilidades.indexOf(habilidade._id)
+    tutor.habilidades.splice(idx, 1)
+
+    this.authModule.updateUser({ id: user._id, user: tutor })
+  }
+
+  isSelected(habilidade: Habilidade): boolean {
+    return this.habilidadesUsuario.indexOf(habilidade) !== -1
   }
 
   mounted() {
-    fetchHabilidades().then(habilidades => {
-      this.categorias = this.formatarHabilidadesPorCategoria(habilidades)
-    })
+    this.isLoading = true
+
+    fetchHabilidades()
+      .then(habilidades => {
+        this.habilidades = habilidades
+      })
+      .finally(() => {
+        this.isLoading = false
+      })
   }
 }
 </script>
@@ -127,7 +138,7 @@ export default class SelecaoHabilidades extends Vue {
   <v-row no-gutters align="center">
     <v-col cols="12" md="10" lg="8" class="mx-auto">
       <v-card class="mb-2">
-        <v-card-title class="font-weight-bold pb-2">
+        <v-card-title class="font-weight-bold pb-2 grey--text text--darken-2">
           <v-icon left>mdi-account-details</v-icon>
           Minhas Habilidades
         </v-card-title>
@@ -141,47 +152,70 @@ export default class SelecaoHabilidades extends Vue {
           </span>
         </div>
 
-        <v-chip-group column multiple class="px-4 mb-4">
-          <div class="my-auto  mr-6">
-            <span class="subtitle grey--text text--darken-2">Habilidades Selecionadas:</span>
-          </div>
+        <template v-if="isLoading">
+          <v-row align="center" justify="center" class="text-center">
+            <v-col class="my-8">
+              <v-progress-circular indeterminate color="grey" class="mr-2" />
+              <span class="headline grey--text">Carregando</span>
+            </v-col>
+          </v-row>
+        </template>
 
-          <v-chip
-            active-class="primary--text"
-            v-for="habilidade in habilidadesUsuario"
-            :key="habilidade._id"
-            filter
-            outlined
-          >
-            <span v-text="habilidade.nome" />
-          </v-chip>
-        </v-chip-group>
+        <template v-else>
+          <v-chip-group column multiple class="px-4 mb-4">
+            <div class="my-auto  mr-6">
+              <span class="subtitle grey--text text--darken-2 mr-3">Habilidades Selecionadas:</span>
+              <span
+                :class="[
+                  'subtitle',
+                  'font-weight-bold',
+                  habilidadesUsuario.length === 5 ? 'green--text' : 'grey--text'
+                ]"
+                v-text="habilidadesUsuario.length"
+              />
+              <span> de </span>
+              <span class="subtitle font-weight-bold">5</span>
+            </div>
 
-        <!-- TABS HEADERS -->
-        <v-tabs v-model="currentTab" :color="Object.values(props)[currentTab].cor" centered icons-and-text>
-          <v-tab v-for="categoria in categorias" :key="categoria.nome">
-            <span v-text="categoria.nome" />
-            <v-icon v-text="categoria.icon" />
-          </v-tab>
-        </v-tabs>
+            <v-chip
+              v-for="habilidade in habilidadesUsuario"
+              :key="habilidade._id"
+              outlined
+              close
+              @click:close="removeHabilidade(habilidade)"
+            >
+              <span v-text="habilidade.nome" />
+            </v-chip>
+          </v-chip-group>
 
-        <!-- TABS CONTENT -->
-        <v-tabs-items v-model="currentTab">
-          <v-tab-item v-for="(categoria, idx) in categorias" :key="idx" class="pa-4">
-            <v-chip-group column multiple>
+          <v-divider></v-divider>
+
+          <!-- TABS HEADERS -->
+          <v-tabs v-model="currentTab" :color="Object.values(props)[currentTab].cor" centered icons-and-text fixed-tabs>
+            <v-tab v-for="categoria in categorias" :key="categoria.nome">
+              <span v-text="categoria.nome" />
+              <v-icon v-text="categoria.icon" />
+            </v-tab>
+          </v-tabs>
+
+          <!-- TABS CONTENT -->
+          <v-tabs-items v-model="currentTab">
+            <v-tab-item v-for="(categoria, i) in categorias" :key="i" class="pa-4">
               <v-chip
+                class="ma-2"
                 active-class="primary--text"
                 v-for="habilidade in categoria.habilidades"
                 :key="habilidade.nome"
+                :input-value="isSelected(habilidade)"
                 filter
                 outlined
-                @click="toggleHabilidade(habilidade)"
+                @click="isSelected(habilidade) ? removeHabilidade(habilidade) : addHabilidade(habilidade)"
               >
                 <span v-text="habilidade.nome" />
               </v-chip>
-            </v-chip-group>
-          </v-tab-item>
-        </v-tabs-items>
+            </v-tab-item>
+          </v-tabs-items>
+        </template>
       </v-card>
     </v-col>
   </v-row>

@@ -6,43 +6,59 @@ import Auth from "@/store/modules/auth"
 import { HOME_ROUTES } from "@/router/utils/get-home-route"
 import { COMMON_ROUTES } from "@/router/rotas/comun"
 
+interface UserMenuItem {
+  to: string
+  icon: string
+  text: string
+  path: string
+}
+
 @Component({ name: "AppBarUserMenu" })
 export default class AppBarUserMenu extends Vue {
   private authModule = getModule(Auth, this.$store)
 
   user = this.authModule.user
 
-  menuItems: { to: string; icon: string; text: string; path: string }[] = [
-    {
-      to: COMMON_ROUTES.MEU_PERFIL,
-      icon: "mdi-account",
-      text: "Minha conta",
-      path: "meu-perfil"
-    },
-    {
-      to: COMMON_ROUTES.AGENDA,
-      icon: "mdi-calendar",
-      text: "Agenda",
-      path: "agenda"
-    },
-    {
-      to: "/minhas-habilidades",
-      icon: "mdi-account-details",
-      text: "Habilidades",
-      path: "minhas-habilidades"
+  get menuItems(): UserMenuItem[] {
+    const menuItems: UserMenuItem[] = [
+      {
+        to: COMMON_ROUTES.MEU_PERFIL,
+        icon: "mdi-account",
+        text: "Minha conta",
+        path: "meu-perfil"
+      },
+      {
+        to: COMMON_ROUTES.AGENDA,
+        icon: "mdi-calendar",
+        text: "Agenda",
+        path: "agenda"
+      }
+    ]
+    if (this.user?.role === "tutor") {
+      menuItems.push({
+        to: "/minhas-habilidades",
+        icon: "mdi-account-details",
+        text: "Habilidades",
+        path: "minhas-habilidades"
+      })
     }
-  ]
+    return menuItems
+  }
 
   goToRoute(route: string) {
     if (this.$route.path !== route) this.$router.push(route)
   }
 
   logout() {
-    if (this.$route.path !== HOME_ROUTES.DEFAULT) this.$router.push(HOME_ROUTES.DEFAULT)
-
-    // Importante realizar logout depois de alterar a página para não quebrar a exibição
-    // da página atual que pode depender do usuário
-    this.authModule.logout()
+    if (this.$route.path !== HOME_ROUTES.DEFAULT) {
+      this.$router.push(HOME_ROUTES.DEFAULT).then(() => {
+        // Importante realizar logout depois de alterar a página para não quebrar a exibição
+        // da página atual que pode depender do usuário
+        this.authModule.logout()
+      })
+    } else {
+      this.authModule.logout()
+    }
   }
 }
 </script>
@@ -86,9 +102,7 @@ export default class AppBarUserMenu extends Vue {
         <v-spacer />
         <v-btn text @click="logout">
           <v-icon left>mdi-logout</v-icon>
-          <span>
-            sair
-          </span>
+          <span>sair</span>
         </v-btn>
       </v-card-actions>
     </v-card>
