@@ -2,10 +2,27 @@ import axios from "@/api/axios-instance-creator"
 import handleAxiosError from "@/api/axios-error-handler"
 import { Professor, Tutor, User } from "@/store/modules/auth-types"
 import { RawUser } from "@/store/modules/users-types"
+import { AxiosError } from "axios"
+
+export enum LOGIN_ERRORS {
+  INVALID_REQUEST = "Invalid request",
+  INVALID_PASSWORD = "Senha inválida",
+  EMAIL_NAO_ENCONTRADO = "Usuário não encontrado com este email"
+}
+
+export interface JWT {
+  type: string
+  value: string
+}
+
+interface LoginApiResponse {
+  user: RawUser
+  token: JWT
+}
 
 export interface LoginResponse {
   user: User
-  token: string
+  token: JWT
 }
 
 function normalizaUsuario(rawUser: RawUser): User {
@@ -21,6 +38,8 @@ function normalizaUsuario(rawUser: RawUser): User {
     return professor
   }
 
+  console.log(rawUser)
+
   /**
    * @TODO FIXME
    * não quero ir além pq estou esperando login do victor mas a ideia aqui é que o usuario so pode ter 3 roles
@@ -33,18 +52,26 @@ function normalizaUsuario(rawUser: RawUser): User {
  * @param username - O username do usuário
  * @param password - A senha do usuario
  */
-export default (username: string, password: string): Promise<LoginResponse> => {
+export default (email: string, password: string): Promise<LoginResponse> => {
   return new Promise((resolve, reject) => {
     axios()
-      // .post("users/5fb07bd6951cf60186e4df2d", { username, password })
-      .get("users/5fb07bd6951cf60186e4df2d")
+      .post("auth/login", { email, password })
       .then(response => {
-        const raw: RawUser = response.data
-        const user = normalizaUsuario(raw)
-        resolve({ user, token: "123" })
+        const { user: rawUser, token } = response.data as LoginApiResponse
+
+        const user = normalizaUsuario(rawUser)
+
+        resolve({ user, token })
       })
-      .catch(error => {
-        const errorMessage = handleAxiosError(error, "Erro do servidor ao realizar login")
+      .catch((error: AxiosError) => {
+        let errorMessage = handleAxiosError(error, "Erro do servidor ao realizar login")
+
+        if (error.response?.data?.statusCode === 400) errorMessage = LOGIN_ERRORS.INVALID_REQUEST
+        if (error.response?.data?.statusCode === 401) errorMessage = LOGIN_ERRORS.INVALID_PASSWORD
+        if (error.response?.data?.statusCode === 404) errorMessage = LOGIN_ERRORS.EMAIL_NAO_ENCONTRADO
+
+        console.log(error.response?.data)
+
         reject(errorMessage)
       })
   })

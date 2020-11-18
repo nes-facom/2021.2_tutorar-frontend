@@ -1,9 +1,11 @@
 <script lang="ts">
-import Auth from "@/store/modules/auth"
-import { getModule } from "vuex-module-decorators"
-import { Component, Ref, Vue } from "vue-property-decorator"
 import AppBarCadastro from "@/components/auth/AppBarCadastro.vue"
+import { Component, Ref, Vue } from "vue-property-decorator"
 import getHomeRoute from "@/router/utils/get-home-route"
+import { getModule } from "vuex-module-decorators"
+import { StringFieldRules } from "@/utils/form"
+import { LOGIN_ERRORS } from "@/api/auth/login"
+import Auth from "@/store/modules/auth"
 
 @Component({
   name: "PageLogin",
@@ -14,19 +16,24 @@ export default class PageLogin extends Vue {
 
   @Ref("loginForm") _loginFormRef!: HTMLFormElement
 
-  username = "preto@gmail.com"
-  password = "1234567"
+  email = "email_att@hotmai.com"
+  password = "senhaAtt"
 
-  isFormValid = false
   showSenha = false
+  isFormValid = false
+
+  emailErrorMessages: string[] = []
+  passwordErrorMessages: string[] = []
 
   loginAttempts = 0
 
-  usernameRules = [(v: string) => !!v || "E-mail é obrigatório", (v: string) => /.+@.+/.test(v) || "E-mail inválido"]
+  isWaitingResponse = false
 
-  passwordRules = [
-    (v: string) => !!v || "Senha é obrigatória",
-    (v: string) => v.length >= 6 || "Senha deve ter no mínimo 6 caracteres"
+  emailRules: StringFieldRules = [v => !!v || "E-mail é obrigatório", v => /.+@.+/.test(v || "") || "E-mail inválido"]
+
+  passwordRules: StringFieldRules = [
+    v => !!v || "Senha é obrigatória",
+    v => (!!v && v.length >= 6) || "Senha deve ter no mínimo 6 caracteres"
   ]
 
   canSendLoginRequest() {
@@ -34,15 +41,38 @@ export default class PageLogin extends Vue {
   }
 
   sendLoginRequest() {
+    const { INVALID_PASSWORD, EMAIL_NAO_ENCONTRADO } = LOGIN_ERRORS
+
     this._loginFormRef.validate()
 
     if (!this.isFormValid) return
 
     this.loginAttempts++
+    this.isWaitingResponse = true
 
-    const { username, password } = this
+    const { email, password } = this
 
-    this.authModule.login({ username, password }).then(() => this.$router.push(getHomeRoute()))
+    this.emailErrorMessages = []
+    this.passwordErrorMessages = []
+
+    this.authModule
+      .login({ email, password })
+      .then(() => this.$router.push(getHomeRoute()))
+      .catch((errorMessage: LOGIN_ERRORS) => {
+        const estaExibindoErroPassword = this.passwordErrorMessages.indexOf(INVALID_PASSWORD) !== -1
+        const estaExibindoErroEmail = this.emailErrorMessages.indexOf(EMAIL_NAO_ENCONTRADO) !== -1
+
+        if (errorMessage === INVALID_PASSWORD && !estaExibindoErroPassword) {
+          this.passwordErrorMessages.push(INVALID_PASSWORD)
+        }
+
+        if (errorMessage === EMAIL_NAO_ENCONTRADO && !estaExibindoErroEmail) {
+          this.emailErrorMessages.push(EMAIL_NAO_ENCONTRADO)
+        }
+      })
+      .finally(() => {
+        this.isWaitingResponse = false
+      })
   }
 }
 </script>
@@ -109,32 +139,44 @@ export default class PageLogin extends Vue {
             </v-row>
 
             <v-form v-model="isFormValid" ref="loginForm">
+              <!-- 
+                Erros de email e senha errada são retornados da API e setados
+                manualmente atraves de passwordErrorMessages e emailErrorMessages
+
+                Quando o usuario realiza um input, para alterar as credenciais
+                e tentar o login novamente eu limpo os erros
+               -->
               <v-text-field
                 outlined
                 append-icon="mdi-account"
                 placeholder="Email"
-                v-model="username"
-                :rules="usernameRules"
+                v-model="email"
+                :rules="emailRules"
+                :error-messages="emailErrorMessages"
+                @input="emailErrorMessages = []"
               />
 
               <v-text-field
+                outlined
                 append-icon="mdi-lock"
                 placeholder="Senha"
                 type="password"
                 v-model="password"
                 :rules="passwordRules"
-                outlined
+                :error-messages="passwordErrorMessages"
+                @input="passwordErrorMessages = []"
               />
             </v-form>
 
             <v-card-actions class="pa-0 mx-0 mt-0 mb-3 justify-center">
               <v-btn
                 @click="sendLoginRequest"
-                :disabled="!canSendLoginRequest"
+                :disabled="!canSendLoginRequest || isWaitingResponse"
+                :loading="isWaitingResponse"
                 color="blue lighten-1"
                 class="white--text px-4 elevation-2"
               >
-                Realizar Login
+                <span>Realizar Login</span>
               </v-btn>
             </v-card-actions>
 

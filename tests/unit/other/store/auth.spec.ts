@@ -49,7 +49,10 @@ describe("Vuex Auth Module", () => {
 
         isAdmin: false
       },
-      token: "eyJhbGciOiJIUzI1NiVCJ9.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV"
+      token: {
+        type: "bearer",
+        value: "eyJhbGciOiJIUzI1NiVCJ9.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV"
+      }
     }
 
     beforeAll(() => {
@@ -102,7 +105,7 @@ describe("Vuex Auth Module", () => {
   })
 
   describe("@Action login:", () => {
-    const username = "dummy_username"
+    const email = "dummy_username"
     const password = "dummy_password"
 
     beforeEach(() => {
@@ -110,7 +113,7 @@ describe("Vuex Auth Module", () => {
     })
 
     it("Should fire the loginService with the provided arguments", async () => {
-      await authModule.login({ username, password })
+      await authModule.login({ email, password })
 
       expect(loginService).toHaveBeenLastCalledWith("dummy_username", "dummy_password")
     })

@@ -1,4 +1,4 @@
-import loginService, { LoginResponse } from "@/api/auth/login"
+import loginService, { LoginResponse, JWT } from "@/api/auth/login"
 import { Module, VuexModule, Mutation, Action, getModule } from "vuex-module-decorators"
 import { LogoutPayload, UpdateUserPayload, User } from "./auth-types"
 import TutorModule, { isProfessor, isTutor } from "./tutor-module"
@@ -10,7 +10,7 @@ import store from ".."
   name: "auth"
 })
 export default class Auth extends VuexModule {
-  token: string | null = null
+  token: JWT | null = null
 
   user: User | null = null
 
@@ -28,7 +28,7 @@ export default class Auth extends VuexModule {
   AUTH_SUCCESS(payload: LoginResponse) {
     const { token, user } = payload
 
-    localStorage.setItem("api_token", token)
+    localStorage.setItem("api_token", token.value)
 
     this.user = user
     this.token = token
@@ -38,10 +38,13 @@ export default class Auth extends VuexModule {
    * Atualiza o usuário e o seu JWT
    */
   @Mutation
-  AUTH_UPDATE(payload: { user: User; token?: string }) {
+  AUTH_UPDATE(payload: { user: User; token?: JWT }) {
     const { user, token } = payload
 
-    if (token) this.token = token
+    if (token) {
+      localStorage.setItem("api_token", token.value)
+      this.token = token
+    }
     this.user = user
   }
 
@@ -57,8 +60,8 @@ export default class Auth extends VuexModule {
   }
 
   @Action({ rawError: true })
-  async login({ username, password }: { username: string; password: string }) {
-    return loginService(username, password).then(response => {
+  async login({ email, password }: { email: string; password: string }) {
+    return loginService(email, password).then(response => {
       this.AUTH_SUCCESS(response)
     })
   }

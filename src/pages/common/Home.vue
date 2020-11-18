@@ -17,6 +17,8 @@ export default class PageHome extends Vue {
       <v-col>
         <v-btn v-if="!authModule.isLoggedIn" @click="$router.push({ path: '/login' })">ir pra login</v-btn>
         <div v-else>Olá fulano !</div>
+
+        {{ authModule.user }}
       </v-col>
     </v-row>
   </v-container>
