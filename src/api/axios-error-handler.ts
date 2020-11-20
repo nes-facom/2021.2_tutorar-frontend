@@ -1,20 +1,25 @@
 import { AxiosError } from "axios"
 
+export interface ApiErrorResponse {
+  statusCode: number
+  message: string
+  error: string
+}
+
 const isAxiosError = (error: Error): error is AxiosError => {
   return (error as AxiosError).isAxiosError === true
 }
 
+const isApiError = (error: AxiosError): boolean => {
+  const data = error.response?.data
+  return data && data.statusCode !== undefined && data.message !== undefined && data.error !== undefined
+}
+
 /**
- * A implementar, esperando padronização de erros do back
- *
- * @param error - erro de uma axios request
- * @param message - mensagem de erro a retornar caso o erro não contenha uma
+ * Retorna os dados de erro da API, caso não seja um axios error
+ * ou não seja um erro padronizado pela api da throw nele
  */
-export default (error: Error, message = "Erro ao se conectar com o servidor"): string => {
-  // Como é um error handler, é sempre bom verificar o tipo do erro
-  if (!isAxiosError(error)) return message
-
-  if (error.response?.data?.error) message = error.response.data.error
-
-  return message
+export default (error: Error): ApiErrorResponse => {
+  if (!isAxiosError(error) || !isApiError(error)) throw error
+  return error.response?.data
 }

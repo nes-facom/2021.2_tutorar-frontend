@@ -10,8 +10,8 @@ interface Config {
  * @param config.minYear - ano minimo permitido
  * @param config.maxYear - ano maximo permitido
  */
-export default (data: string, config?: Config): boolean => {
-  if (!data) return false
+export default (data: string, config?: Config): true | string => {
+  if (!data) return "Campo Obrigatório"
 
   const cfgPadrao = {
     separator: "/",
@@ -26,9 +26,9 @@ export default (data: string, config?: Config): boolean => {
   const mes = x[1]
   const ano = x[2]
 
-  if (minYear && Number(ano) < minYear) return false
+  if (minYear && Number(ano) < minYear) return `Ano deve ser superior a ${minYear}`
 
-  if (maxYear && Number(ano) > maxYear) return false
+  if (maxYear && Number(ano) > maxYear) return `Ano deve ser inferior a ${maxYear}`
 
-  return !Number.isNaN(Date.parse(`${mes}/${dia}/${ano}`))
+  return !Number.isNaN(Date.parse(`${mes}/${dia}/${ano}`)) || "Data inválida"
 }

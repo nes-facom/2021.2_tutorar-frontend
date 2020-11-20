@@ -60,8 +60,8 @@ export default class TutorModule extends CrudModule<Tutor> {
           if (options.updateRecord) this.UPDATE({ id: tutor._id, item: tutor })
           resolve(tutor)
         })
-        .catch(errorMessage => {
-          reject(errorMessage)
+        .catch(apiError => {
+          reject(apiError)
         })
     })
   }

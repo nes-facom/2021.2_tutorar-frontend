@@ -93,9 +93,11 @@ export default class Auth extends VuexModule {
         data: { tutor: user, id, foto },
         options: { updateRecord: false }
       }
+
       const tutorModule = getModule(TutorModule, store)
 
-      tutorModule.updateTutor(payload).then(updatedUser => {
+      tutorModule.updateTutor(payload).then(updatedTutor => {
+        const updatedUser = { ...updatedTutor, isAdmin: user.isAdmin, isMonitor: user.isMonitor }
         this.AUTH_UPDATE({ user: updatedUser })
       })
     }

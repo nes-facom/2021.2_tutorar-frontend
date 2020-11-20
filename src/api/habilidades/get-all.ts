@@ -27,8 +27,8 @@ export default (): Promise<Habilidade[]> => {
         resolve(habilidades)
       })
       .catch(err => {
-        const errorMessage = handleAxiosError(err, "Erro ao buscar habilidades")
-        reject(errorMessage)
+        const apiError = handleAxiosError(err)
+        reject(apiError)
       })
   })
 }

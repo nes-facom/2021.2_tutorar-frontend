@@ -11,13 +11,17 @@ interface DadosTutor {
 interface DadosProfessor {
   formacaoAcademica: FORMACAO_ACADEMICA
   nivelLecionamento: NIVEL_LECIONAMENTO
-  tempoLecionamento: string
+  inicioLecionamento: string
 }
 
 /**
  * Raw são os formatos dos dados como a api os retorna
  */
 export interface RawUser extends Pessoa {
+  isActive: boolean
+  isAdmin: boolean
+  isMonitor: boolean
+
   tutor?: DadosTutor
   professor?: DadosProfessor
 }

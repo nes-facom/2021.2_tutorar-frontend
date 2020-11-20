@@ -16,7 +16,7 @@ rotas.map(route => {
 
   const defaultMeta: RouteMeta = {
     requireLogin: true,
-    requireRole: "tutorando"
+    requireRole: "tutor"
   }
 
   route.meta = { ...route.meta, ...defaultMeta }

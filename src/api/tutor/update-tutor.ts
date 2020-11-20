@@ -29,8 +29,8 @@ export default (id: string, tutor: Tutor): Promise<RawTutor> => {
         resolve(res.data)
       })
       .catch(error => {
-        const errorMessage = handleAxiosError(error, "Erro ao atualizar tutor")
-        reject(errorMessage)
+        const apiError = handleAxiosError(error)
+        reject(apiError)
       })
   })
 }

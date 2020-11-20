@@ -13,6 +13,7 @@ import FotoDropZone from "@/components/inputs/FotoDropZone.vue"
 
 import { NIVEL_LECIONAMENTO } from "@/utils/constants/nivel-lecionamento"
 import { FORMACAO_ACADEMICA } from "@/utils/constants/formacao-academica"
+import isValidDdMmYyyy from "@/utils/form/is-valid-dd-mm-yyyy"
 
 @Component({
   name: "CadastroProfessor",
@@ -46,7 +47,7 @@ export default class CadastroProfessor extends Vue {
     // Passo 1
     formacao: "",
     nivel: "",
-    tempoEnsino: "",
+    inicioLecionamento: "",
 
     // Passo 2
     senha: "",
@@ -69,9 +70,7 @@ export default class CadastroProfessor extends Vue {
       NIVEL_LECIONAMENTO.ENSINO_SUPERIOR,
       NIVEL_LECIONAMENTO.ENSINO_FUNDAMENTAL,
       NIVEL_LECIONAMENTO.EDUCACAO_INFANTIL
-    ],
-
-    tempoEnsino: ["menos de 1 ano", "entre 1 a 5 anos", "entre 5 a 10 anos", "mais de 10 anos"]
+    ]
   }
 
   /**
@@ -79,7 +78,11 @@ export default class CadastroProfessor extends Vue {
    * na mão ou ambos, como as desse form é simples fiz na mão.
    */
   rules: { [x: string]: StringFieldRules } = {
-    campoObrigatorio: [v => !!v || "Campo Obrigatório"]
+    campoObrigatorio: [v => !!v || "Campo Obrigatório"],
+    inicioLecionamento: [
+      v => !!v || "Campo Obrigatório",
+      v => (!!v && isValidDdMmYyyy(v, { maxYear: new Date().getFullYear() })) || "Data inválida"
+    ]
   }
 
   submit() {
@@ -140,13 +143,16 @@ export default class CadastroProfessor extends Vue {
                     outlined
                   />
 
-                  <v-select
-                    v-model="professor.tempoEnsino"
-                    :rules="rules.tempoEnsino"
-                    :items="opcoes.tempoEnsino"
-                    placeholder="Quanto tempo você atua na docencia"
+                  <v-text-field
+                    v-model="professor.inicioLecionamento"
+                    v-mask="'##/##/####'"
+                    :rules="rules.inicioLecionamento"
+                    placeholder="Quando começou a lecionar ?"
+                    append-icon="mdi-calendar"
+                    hint="Não precisamos de uma data exata, uma estimativa basta !"
                     outlined
                   />
+
                   <FormularioSenha v-model="professor.senha" />
                 </v-form>
               </v-window-item>

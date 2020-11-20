@@ -26,6 +26,8 @@ export default class SelecaoHabilidades extends Vue {
 
   isLoading = false
 
+  failedToLoad = false
+
   props: { [x: string]: { cor: string; icon: string } } = {
     [GOOGLE]: {
       cor: "blue",
@@ -127,6 +129,9 @@ export default class SelecaoHabilidades extends Vue {
       .then(habilidades => {
         this.habilidades = habilidades
       })
+      .catch(() => {
+        this.failedToLoad = true
+      })
       .finally(() => {
         this.isLoading = false
       })
@@ -156,7 +161,14 @@ export default class SelecaoHabilidades extends Vue {
           <v-row align="center" justify="center" class="text-center">
             <v-col class="my-8">
               <v-progress-circular indeterminate color="grey" class="mr-2" />
-              <span class="headline grey--text">Carregando</span>
+            </v-col>
+          </v-row>
+        </template>
+
+        <template v-else-if="failedToLoad">
+          <v-row align="center" justify="center" class="text-center">
+            <v-col class="my-8">
+              <v-card-title class="mx-auto">Erro ao carregar habilidades</v-card-title>
             </v-col>
           </v-row>
         </template>

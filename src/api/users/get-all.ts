@@ -25,8 +25,8 @@ export default (): Promise<User[]> => {
         resolve(formatedUsers)
       })
       .catch(err => {
-        const errorMessage = handleAxiosError(err, "Erro ao buscar usuarios")
-        reject(errorMessage)
+        const apiError = handleAxiosError(err)
+        reject(apiError)
       })
   })
 }

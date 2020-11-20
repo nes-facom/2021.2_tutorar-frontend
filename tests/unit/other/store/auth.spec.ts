@@ -33,7 +33,7 @@ describe("Vuex Auth Module", () => {
     const { user, token }: LoginResponse = {
       user: {
         _id: "2",
-        _v: "1",
+        __v: "1",
 
         role: "professor",
 
@@ -44,10 +44,12 @@ describe("Vuex Auth Module", () => {
         dataNascimento: "23/10/1996",
         genero: "M",
 
+        inicioLecionamento: "2002-12-09",
         formacaoAcademica: FORMACAO_ACADEMICA.BACHARELADO,
         nivelLecionamento: NIVEL_LECIONAMENTO.EDUCACAO_INFANTIL,
 
-        isAdmin: false
+        isAdmin: false,
+        isMonitor: false
       },
       token: {
         type: "bearer",

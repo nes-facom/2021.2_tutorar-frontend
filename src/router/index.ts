@@ -8,7 +8,6 @@ import { getModule } from "vuex-module-decorators"
 import Auth from "@/store/modules/auth"
 import { RouteConfigSingleView } from "vue-router/types/router"
 
-import fetchResourcesPreenptively, { resources } from "@/router/utils/fetchResourcesPreenptively"
 import { AUTH_ROUTES } from "./rotas/comun"
 import getHomeRoute from "./utils/get-home-route"
 import { ERROR_ROUTES } from "./rotas/error"
@@ -18,9 +17,6 @@ export interface RouteMeta {
   requireRole?: false | string
   requireLogin?: boolean
   requireLogoff?: boolean
-
-  // Recursos
-  requiredResources?: resources[]
 
   // Styling
   fullpage?: boolean
@@ -79,12 +75,7 @@ router.beforeEach((to, from, next) => {
   if (meta.requireLogin && !isLoggedIn) return next(AUTH_ROUTES.LOGIN)
 
   // Barro usuários sem papel necessário pra acessar a rota
-  // if (user && meta.requireRole && meta.requireRole !== user.role) return next(ERROR_ROUTES.FORBIDDEN)
-
-  // Se a rota requer alguns recursos eu a os pego
-  if (meta.requiredResources && meta.requiredResources.length > 0) {
-    fetchResourcesPreenptively(meta.requiredResources)
-  }
+  if (user && meta.requireRole && meta.requireRole !== user.role) return next(ERROR_ROUTES.FORBIDDEN)
 
   return next()
 })

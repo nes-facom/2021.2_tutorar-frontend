@@ -30,15 +30,13 @@ function normalizaUsuario(rawUser: RawUser): User {
 
   if (dadosTutor) {
     const tutor: Tutor = { ...dadosTutor, ...dadosPessoa, role: "tutor" }
-    return tutor
+    return { ...tutor, isMonitor: false }
   }
 
   if (dadosProfessor) {
     const professor: Professor = { ...dadosProfessor, ...dadosPessoa, role: "professor" }
-    return professor
+    return { ...professor, isMonitor: false }
   }
-
-  console.log(rawUser)
 
   /**
    * @TODO FIXME
@@ -64,15 +62,15 @@ export default (email: string, password: string): Promise<LoginResponse> => {
         resolve({ user, token })
       })
       .catch((error: AxiosError) => {
-        let errorMessage = handleAxiosError(error, "Erro do servidor ao realizar login")
+        let { message } = handleAxiosError(error)
 
-        if (error.response?.data?.statusCode === 400) errorMessage = LOGIN_ERRORS.INVALID_REQUEST
-        if (error.response?.data?.statusCode === 401) errorMessage = LOGIN_ERRORS.INVALID_PASSWORD
-        if (error.response?.data?.statusCode === 404) errorMessage = LOGIN_ERRORS.EMAIL_NAO_ENCONTRADO
+        if (error.response?.data?.statusCode === 400) message = LOGIN_ERRORS.INVALID_REQUEST
+        if (error.response?.data?.statusCode === 401) message = LOGIN_ERRORS.INVALID_PASSWORD
+        if (error.response?.data?.statusCode === 404) message = LOGIN_ERRORS.EMAIL_NAO_ENCONTRADO
 
         console.log(error.response?.data)
 
-        reject(errorMessage)
+        reject(message)
       })
   })
 }

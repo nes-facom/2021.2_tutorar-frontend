@@ -1,10 +1,12 @@
 <script lang="ts">
-// Validação
 import { StringFieldRules } from "@/utils/form"
 import isValidCpf from "@/utils/form/is-valid-cpf"
 import isValidDMY from "@/utils/form/is-valid-dd-mm-yyyy"
+import { unmask } from "@/utils/inputs/mask"
 
 import { Vue, Component, Watch } from "vue-property-decorator"
+
+import findUserByCpf from "@/api/users/find-by-cpf"
 
 export interface DadosPessoais {
   cpf: string | undefined
@@ -24,10 +26,10 @@ export default class FormularioDadosPessoais extends Vue {
     celular: ""
   }
 
+  maskedCpf = ""
   isCpfEmUso = false
   isCheckingCpf = false
 
-  // @TODO: Rever quais são os tipos permitidos no back, transformar em dicionario depois
   opcoes = {
     genero: [
       { text: "Masculino", value: "M" },
@@ -60,8 +62,11 @@ export default class FormularioDadosPessoais extends Vue {
     dataNascimento: [
       v => !!v || "Data de nascimento é obrigatório",
       v => {
+        // @TODO Eca, refatorar depois
         const maxYear = new Date().getFullYear() - 16
-        return (!!v && isValidDMY(v, { maxYear })) || "Data inválida"
+        if (!v) return "Campo Obrigatório"
+        const error = isValidDMY(v, { maxYear })
+        return typeof error === "string" && error.includes("inferior") ? "Idade mínima de 16 anos" : error
       }
     ],
 
@@ -75,26 +80,27 @@ export default class FormularioDadosPessoais extends Vue {
     this.$emit("input", value)
   }
 
-  /**
-   * @TODO: fazer uma função que faz uma request simples a API pra verificar se
-   * ja existe um cadastro com esse cpf, essa função deve ser chamada quando
-   * o usuario termina de digitar um cpf válido no campo
-   */
-  @Watch("dados.cpf")
-  onCpfChange(cpf: string | undefined) {
+  @Watch("maskedCpf")
+  onCpfChange(maskedCpf?: string) {
+    const cpf = maskedCpf ? unmask(maskedCpf, "###.###.###-##") : ""
+
     if (!cpf || !isValidCpf(cpf)) {
       this.isCpfEmUso = false
-    } else {
-      this.isCheckingCpf = true
-
-      // Mockup
-      setTimeout(() => {
-        this.isCheckingCpf = false
-        this.isCpfEmUso = false
-      }, 2000)
-
-      // @TODO: implementar a call a api aqui...
+      return
     }
+
+    this.isCheckingCpf = true
+
+    findUserByCpf(cpf)
+      .then(user => {
+        if (user) this.isCpfEmUso = true
+      })
+      .catch(err => {
+        if (err.statusCode === 404) this.isCpfEmUso = false
+      })
+      .finally(() => {
+        this.isCheckingCpf = false
+      })
   }
 }
 </script>
@@ -140,8 +146,9 @@ export default class FormularioDadosPessoais extends Vue {
 
       see: https://vuetifyjs.com/en/api/v-text-field/#props
     -->
+    {{ dados.cpf }}
     <v-text-field
-      v-model="dados.cpf"
+      v-model="maskedCpf"
       v-mask="'###.###.###-##'"
       :rules="[verificaCpf]"
       :loading="isCheckingCpf"
@@ -156,6 +163,7 @@ export default class FormularioDadosPessoais extends Vue {
       v-mask="'##/##/####'"
       :rules="rules.dataNascimento"
       placeholder="Data de Nascimento"
+      append-icon="mdi-calendar"
       outlined
     />
 

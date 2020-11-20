@@ -13,7 +13,7 @@ interface UpdateUserPayload {
 
 interface Pessoa {
   _id: string
-  _v: string
+  __v: string | number
 
   nome: string
   email: string
@@ -26,13 +26,15 @@ interface Pessoa {
 
 export interface Professor extends Pessoa {
   role: "professor"
-  // dataInicioEnsino: string
+
+  inicioLecionamento: string
   formacaoAcademica: FORMACAO_ACADEMICA
   nivelLecionamento: NIVEL_LECIONAMENTO
 }
 
 export interface Tutor extends Pessoa {
   role: "tutor"
+
   habilidades: string[]
   universidade: string
   semestreAtual: number
@@ -45,4 +47,5 @@ export interface Monitor extends Pessoa {
 
 export type User = (Professor | Tutor | Monitor) & {
   isAdmin: boolean
+  isMonitor: boolean
 }
