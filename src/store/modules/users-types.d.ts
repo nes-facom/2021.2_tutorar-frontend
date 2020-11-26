@@ -18,6 +18,8 @@ interface DadosProfessor {
  * Raw são os formatos dos dados como a api os retorna
  */
 export interface RawUser extends Pessoa {
+  //TODO RETIRAR
+  isActive: boolean
   tutor?: DadosTutor
   professor?: DadosProfessor
 }

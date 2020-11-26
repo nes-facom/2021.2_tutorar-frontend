@@ -13,7 +13,8 @@ interface UpdateUserPayload {
 
 interface Pessoa {
   _id: string
-  _v: string
+  //TODO RETIRAR
+  __v: string | number
 
   nome: string
   email: string

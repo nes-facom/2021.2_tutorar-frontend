@@ -13,6 +13,10 @@ export default class ProfileSidebar extends Vue {
 
   user = this.authModule.user
 
+  userRole = this.user.role.replace(/(\w)(\w*)/g, function(g0, g1, g2) {
+    return g1.toUpperCase() + g2.toLowerCase();
+  })
+
   habilidades: Habilidade[] = []
 
   get habilidadesUsuario() {
@@ -35,14 +39,14 @@ export default class ProfileSidebar extends Vue {
 <template>
   <div class="py-6 px-4">
     <div class="d-flex align-center">
-      <v-avatar size="220px" class="mb-4 mx-auto">
+      <v-avatar size="50%" class="mb-4 mx-auto">
         <v-img src="@/assets/dog.jpg" />
       </v-avatar>
     </div>
 
     <v-card-text class="text-center">
       <h4 class="font-weight-light grey--text mb-3">
-        Professora Bacharellado Química
+        {{userRole}}
       </h4>
 
       <h2 class="font-weight-light blue--text mb-3" v-text="user.nome" />

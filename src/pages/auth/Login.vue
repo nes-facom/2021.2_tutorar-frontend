@@ -180,7 +180,7 @@ export default class PageLogin extends Vue {
               </v-btn>
             </v-card-actions>
 
-            <div class="text-center mt-5" @click="$router.push({ path: '/login' })">
+            <div class="text-center mt-5" @click="$router.push({ path: '/recuperar-senha' })">
               <span class="link">Esqueceu sua senha ?</span>
             </div>
           </v-card>
