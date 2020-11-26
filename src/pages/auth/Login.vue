@@ -14,10 +14,11 @@ import Auth from "@/store/modules/auth"
 export default class PageLogin extends Vue {
   private authModule = getModule(Auth, this.$store)
 
-  @Ref("loginForm") _loginFormRef!: HTMLFormElement
+  @Ref("loginForm")
+  _loginFormRef!: HTMLFormElement
 
   email = "teste@teste.com"
-  password = "testesenha"
+  password = "testeteste"
 
   showSenha = false
   isFormValid = false

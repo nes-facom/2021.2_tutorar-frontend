@@ -53,7 +53,7 @@ function normalizaUsuario(rawUser: RawUser): User {
 export default (email: string, password: string): Promise<LoginResponse> => {
   return new Promise((resolve, reject) => {
     axios()
-      .post("auth/login", { email, password })
+      .post("users/auth/login", { email, password })
       .then(response => {
         const { user: rawUser, token } = response.data as LoginApiResponse
 
