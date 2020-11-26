@@ -9,7 +9,9 @@ export enum AUTH_ROUTES {
 
 export enum COMMON_ROUTES {
   MEU_PERFIL = "/meu-perfil",
-  AGENDA = "/agenda"
+  AGENDA = "/agenda",
+  RECUPERAR_SENHA =  "/recuperar-senha",
+  NOVA_SENHA = "/nova-senha"
 }
 
 const rotas: RouteConfig[] = [
@@ -56,6 +58,22 @@ const rotas: RouteConfig[] = [
   {
     path: COMMON_ROUTES.AGENDA,
     component: () => import(/* webpackChunkName: "PageAgenda" */ "@/pages/agenda/Agenda.vue")
+  },
+  {
+    path: COMMON_ROUTES.RECUPERAR_SENHA,
+    component: () => import(/* webpackChunkName: "RecuperarSenha" */ "@/pages/auth/RecuperarSenha.vue"),
+    meta: {
+      fullpage: true,
+      requireLogoff: true
+    }
+  },
+  {
+    path: COMMON_ROUTES.NOVA_SENHA,
+    component: () => import(/* webpackChunkName: "NovaSenha" */ "@/pages/auth/NovaSenha.vue"),
+    meta: {
+      fullpage: true,
+      requireLogoff: true
+    }
   }
 ]
 

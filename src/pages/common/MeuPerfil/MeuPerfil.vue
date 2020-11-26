@@ -8,10 +8,11 @@ import DadosPessoais from "@/pages/common/MeuPerfil/DadosPessoais.vue"
 import ProfileSidebar from "@/pages/common/MeuPerfil/ProfileSidebar.vue"
 import GraduacaoTutor from "@/pages/common/MeuPerfil/GraduacaoTutor.vue"
 import GraduacaoProfessor from "@/pages/common/MeuPerfil/GraduacaoProfessor.vue"
+import PainelControle from "@/pages/common/MeuPerfil/PainelControle.vue"
 
 @Component({
   name: "MeuPerfil",
-  components: { GraduacaoProfessor, GraduacaoTutor, DadosPessoais, ProfileSidebar, DadosUsuario }
+  components: { GraduacaoProfessor, GraduacaoTutor, DadosPessoais, ProfileSidebar, DadosUsuario, PainelControle }
 })
 export default class MeuPerfil extends Vue {
   private authModule = getModule(Auth, this.$store)
@@ -37,7 +38,7 @@ export default class MeuPerfil extends Vue {
 
 <template>
   <v-row align="center" justify="center" no-gutters>
-    <v-col cols="12" md="8">
+    <v-col cols="12" md="10">
       <v-card class="pa-0">
         <v-row align="center" justify="center" no-gutters>
           <v-col cols="3" class="pa-0" style="border-right: 1px solid #e3e3e3;">
@@ -46,6 +47,7 @@ export default class MeuPerfil extends Vue {
 
           <v-col cols="9" align-self="start">
             <v-tabs v-model="tab">
+              <v-tab v-if="user.role == 'tutor'">Painel de Controle</v-tab>
               <v-tab>Dados Pessoais</v-tab>
               <v-tab>Graduação</v-tab>
               <v-tab>Minha Conta</v-tab>
@@ -57,6 +59,10 @@ export default class MeuPerfil extends Vue {
             </v-tabs>
 
             <v-tabs-items v-model="tab">
+              <v-tab-item v-if="user.role == 'tutor'">
+                <PainelControle :isEditing="isEditing" :user="user" />
+              </v-tab-item>
+
               <v-tab-item>
                 <DadosPessoais :isEditing="isEditing" :user="user" />
               </v-tab-item>

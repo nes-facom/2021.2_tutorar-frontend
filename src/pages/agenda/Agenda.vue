@@ -86,14 +86,6 @@
                 </v-menu>
               </v-col>
               <v-col cols="12">
-                <v-text-field
-                  label="Nome para seu horário"
-                  placeholder="Escreva aqui"
-                  outlined
-                  v-model="nomeEvento"
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12">
                 <v-checkbox
                   class="my-0"
                   label="O dia todo"
@@ -172,27 +164,63 @@
           @click:date="viewDay"
         ></v-calendar>
         <v-menu v-model="selectedOpen" :close-on-content-click="false" :activator="selectedElement" offset-x>
-          <v-card color="grey lighten-4" min-width="350px" flat>
+          <v-card color="grey lighten-4" min-width="350px" width="500px" flat>
             <v-toolbar :color="selectedEvent.color" dark>
-              <v-btn icon>
-                <v-icon>mdi-pencil</v-icon>
-              </v-btn>
-              <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
+              <v-toolbar-title>Tutoria Agendada</v-toolbar-title>
               <v-spacer></v-spacer>
-              <v-btn icon>
-                <v-icon>mdi-heart</v-icon>
-              </v-btn>
-              <v-btn icon>
-                <v-icon>mdi-dots-vertical</v-icon>
-              </v-btn>
             </v-toolbar>
             <v-card-text>
-              <span v-html="selectedEvent.details"></span>
+              <v-card-text>
+                <v-row>
+                  <v-col cols="3">
+                    <v-avatar size="100%">
+                      <v-img src="@/assets/dog.jpg" />
+                    </v-avatar>
+                  </v-col>
+                  <v-col cols="9" align-self="center">
+                    <h4>selected.pessoa.nome gostaria de agendar uma tutoria no dia selected.dia.selecao às selected.hora.selecao.</h4>
+                  </v-col>
+                </v-row>
+              </v-card-text>
+
+              <v-card-text>
+                <v-row class="">
+                  <v-icon class="pr-2">mdi-phone</v-icon>
+                  <h3>Informações para contato</h3>
+                </v-row>
+              </v-card-text>
+              <v-card-text>
+                <v-row class="">
+                  <v-col cols="6">
+                    <h5>Telefone</h5>
+                    <a @click="whatsappLink">{{ telefone }}</a>
+                  </v-col>
+                  <v-col cols="6">
+                    <h5>Email</h5>
+                    <h4>email.professor</h4>
+                  </v-col>
+                </v-row>
+              </v-card-text>
             </v-card-text>
             <v-card-actions>
-              <v-btn text color="secondary" @click="selectedOpen = false">
-                Fechar
-              </v-btn>
+              <v-spacer />
+              <v-dialog v-model="dialog" width="500">
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn @click="closeAndCancel(focus)"
+                         color="primary" text  v-bind="attrs" v-on="on">
+                    <span>Cancelar Tutoria</span>
+                  </v-btn>
+                </template>
+                <v-card>
+                  <v-img class="mx-auto" width="276" src="@/assets/imagens/Usuário_Desativar.svg" />
+                  <v-card-title class="font-weight-bold headline d-flex justify-center">
+                    Tutoria cancelada
+                  </v-card-title>
+                  <v-card-text>
+                    A tutoria agendada foi cancelada com sucesso, o professor professor.nome irá receber um aviso sobre o cancelamento.
+                  </v-card-text>
+                </v-card>
+              </v-dialog>
             </v-card-actions>
           </v-card>
         </v-menu>
@@ -207,6 +235,7 @@ export default {
   name: "Agenda",
   data: () => ({
     dialogAgenda: false,
+    dialog: false,
     focus: "",
     type: "month",
     typeToLabel: {
@@ -237,10 +266,11 @@ export default {
 
     segHorario: null,
     diaTodo: null,
-    nomeEvento: null
+    telefone: 67991121434
   }),
   mounted() {
     this.$refs.calendar.checkChange()
+    this.setEvent('', new Date(), new Date(), 'blue', false)
   },
 
   methods: {
@@ -297,7 +327,7 @@ export default {
     },
     salvaElimpaCampos() {
       if (this.selection) {
-        this.setEvent(this.nomeEvento, new Date(), new Date(), "blue", this.diaTodo)
+        this.setEvent("", new Date(), new Date(), "blue", this.diaTodo)
       }
       this.dialogAgenda = false
       this.selection = null
@@ -305,34 +335,16 @@ export default {
       this.primHorario = null
       this.segHorario = null
       this.nomeEvento = null
+    },
+    whatsappLink(){
+      window.open('https://wa.me/55' + this.telefone, '_blank')
+    },
+    closeAndCancel(focus){
+      setTimeout(() => {
+        this.selectedOpen = false
+        this.events.splice(focus, 1)
+      },2500)
     }
-
-    // updateRange ({ start, end }) {
-    //   const events = []
-    //
-    //   const min = new Date(`${start.date}T00:00:00`)
-    //   const max = new Date(`${end.date}T23:59:59`)
-    //   const days = (max.getTime() - min.getTime()) / 86400000
-    //   const eventCount = this.rnd(days, days + 20)
-    //
-    //     const allDay = this.rnd(0, 3) === 0
-    //     const firstTimestamp = this.rnd(min.getTime(), max.getTime())
-    //     const first = new Date(firstTimestamp - (firstTimestamp % 900000))
-    //     const secondTimestamp = this.rnd(2, allDay ? 288 : 8) * 900000
-    //     const second = new Date(first.getTime() + secondTimestamp)
-    //
-    //     events.push({
-    //       name: this.names[this.rnd(0, this.names.length - 1)],
-    //       start: first,
-    //       end: second,
-    //       color: this.colors[this.rnd(0, this.colors.length - 1)],
-    //       timed: !allDay,
-    //     })
-    //   this.events = events
-    // },
-    // rnd (a, b) {
-    //   return Math.floor((b - a + 1) * Math.random()) + a
-    // },
   }
 }
 </script>

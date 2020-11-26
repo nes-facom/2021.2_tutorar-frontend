@@ -86,12 +86,14 @@ export default class AppBar extends Vue {
     flat
     app
   >
-    <v-icon
-      @click="navigationDrawer = !navigationDrawer"
-      v-text="navigationDrawer ? 'mdi-menu-open' : 'mdi-menu'"
-      color="grey"
-    />
-
+<!--    <v-icon-->
+<!--      @click="navigationDrawer = !navigationDrawer"-->
+<!--      v-text="navigationDrawer ? 'mdi-menu-open' : 'mdi-menu'"-->
+<!--      color="grey"-->
+<!--    />-->
+    <a href="/login">
+      <v-img src="@/assets/logos/tutorar_com_titulo.svg" max-height="130" max-width="130" contain />
+    </a>
     <v-breadcrumbs :items="routeSections" divider="/" class="hidden-sm-and-down" large />
 
     <v-spacer />

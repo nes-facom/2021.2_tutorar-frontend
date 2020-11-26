@@ -19,10 +19,9 @@ interface DadosProfessor {
  */
 export interface RawUser extends Pessoa {
   isActive: boolean
-  isAdmin: boolean
-  isMonitor: boolean
 
   tutor?: DadosTutor
+
   professor?: DadosProfessor
 }
 
