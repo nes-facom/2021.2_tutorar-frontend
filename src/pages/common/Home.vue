@@ -21,7 +21,7 @@ export default class PageHome extends Vue {
 
   mounted() {
     if (!this.authModule.isLoggedIn) this.$router.push({path: "/login"})
-    // if (this.authModule.user?.role == "tutor") this.$router.push({ path: "/meu-perfil" })
+    if (this.authModule.user?.role == "tutor") this.$router.push({ path: "/meu-perfil" })
   }
 
   procurar() {
