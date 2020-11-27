@@ -1,6 +1,5 @@
 <script lang="ts">
-import Auth, { Professor, Tutor } from "@/store/modules/auth-types"
-import { getModule } from "vuex-module-decorators"
+import { Professor, Tutor } from "@/store/modules/auth-types"
 import { Vue, Component, Prop } from "vue-property-decorator"
 
 @Component({
@@ -40,7 +39,7 @@ export default class DadosPessoais extends Vue {
           @input="user.descricao = $event"
           :value="user.descricao || 'Digite uma descrição e enriqueça seu perfil !'"
           :disabled="!isEditing"
-          rows="3"
+          rows="2"
           hide-details
         />
       </v-col>

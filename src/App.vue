@@ -40,7 +40,7 @@ export default class App extends Vue {
   <v-app>
     <app-bar v-if="!hideHeader" />
 
-<!--    <app-navigation-drawer v-if="isLoggedIn" />-->
+    <app-navigation-drawer v-if="isLoggedIn" />
 
     <v-main app>
       <v-container :class="routerViewContainerPadding" fluid>

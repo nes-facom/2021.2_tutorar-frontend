@@ -10,12 +10,8 @@ import CrudModule from "../utils/crud-module"
 export default class UsersModule extends CrudModule<User> {
   @Action({ rawError: true })
   async getAll() {
-    return getAllUsers()
-      .then(users => {
-        this.SET_ITEMS(users)
-      })
-      .catch(error => {
-        console.log(error)
-      })
+    return getAllUsers().then(users => {
+      this.SET_ITEMS(users)
+    })
   }
 }

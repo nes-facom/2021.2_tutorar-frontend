@@ -14,7 +14,7 @@ import { ERROR_ROUTES } from "./rotas/error"
 
 export interface RouteMeta {
   // Auth
-  requireRole?: false | string
+  requireRole?: false | "tutor" | "monitor" | "admin" | "professor"
   requireLogin?: boolean
   requireLogoff?: boolean
 
@@ -75,7 +75,11 @@ router.beforeEach((to, from, next) => {
   if (meta.requireLogin && !isLoggedIn) return next(AUTH_ROUTES.LOGIN)
 
   // Barro usuários sem papel necessário pra acessar a rota
-  if (user && meta.requireRole && meta.requireRole !== user.role) return next(ERROR_ROUTES.FORBIDDEN)
+
+  /**
+   * @TODO UNCOMMENT ME
+   */
+  // if (user && meta.requireRole && meta.requireRole !== user.role) return next(ERROR_ROUTES.FORBIDDEN)
 
   return next()
 })

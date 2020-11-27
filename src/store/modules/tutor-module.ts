@@ -5,11 +5,11 @@ import updateTutorService from "@/api/tutor/update-tutor"
 import { RawTutor } from "./users-types"
 
 export function isTutor(user: User | Tutor | Professor): user is Tutor {
-  return (user as Tutor).habilidades !== undefined
+  return (user as Tutor).habilidades !== undefined && user.role === "tutor"
 }
 
 export function isProfessor(user: User | Tutor | Professor): user is Professor {
-  return (user as Professor).nivelLecionamento !== undefined
+  return (user as Professor).nivelLecionamento !== undefined && user.role === "professor"
 }
 
 export interface UpdateTutorPayload {

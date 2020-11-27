@@ -6,24 +6,20 @@ import { Vue, Component } from "vue-property-decorator"
 import DadosUsuario from "@/pages/common/MeuPerfil/DadosUsuario.vue"
 import DadosPessoais from "@/pages/common/MeuPerfil/DadosPessoais.vue"
 import ProfileSidebar from "@/pages/common/MeuPerfil/ProfileSidebar.vue"
-import GraduacaoTutor from "@/pages/common/MeuPerfil/GraduacaoTutor.vue"
 import GraduacaoProfessor from "@/pages/common/MeuPerfil/GraduacaoProfessor.vue"
-import PainelControle from "@/pages/common/MeuPerfil/PainelControle.vue"
 
 @Component({
-  name: "MeuPerfil",
-  components: { GraduacaoProfessor, GraduacaoTutor, DadosPessoais, ProfileSidebar, DadosUsuario, PainelControle }
+  name: "PagePerfilProfessor",
+  components: { GraduacaoProfessor, DadosPessoais, ProfileSidebar, DadosUsuario }
 })
 export default class MeuPerfil extends Vue {
   private authModule = getModule(Auth, this.$store)
 
   tab = 0
+
   isEditing = false
 
   userCopy = { ...this.authModule.user }
-
-  // Casting é safe nessa caso pois esse componente só é exibido se
-  // o usuário logado é do tipo professor
 
   get user() {
     return this.isEditing ? this.userCopy : this.authModule.user
@@ -41,35 +37,31 @@ export default class MeuPerfil extends Vue {
     <v-col cols="12" md="10">
       <v-card class="pa-0">
         <v-row align="center" justify="center" no-gutters>
-          <v-col cols="3" class="pa-0" style="border-right: 1px solid #e3e3e3;">
+          <v-col cols="3" class="pa-0">
             <ProfileSidebar />
           </v-col>
 
-          <v-col cols="9" align-self="start">
+          <v-col cols="9" align-self="start" style="border-left: 1px solid #e3e3e3; min-height: 320px">
             <v-tabs v-model="tab">
-              <v-tab v-if="user.role == 'tutor'">Painel de Controle</v-tab>
               <v-tab>Dados Pessoais</v-tab>
               <v-tab>Graduação</v-tab>
               <v-tab>Minha Conta</v-tab>
+
               <v-spacer />
-              <v-btn :color="isEditing ? 'red' : 'grey'" x-large text @click="toggleEditMode">
-                <span>{{ isEditing ? "Cancelar Edição" : "Editar" }}</span>
+
+              <v-btn :color="isEditing ? 'red' : 'grey'" @click="toggleEditMode" x-large text>
+                <span v-text="isEditing ? 'Cancelar Edição' : 'Editar'" />
                 <v-icon class="ml-3" v-text="isEditing ? 'mdi-pencil-off-outline' : 'mdi-pencil'" />
               </v-btn>
             </v-tabs>
 
             <v-tabs-items v-model="tab">
-              <v-tab-item v-if="user.role == 'tutor'">
-                <PainelControle :isEditing="isEditing" :user="user" />
-              </v-tab-item>
-
               <v-tab-item>
                 <DadosPessoais :isEditing="isEditing" :user="user" />
               </v-tab-item>
 
               <v-tab-item>
-                <GraduacaoProfessor v-if="user.role == 'professor'" :isEditing="isEditing" :user="user" />
-                <GraduacaoTutor v-if="user.role == 'tutor'" :isEditing="isEditing" :user="user" />
+                <GraduacaoProfessor :isEditing="isEditing" :user="user" />
               </v-tab-item>
 
               <v-tab-item>

@@ -1,13 +1,26 @@
 import { RouteConfig, RouteMeta } from "@/router"
 
 export enum PROFESSOR_ROUTES {
-  EXIBIR_PERFIL = "/professor/perfil"
+  PERFIL = "/professor/meu-perfil",
+  PERFIL_RESUMIDO = "/professor/perfil"
 }
 
 const rotas: RouteConfig[] = [
   {
-    path: PROFESSOR_ROUTES.EXIBIR_PERFIL,
-    component: () => import(/* webpackChunkName: "PagePerfilProfessor" */ "@/pages/professor/PerfilProfessor.vue"),
+    path: PROFESSOR_ROUTES.PERFIL,
+    component: () =>
+      import(/* webpackChunkName: "PagePerfilProfessor" */ "@/pages/professor/perfil/PagePerfilProfessor.vue"),
+    meta: {
+      requireLogin: true,
+      requireRole: "professor"
+    }
+  },
+  {
+    path: PROFESSOR_ROUTES.PERFIL_RESUMIDO,
+    component: () =>
+      import(
+        /* webpackChunkName: "CardPerfilResumidoProfessor" */ "@/pages/professor/perfil/CardPerfilResumidoProfessor.vue"
+      ),
     meta: {
       requireRole: false,
       requireLogin: false

@@ -59,6 +59,9 @@ export default class SelecaoHabilidades extends Vue {
     }
   }
 
+  /**
+   * Habilidades que o usuário selecionou
+   */
   get habilidadesUsuario(): Habilidade[] {
     const { user } = this.authModule
     if (!user || !isTutor(user)) return []

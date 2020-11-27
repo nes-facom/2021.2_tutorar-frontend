@@ -36,7 +36,7 @@ export default class AppBarUserMenu extends Vue {
     ]
     if (this.user?.role === "tutor") {
       menuItems.push({
-        to: "/minhas-habilidades",
+        to: "/tutor/minhas-habilidades",
         icon: "mdi-account-details",
         text: "Habilidades",
         path: "minhas-habilidades"

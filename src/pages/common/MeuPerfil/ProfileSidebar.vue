@@ -13,8 +13,9 @@ export default class ProfileSidebar extends Vue {
 
   user = this.authModule.user
 
-  userRole = this.user.role.replace(/(\w)(\w*)/g, function(g0, g1, g2) {
-    return g1.toUpperCase() + g2.toLowerCase();
+  // vitor: wtf ?
+  userRole = this.user?.role.replace(/(\w)(\w*)/g, function(g0, g1, g2) {
+    return g1.toUpperCase() + g2.toLowerCase()
   })
 
   habilidades: Habilidade[] = []
@@ -25,8 +26,6 @@ export default class ProfileSidebar extends Vue {
 
     return this.habilidades.filter(h => user.habilidades.findIndex(id => id === h._id) !== -1)
   }
-
-  cores = ["blue", "green", "orange", "deep-orange", "deep-purple"]
 
   mounted() {
     fetchHabilidades().then(habilidades => {
@@ -45,9 +44,7 @@ export default class ProfileSidebar extends Vue {
     </div>
 
     <v-card-text class="text-center">
-      <h4 class="font-weight-light grey--text mb-3">
-        {{userRole}}
-      </h4>
+      <h4 class="font-weight-light grey--text mb-3" v-text="userRole" />
 
       <h2 class="font-weight-light blue--text mb-3" v-text="user.nome" />
 

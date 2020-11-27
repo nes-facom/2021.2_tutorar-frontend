@@ -1,5 +1,12 @@
 import { RouteConfig } from "@/router"
 import { HOME_ROUTES } from "../utils/get-home-route"
+import store from "../../store/index"
+import { getModule } from "vuex-module-decorators"
+import Auth from "@/store/modules/auth"
+import { ERROR_ROUTES } from "./error"
+import { isProfessor, isTutor } from "@/store/modules/tutor-module"
+import { TUTOR_ROUTES } from "./tutor"
+import { PROFESSOR_ROUTES } from "./professor"
 
 export enum AUTH_ROUTES {
   LOGIN = "/login",
@@ -10,7 +17,7 @@ export enum AUTH_ROUTES {
 export enum COMMON_ROUTES {
   MEU_PERFIL = "/meu-perfil",
   AGENDA = "/agenda",
-  RECUPERAR_SENHA =  "/recuperar-senha",
+  RECUPERAR_SENHA = "/recuperar-senha",
   NOVA_SENHA = "/nova-senha"
 }
 
@@ -49,10 +56,17 @@ const rotas: RouteConfig[] = [
   },
   {
     path: COMMON_ROUTES.MEU_PERFIL,
-    component: () =>
-      import(/* webpackChunkName: "PageExibicaoPerfilUsuario" */ "@/pages/common/MeuPerfil/MeuPerfil.vue"),
+    redirect: () => {
+      const { user } = getModule(Auth, store)
+      if (!user) return ERROR_ROUTES.FORBIDDEN
+
+      if (isTutor(user)) return TUTOR_ROUTES.PERFIL
+      if (isProfessor(user)) return PROFESSOR_ROUTES.PERFIL
+
+      return "/home"
+    },
     meta: {
-      requireLogoff: false
+      requireLogin: true
     }
   },
   {

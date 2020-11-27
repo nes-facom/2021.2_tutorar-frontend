@@ -17,8 +17,8 @@ export default class PageLogin extends Vue {
   @Ref("loginForm")
   _loginFormRef!: HTMLFormElement
 
-  email = "teste@teste.com"
-  password = "testeteste"
+  email = "sai_fora2s@hotmai.com"
+  password = "contafake3"
 
   showSenha = false
   isFormValid = false
