@@ -5,6 +5,7 @@ import { Vue, Component } from "vue-property-decorator"
 import Auth from "@/store/modules/auth"
 import { HOME_ROUTES } from "@/router/utils/get-home-route"
 import { COMMON_ROUTES } from "@/router/rotas/comun"
+import router from "@/router";
 
 interface UserMenuItem {
   to: string
@@ -59,6 +60,7 @@ export default class AppBarUserMenu extends Vue {
     } else {
       this.authModule.logout()
     }
+    router.push({ path: "/login" })
   }
 }
 </script>

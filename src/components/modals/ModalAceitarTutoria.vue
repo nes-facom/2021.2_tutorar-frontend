@@ -12,7 +12,7 @@ export default class ModalAceitarTutoria extends Vue {
   telefone!: string
 
   openTutorWhatsAppLink() {
-    window.open(`https://wa.me/55${this.telefone}_blank`)
+    window.open(`https://wa.me/55${this.telefone}`)
   }
 
   get telefoneFilter(): string {

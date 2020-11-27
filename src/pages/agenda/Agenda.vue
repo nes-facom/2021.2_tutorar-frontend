@@ -270,7 +270,9 @@ export default {
   }),
   mounted() {
     this.$refs.calendar.checkChange()
+    //TESTE
     this.setEvent('', new Date(), new Date(), 'blue', false)
+    this.setEvent('', new Date('2020-11-11 12:30'), new Date('2020-11-11 21:00'), 'blue', false)
   },
 
   methods: {
