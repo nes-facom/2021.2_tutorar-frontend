@@ -4,6 +4,7 @@ import {Vue, Component} from "vue-property-decorator"
 
 import store from "@/store"
 import Auth from "@/store/modules/auth"
+import router from "@/router";
 
 @Component({name: "Home"})
 export default class PageHome extends Vue {
@@ -25,6 +26,12 @@ export default class PageHome extends Vue {
 
   procurar() {
     console.log("apertou")
+  }
+
+  irPerfilTutor(tutor: never) {
+    //TODO Colocar Pagina do tutor selecionado
+    router.push({ path: "/tutor/perfil" })
+    console.log(tutor)
   }
 }
 </script>
@@ -70,6 +77,7 @@ export default class PageHome extends Vue {
                     v-on="on"
                     class="mx-auto mb-7"
                     max-width="400"
+                    @click="irPerfilTutor(tutor)"
                 >
                   <v-img
                       class="white--text align-end"

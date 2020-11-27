@@ -1,108 +1,138 @@
-<script>
-export default {
+<script lang="ts">
+import {getModule} from "vuex-module-decorators"
+import {Vue, Component} from "vue-property-decorator"
+
+import store from "@/store"
+import Auth from "@/store/modules/auth"
+
+const ModalAgendarTutoria = () => import("@/components/modals/ModalAgendarTutoria.vue")
+
+@Component({
   name: "PagePerfil",
+  components: { ModalAgendarTutoria }
+})
+export default class PagePerfil extends Vue {
+  authModule = getModule(Auth, store)
 
-  components: {},
+  showModalAgendarTutoria = false
 
-  data: () => ({
-    file: null
-  }),
+  diasSemanaTutor = [
+    { dia: "Segunda", diaExt: "Segunda-Feira", disponibilidade: "Noite", num: 1 },
+    { dia: "Terça", diaExt: "Terça-Feira", disponibilidade: "Manhã e Tarde", num: 2 },
+    { dia: "Quarta", diaExt: "Quarta-Feira", disponibilidade: "Tarde e Noite", num: 3 },
+    { dia: "Quinta", diaExt: "Quinta-Feira", disponibilidade: "Não possui horário", num: 4 },
+    { dia: "Sexta", diaExt: "Sexta-Feira", disponibilidade: "Manhã, tarde e noite", num: 5 }
+  ]
 
-  methods: {}
+  habilidadesTutor = [
+    { nome: "Google", cor: "blue"},
+  ]
+
+  tutor = {nome: "Amanda", curso: "Biologia", universidade: "UFMS - Universidade Federal do Mato Grosso do Sul"}
+
+  escolherTutoria() {
+    this.showModalAgendarTutoria = true
+  }
 }
 </script>
 
 <template>
-  <v-row no-gutters align="center">
-    <v-col cols="12" class="mx-auto">
+  <v-row no-gutters align="center" justify="center">
+    <v-col cols="12" md="10">
       <v-card>
-        <v-card-title class="font-weight-bold pb-2">
-          Informações do Usuário
-        </v-card-title>
-        <v-row align="center" justify="center" class="my-10" no-gutters>
-          <v-col cols="6" class="pa-0" style="border-right: 1px solid #e3e3e3;">
-            <div class="py-6 px-4">
+        <v-row>
+          <v-col cols="3">
+            <v-btn color="primary" text @click="$router.push({ path: '/home' })">
+              <v-icon>mdi-arrow-left</v-icon>
+            </v-btn>
+          </v-col>
+          <v-col cols="9" class="d-flex justify-space-between">
+            <h3 class="grey--text ml-2">Disponibilidade do tutor</h3>
+            <v-btn color="green" small class="white--text mr-3" @click="escolherTutoria()">
+              <span>Agendar Tutoria</span>
+            </v-btn>
+          </v-col>
+        </v-row>
+        <v-divider></v-divider>
+        <v-row align="center" justify="center" no-gutters>
+          <v-col cols="3">
+            <div>
               <div class="d-flex align-center">
                 <v-avatar size="150px" class="mb-4 mx-auto">
-                  <v-img src="https://cdn.vuetifyjs.com/images/john.jpg" />
+                  <v-img src="@/assets/taylor.jpg" />
                 </v-avatar>
               </div>
 
               <v-card-text class="text-center">
-                <h4 class="display font-weight-light grey--text mb-3">
-                  Leonardo
-                </h4>
-                <h4 class="display font-weight-bold">
-                  <span class="green--text">P</span>
-                  <span class="blue--text">R</span>
-                  <span class="orange--text">O</span>
-                  <span class="red--text">F</span>
-                  <span class="green--text">E</span>
-                  <span class="blue--text">S</span>
-                  <span class="orange--text">S</span>
-                  <span class="red--text">O</span>
-                  <span class="blue--text">R</span>
-                </h4>
+                <h3 class="blue--text" v-text="tutor.nome"></h3>
+              </v-card-text>
+            </div>
+            <v-divider/>
+            <div class="">
+              <v-card-text>
+                <h3 class="grey--text">
+                  Curso
+                </h3>
+                <h4 class="blue--text">{{ tutor.curso }}</h4>
+              </v-card-text>
+              <v-card-text>
+                <h3 class="grey--text">
+                  Universidade
+                </h3>
+                <h4 class="blue--text">{{ tutor.universidade }}</h4>
               </v-card-text>
             </div>
           </v-col>
 
-          <v-col cols="6" class="px-16">
-            <v-text-field disabled value="Leonardo Kauan Pereira" label="Nome Completo" />
-            <v-text-field disabled value="20 anos" label="idade" />
-            <v-text-field disabled value="Masculino" label="Genêro" />
-            <v-text-field disabled value="leonardo.12345@gmail.com" label="E-mail" />
-            <v-text-field disabled value="(67) 99234-5678" label="Celular" />
+          <v-col cols="9" style="border-left: 1px solid #e3e3e3; min-height: 300px">
+            <h4 class="grey--text px-3 py-3">O tutor possui disponibilidade nos seguintes dias da semana e períodos</h4>
+            <v-list two-line>
+              <v-list-item v-for="dias in diasSemanaTutor" :key="dias.num">
+                <v-list-item-icon v-if="dias.num == 1">
+                  <v-icon color="primary">
+                    mdi-calendar
+                  </v-icon>
+                </v-list-item-icon>
+                <v-list-item-action v-else></v-list-item-action>
+
+                <v-list-item-content>
+                  <v-list-item-title>{{ dias.dia }}</v-list-item-title>
+                  <v-list-item-subtitle>{{ dias.disponibilidade }}</v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+              <v-divider inset></v-divider>
+
+              <v-list-item>
+                <v-list-item-icon>
+                  <v-icon color="primary">
+                    mdi-account-details
+                  </v-icon>
+                </v-list-item-icon>
+
+                <v-list-item-content>
+                  <v-list-item-title>Ferramentas</v-list-item-title>
+                  <v-list-item-subtitle>
+                    <v-chip-group>
+                      <v-chip
+                        v-for="(habilidades, index) in habilidadesTutor"
+                        :key="index"
+                        outlined
+                        :color="habilidades.cor"
+                      >
+                        {{ habilidades.nome }}
+                      </v-chip>
+                    </v-chip-group>
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
           </v-col>
         </v-row>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn color="primary" text @click="$router.push({ path: '/monitor/listagem-usuarios' })">
-            Voltar
-          </v-btn>
-          <v-spacer />
-        </v-card-actions>
       </v-card>
     </v-col>
+    <ModalAgendarTutoria v-model="showModalAgendarTutoria"/>
   </v-row>
 </template>
 
 <style scoped>
-.container {
-  background: #596678;
-  width: 100%;
-  height: 300px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.top-round-rainbow {
-  width: 400px;
-  height: 50%;
-  background: white;
-  border-radius: 4px;
-
-  background-image: repeating-linear-gradient(
-    to right,
-    #c4e17f 0px,
-    #c4e17f 50px,
-    #f7fdca 50px,
-    #f7fdca 100px,
-    #fad071 100px,
-    #fad071 150px,
-    #f0766b 150px,
-    #f0766b 200px,
-    #db9dbe 200px,
-    #db9dbe 250px,
-    #c49cdf 250px,
-    #c49cdf 300px,
-    #6599e2 300px,
-    #6599e2 350px,
-    #61c2e4 350px,
-    #61c2e4 400px
-  );
-  background-size: 100% 10px;
-  background-repeat: no-repeat;
-}
 </style>
