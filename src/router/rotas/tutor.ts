@@ -3,7 +3,8 @@ import { RouteConfig, RouteMeta } from "@/router"
 export enum TUTOR_ROUTES {
   PERFIL = "/tutor/meu-perfil",
   PERFIL_RESUMIDO = "/tutor/perfil",
-  MINHAS_HABILIDAES = "/tutor/minhas-habilidades"
+  AGENDA = "/tutor/minha-agenda",
+  HABILIDADES = "/tutor/minhas-habilidades"
 }
 
 const rotas: RouteConfig[] = [
@@ -16,7 +17,7 @@ const rotas: RouteConfig[] = [
     }
   },
   {
-    path: TUTOR_ROUTES.MINHAS_HABILIDAES,
+    path: TUTOR_ROUTES.HABILIDADES,
     component: () => import(/* webpackChunkName: "PageSelecaoHabilidades" */ "@/pages/tutor/PageSelecaoHabilidades.vue")
   },
   {
@@ -26,6 +27,10 @@ const rotas: RouteConfig[] = [
     meta: {
       requireLogin: true
     }
+  },
+  {
+    path: TUTOR_ROUTES.AGENDA,
+    component: () => import(/* webpackChunkName: "PageAgenda" */ "@/pages/tutor/agenda/PageAgenda.vue")
   }
 ]
 

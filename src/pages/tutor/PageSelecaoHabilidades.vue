@@ -203,7 +203,7 @@ export default class SelecaoHabilidades extends Vue {
             </v-chip>
           </v-chip-group>
 
-          <v-divider></v-divider>
+          <v-divider />
 
           <!-- TABS HEADERS -->
           <v-tabs v-model="currentTab" :color="Object.values(props)[currentTab].cor" centered icons-and-text fixed-tabs>

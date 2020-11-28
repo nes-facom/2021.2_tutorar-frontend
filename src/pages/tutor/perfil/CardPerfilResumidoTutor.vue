@@ -1,18 +1,17 @@
 <script lang="ts">
-import {getModule} from "vuex-module-decorators"
-import {Vue, Component} from "vue-property-decorator"
+import { getModule } from "vuex-module-decorators"
+import { Vue, Component } from "vue-property-decorator"
 
-import store from "@/store"
 import Auth from "@/store/modules/auth"
 
 const ModalAgendarTutoria = () => import("@/components/modals/ModalAgendarTutoria.vue")
 
 @Component({
-  name: "PagePerfil",
+  name: "CardPerfilResumidoTutor",
   components: { ModalAgendarTutoria }
 })
-export default class PagePerfil extends Vue {
-  authModule = getModule(Auth, store)
+export default class CardPerfilResumidoTutor extends Vue {
+  authModule = getModule(Auth, this.$store)
 
   showModalAgendarTutoria = false
 
@@ -24,11 +23,9 @@ export default class PagePerfil extends Vue {
     { dia: "Sexta", diaExt: "Sexta-Feira", disponibilidade: "Manhã, tarde e noite", num: 5 }
   ]
 
-  habilidadesTutor = [
-    { nome: "Google", cor: "blue"},
-  ]
+  habilidadesTutor = [{ nome: "Google", cor: "blue" }]
 
-  tutor = {nome: "Amanda", curso: "Biologia", universidade: "UFMS - Universidade Federal do Mato Grosso do Sul"}
+  tutor = { nome: "Amanda", curso: "Biologia", universidade: "UFMS - Universidade Federal do Mato Grosso do Sul" }
 
   escolherTutoria() {
     this.showModalAgendarTutoria = true
@@ -53,7 +50,7 @@ export default class PagePerfil extends Vue {
             </v-btn>
           </v-col>
         </v-row>
-        <v-divider></v-divider>
+        <v-divider />
         <v-row align="center" justify="center" no-gutters>
           <v-col cols="3">
             <div>
@@ -67,7 +64,7 @@ export default class PagePerfil extends Vue {
                 <h3 class="blue--text" v-text="tutor.nome"></h3>
               </v-card-text>
             </div>
-            <v-divider/>
+            <v-divider />
             <div class="">
               <v-card-text>
                 <h3 class="grey--text">
@@ -130,9 +127,8 @@ export default class PagePerfil extends Vue {
         </v-row>
       </v-card>
     </v-col>
-    <ModalAgendarTutoria v-model="showModalAgendarTutoria"/>
+    <ModalAgendarTutoria v-model="showModalAgendarTutoria" />
   </v-row>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

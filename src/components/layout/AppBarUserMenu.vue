@@ -5,7 +5,9 @@ import { Vue, Component } from "vue-property-decorator"
 import Auth from "@/store/modules/auth"
 import { HOME_ROUTES } from "@/router/utils/get-home-route"
 import { COMMON_ROUTES } from "@/router/rotas/comun"
-import router from "@/router";
+import router from "@/router"
+import { PROFESSOR_ROUTES } from "@/router/rotas/professor"
+import { TUTOR_ROUTES } from "@/router/rotas/tutor"
 
 interface UserMenuItem {
   to: string
@@ -27,20 +29,28 @@ export default class AppBarUserMenu extends Vue {
         icon: "mdi-account",
         text: "Minha conta",
         path: "meu-perfil"
-      },
-      {
-        to: COMMON_ROUTES.AGENDA,
-        icon: "mdi-calendar",
-        text: "Agenda",
-        path: "agenda"
       }
     ]
     if (this.user?.role === "tutor") {
       menuItems.push({
-        to: "/tutor/minhas-habilidades",
+        to: TUTOR_ROUTES.AGENDA,
+        icon: "mdi-calendar",
+        text: "Agenda",
+        path: "agenda"
+      })
+      menuItems.push({
+        to: TUTOR_ROUTES.HABILIDADES,
         icon: "mdi-account-details",
         text: "Habilidades",
         path: "minhas-habilidades"
+      })
+    }
+    if (this.user?.role === "professor") {
+      menuItems.push({
+        to: PROFESSOR_ROUTES.ESCOLHER_TUTOR,
+        icon: "mdi-star",
+        text: "Procurar Tutores",
+        path: "escolher-tutor"
       })
     }
     return menuItems
@@ -51,15 +61,7 @@ export default class AppBarUserMenu extends Vue {
   }
 
   logout() {
-    if (this.$route.path !== HOME_ROUTES.DEFAULT) {
-      this.$router.push(HOME_ROUTES.DEFAULT).then(() => {
-        // Importante realizar logout depois de alterar a página para não quebrar a exibição
-        // da página atual que pode depender do usuário
-        this.authModule.logout()
-      })
-    } else {
-      this.authModule.logout()
-    }
+    this.authModule.logout()
     router.push({ path: "/login" })
   }
 }

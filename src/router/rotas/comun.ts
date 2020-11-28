@@ -16,7 +16,6 @@ export enum AUTH_ROUTES {
 
 export enum COMMON_ROUTES {
   MEU_PERFIL = "/meu-perfil",
-  AGENDA = "/agenda",
   RECUPERAR_SENHA = "/recuperar-senha",
   NOVA_SENHA = "/nova-senha"
 }
@@ -28,7 +27,14 @@ const rotas: RouteConfig[] = [
   },
   {
     path: HOME_ROUTES.DEFAULT,
-    component: () => import(/* webpackChunkName: "PageHome" */ "@/pages/common/Home.vue")
+    redirect: () => {
+      const { user } = getModule(Auth, store)
+
+      if (isTutor(user)) return TUTOR_ROUTES.PERFIL
+      if (isProfessor(user)) return PROFESSOR_ROUTES.ESCOLHER_TUTOR
+
+      return AUTH_ROUTES.LOGIN
+    }
   },
   {
     path: AUTH_ROUTES.LOGIN,
@@ -68,10 +74,6 @@ const rotas: RouteConfig[] = [
     meta: {
       requireLogin: true
     }
-  },
-  {
-    path: COMMON_ROUTES.AGENDA,
-    component: () => import(/* webpackChunkName: "PageAgenda" */ "@/pages/agenda/Agenda.vue")
   },
   {
     path: COMMON_ROUTES.RECUPERAR_SENHA,

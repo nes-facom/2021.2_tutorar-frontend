@@ -11,12 +11,12 @@ const rotas: DrawerRoute[] = [
   {
     title: "Agenda",
     icon: "mdi-calendar",
-    to: COMMON_ROUTES.AGENDA
+    to: TUTOR_ROUTES.AGENDA
   },
   {
     title: "Minhas Habilidades",
     icon: "mdi-account-details",
-    to: TUTOR_ROUTES.MINHAS_HABILIDAES
+    to: TUTOR_ROUTES.HABILIDADES
   },
   {
     title: "Dev",

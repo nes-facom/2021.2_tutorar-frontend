@@ -1,3 +1,161 @@
+<script lang="ts">
+import { getModule } from "vuex-module-decorators"
+import { Vue, Component, Ref } from "vue-property-decorator"
+
+import Auth from "@/store/modules/auth"
+import { CalendarEvent } from "vuetify"
+import { VuetifyCalendarComponent } from "@/pages/tutor/agenda/calendar"
+
+@Component({
+  name: "AgendaProfessor"
+})
+export default class AgendaProfessor extends Vue {
+  /**
+   * Pau no cu do TS, meu deus
+   */
+  @Ref("calendar")
+  calendarInstance!: VuetifyCalendarComponent
+
+  // private get calendarInstance(): Vue & {
+  //   prev: () => void
+  //   next: () => void
+  //   checkChange: () => void
+  // } {
+  //   return this.$refs.calendar as Vue & {
+  //     prev: () => void
+  //     next: () => void
+  //     checkChange: () => void
+  //   }
+  // }
+
+  authModule = getModule(Auth, this.$store)
+
+  dialogAgenda = false
+
+  dialog = false
+
+  focus = ""
+
+  type = "month"
+
+  typeToLabel = {
+    month: "Mensal",
+    week: "Semanal",
+    day: "Dia"
+  }
+
+  selectedEvent = null
+
+  selectedElement = null
+
+  selectedOpen = false
+  selection = ""
+  nomeEvento = ""
+  events: CalendarEvent[] = []
+
+  diasSemana = [
+    { dia: "Domingo", diaExt: "Domingo", diaPeq: "Dom", num: 0 },
+    { dia: "Segunda", diaExt: "Segunda-Feira", diaPeq: "Seg", num: 1 },
+    { dia: "Terça", diaExt: "Terça-Feira", diaPeq: "Ter", num: 2 },
+    { dia: "Quarta", diaExt: "Quarta-Feira", diaPeq: "Qua", num: 3 },
+    { dia: "Quinta", diaExt: "Quinta-Feira", diaPeq: "Qui", num: 4 },
+    { dia: "Sexta", diaExt: "Sexta-Feira", diaPeq: "Sex", num: 5 },
+    { dia: "Sábado", diaExt: "Sábado", diaPeq: "Sab", num: 6 }
+  ]
+
+  diaTodo = null
+  segHorario = null
+  primHorario = null
+  telefone = 67991121434
+
+  viewDay({ date }) {
+    this.focus = date
+    this.type = "day"
+  }
+
+  getEventColor(event) {
+    return event.color
+  }
+
+  setToday() {
+    this.focus = ""
+  }
+
+  prev() {
+    this.calendarInstance.prev()
+  }
+
+  next() {
+    this.calendarInstance.next()
+  }
+
+  showEvent({ nativeEvent, event }) {
+    const open = () => {
+      this.selectedEvent = event
+      this.selectedElement = nativeEvent.target
+      setTimeout(() => {
+        this.selectedOpen = true
+      }, 10)
+    }
+
+    if (this.selectedOpen) {
+      this.selectedOpen = false
+      setTimeout(open, 10)
+    } else {
+      open()
+    }
+
+    nativeEvent.stopPropagation()
+  }
+
+  setEvent(nome, inicio, fim, cor, diaTodo) {
+    this.events.push({
+      name: nome,
+      color: cor,
+      timed: !diaTodo,
+      start: inicio,
+      end: fim
+    })
+  }
+
+  limpaCampos() {
+    this.dialogAgenda = false
+    this.selection = ""
+    this.diaTodo = null
+    this.primHorario = null
+    this.segHorario = null
+    this.nomeEvento = ""
+  }
+
+  salvaElimpaCampos() {
+    if (this.selection) this.setEvent("", new Date(), new Date(), "blue", this.diaTodo)
+    this.diaTodo = null
+    this.selection = ""
+    this.segHorario = null
+    this.nomeEvento = ""
+    this.primHorario = null
+    this.dialogAgenda = false
+  }
+
+  whatsappLink() {
+    window.open(`https://wa.me/55${this.telefone}_blank`)
+  }
+
+  closeAndCancel(focus) {
+    setTimeout(() => {
+      this.selectedOpen = false
+      this.events.splice(focus, 1)
+    }, 2500)
+  }
+
+  mounted() {
+    this.calendarInstance.checkChange()
+    this.setEvent("", new Date(), new Date(), "blue", false)
+    this.setEvent("", new Date("2020-11-11 12:30"), new Date("2020-11-11 21:00"), "blue", false)
+  }
+}
+</script>
+
 <template>
   <v-row class="fill-height">
     <v-col cols="12" align="right">
@@ -21,7 +179,7 @@
               <v-chip v-for="dia in diasSemana" :key="dia.diaExt" :value="dia.diaExt">{{ dia.dia }}</v-chip>
             </v-chip-group>
 
-            <v-divider></v-divider>
+            <v-divider />
 
             <v-row v-if="selection">
               <v-col cols="4">
@@ -95,7 +253,7 @@
               </v-col>
             </v-row>
           </v-card-text>
-          <v-divider></v-divider>
+          <v-divider />
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="error" text @click="limpaCampos()">
@@ -178,7 +336,10 @@
                     </v-avatar>
                   </v-col>
                   <v-col cols="9" align-self="center">
-                    <h4>selected.pessoa.nome gostaria de agendar uma tutoria no dia selected.dia.selecao às selected.hora.selecao.</h4>
+                    <h4>
+                      selected.pessoa.nome gostaria de agendar uma tutoria no dia selected.dia.selecao às
+                      selected.hora.selecao.
+                    </h4>
                   </v-col>
                 </v-row>
               </v-card-text>
@@ -206,8 +367,7 @@
               <v-spacer />
               <v-dialog v-model="dialog" width="500">
                 <template v-slot:activator="{ on, attrs }">
-                  <v-btn @click="closeAndCancel(focus)"
-                         color="primary" text  v-bind="attrs" v-on="on">
+                  <v-btn @click="closeAndCancel(focus)" color="primary" text v-bind="attrs" v-on="on">
                     <span>Cancelar Tutoria</span>
                   </v-btn>
                 </template>
@@ -217,7 +377,8 @@
                     Tutoria cancelada
                   </v-card-title>
                   <v-card-text>
-                    A tutoria agendada foi cancelada com sucesso, o professor professor.nome irá receber um aviso sobre o cancelamento.
+                    A tutoria agendada foi cancelada com sucesso, o professor professor.nome irá receber um aviso sobre
+                    o cancelamento.
                   </v-card-text>
                 </v-card>
               </v-dialog>
@@ -228,127 +389,3 @@
     </v-col>
   </v-row>
 </template>
-
-<script>
-//TODO: Arrumar Código Agenda.
-export default {
-  name: "Agenda",
-  data: () => ({
-    dialogAgenda: false,
-    dialog: false,
-    focus: "",
-    type: "month",
-    typeToLabel: {
-      month: "Mensal",
-      week: "Semanal",
-      day: "Dia"
-    },
-
-    selectedEvent: {},
-
-    selectedElement: null,
-
-    selectedOpen: false,
-    selection: "",
-    events: [],
-
-    diasSemana: [
-      { dia: "Domingo", diaExt: "Domingo", diaPeq: "Dom", num: 0 },
-      { dia: "Segunda", diaExt: "Segunda-Feira", diaPeq: "Seg", num: 1 },
-      { dia: "Terça", diaExt: "Terça-Feira", diaPeq: "Ter", num: 2 },
-      { dia: "Quarta", diaExt: "Quarta-Feira", diaPeq: "Qua", num: 3 },
-      { dia: "Quinta", diaExt: "Quinta-Feira", diaPeq: "Qui", num: 4 },
-      { dia: "Sexta", diaExt: "Sexta-Feira", diaPeq: "Sex", num: 5 },
-      { dia: "Sábado", diaExt: "Sábado", diaPeq: "Sab", num: 6 }
-    ],
-
-    primHorario: null,
-
-    segHorario: null,
-    diaTodo: null,
-    telefone: 67991121434
-  }),
-  mounted() {
-    this.$refs.calendar.checkChange()
-    //TESTE
-    this.setEvent('', new Date(), new Date(), 'blue', false)
-    this.setEvent('', new Date('2020-11-11 12:30'), new Date('2020-11-11 21:00'), 'blue', false)
-  },
-
-  methods: {
-    viewDay({ date }) {
-      this.focus = date
-      this.type = "day"
-    },
-    getEventColor(event) {
-      return event.color
-    },
-    setToday() {
-      this.focus = ""
-    },
-    prev() {
-      this.$refs.calendar.prev()
-    },
-    next() {
-      this.$refs.calendar.next()
-    },
-    showEvent({ nativeEvent, event }) {
-      const open = () => {
-        this.selectedEvent = event
-        this.selectedElement = nativeEvent.target
-        setTimeout(() => {
-          this.selectedOpen = true
-        }, 10)
-      }
-
-      if (this.selectedOpen) {
-        this.selectedOpen = false
-        setTimeout(open, 10)
-      } else {
-        open()
-      }
-
-      nativeEvent.stopPropagation()
-    },
-    setEvent(nome, inicio, fim, cor, diaTodo) {
-      this.events.push({
-        name: nome,
-        color: cor,
-        timed: !diaTodo,
-        start: inicio,
-        end: fim
-      })
-    },
-    limpaCampos() {
-      this.dialogAgenda = false
-      this.selection = null
-      this.diaTodo = null
-      this.primHorario = null
-      this.segHorario = null
-      this.nomeEvento = null
-    },
-    salvaElimpaCampos() {
-      if (this.selection) {
-        this.setEvent("", new Date(), new Date(), "blue", this.diaTodo)
-      }
-      this.dialogAgenda = false
-      this.selection = null
-      this.diaTodo = null
-      this.primHorario = null
-      this.segHorario = null
-      this.nomeEvento = null
-    },
-    whatsappLink(){
-      window.open('https://wa.me/55' + this.telefone, '_blank')
-    },
-    closeAndCancel(focus){
-      setTimeout(() => {
-        this.selectedOpen = false
-        this.events.splice(focus, 1)
-      },2500)
-    }
-  }
-}
-</script>
-
-<style scoped></style>

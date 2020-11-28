@@ -8,11 +8,6 @@ const rotas: DrawerRoute[] = [
     to: COMMON_ROUTES.MEU_PERFIL
   },
   {
-    title: "Agenda",
-    icon: "mdi-calendar",
-    to: COMMON_ROUTES.AGENDA
-  },
-  {
     title: "Mensagens",
     icon: "mdi-android-messages",
     to: "/professor/mensagens"

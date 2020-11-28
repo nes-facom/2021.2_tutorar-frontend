@@ -4,11 +4,13 @@ import CrudModule from "../utils/crud-module"
 import updateTutorService from "@/api/tutor/update-tutor"
 import { RawTutor } from "./users-types"
 
-export function isTutor(user: User | Tutor | Professor): user is Tutor {
+export function isTutor(user?: User | Tutor | Professor | null): user is Tutor {
+  if (!user) return false
   return (user as Tutor).habilidades !== undefined && user.role === "tutor"
 }
 
-export function isProfessor(user: User | Tutor | Professor): user is Professor {
+export function isProfessor(user?: User | Tutor | Professor | null): user is Professor {
+  if (!user) return false
   return (user as Professor).nivelLecionamento !== undefined && user.role === "professor"
 }
 
