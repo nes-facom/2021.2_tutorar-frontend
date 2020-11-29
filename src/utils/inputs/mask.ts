@@ -1,6 +1,8 @@
 /**
  * Retira a mascara dos inputs, funciona apenas se a mascara contem os tokens padrão do v-mask,
  * sendo eles "#", "X", "S", "A", "a", "!"
+ *
+ * exemplo: valor: '(12) 34-56', mascara: '(##) ##-##' -> '123456'
  */
 export function unmask(maskedValue: string, mask: string) {
   if (!maskedValue) return ""
@@ -14,4 +16,13 @@ export function unmask(maskedValue: string, mask: string) {
   }
 
   return valorSemMascara
+}
+
+export function getApropriateTelefoneMask(telefone?: string): string {
+  if (!telefone) return ""
+  if (telefone.length <= 8) return "####-####"
+  if (telefone.length === 9) return "#####-####"
+  if (telefone.length === 10) return "(##) ####-####"
+  if (telefone.length === 11) return "(##) #####-####"
+  return "+## (##) #####-####"
 }

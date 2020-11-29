@@ -85,8 +85,7 @@ export default class ModalConfigurarAgenda extends Vue {
       </v-card-title>
 
       <v-card-subtitle align="center" class="mt-1">
-        Selecione os dias da semana em que você tem disponibilidade de horário para atender como tutor na plataforma
-        Tutorar
+        Selecione os dias da semana em que você tem disponibilidade de horário para atender como tutor.
       </v-card-subtitle>
 
       <div class="px-6 pb-4">

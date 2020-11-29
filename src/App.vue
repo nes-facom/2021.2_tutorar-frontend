@@ -7,11 +7,10 @@ import Auth from "@/store/modules/auth"
 
 import AppBar from "@/components/layout/AppBar.vue"
 import AppFooter from "@/components/layout/AppFooter.vue"
-import AppNavigationDrawer from "@/components/layout/AppNavigationDrawer.vue"
 
 @Component({
   name: "App",
-  components: { AppBar, AppNavigationDrawer, AppFooter }
+  components: { AppBar, AppFooter }
 })
 export default class App extends Vue {
   authModule = getModule(Auth, store)
@@ -39,8 +38,6 @@ export default class App extends Vue {
 <template>
   <v-app>
     <app-bar v-if="!hideHeader" />
-
-<!--    <app-navigation-drawer v-if="isLoggedIn" />-->
 
     <v-main app>
       <v-container :class="routerViewContainerPadding" fluid>

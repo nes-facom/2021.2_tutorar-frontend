@@ -67,12 +67,12 @@ export default class FormHorariosLivresDia extends Vue {
 
       <v-col cols="4">
         <v-card-title class="px-0 pb-3">
-          <v-btn class="ml-4" color="green" icon>
-            <v-icon @click="$emit('horario-adicionado')">mdi-plus</v-icon>
+          <v-btn class="ml-4" color="green" @click="$emit('horario-adicionado')" icon>
+            <v-icon>mdi-plus</v-icon>
           </v-btn>
 
-          <v-btn v-if="value.length > 1" class="ml-4" color="red" icon>
-            <v-icon @click="$emit('horario-removido', i)">mdi-minus</v-icon>
+          <v-btn v-if="value.length > 1" class="ml-4" color="red" @click="$emit('horario-removido', i)" icon>
+            <v-icon>mdi-minus</v-icon>
           </v-btn>
         </v-card-title>
       </v-col>

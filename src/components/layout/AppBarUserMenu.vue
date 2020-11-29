@@ -1,13 +1,10 @@
 <script lang="ts">
-import { getModule } from "vuex-module-decorators"
 import { Vue, Component } from "vue-property-decorator"
+import { getModule } from "vuex-module-decorators"
 
-import Auth from "@/store/modules/auth"
-import { HOME_ROUTES } from "@/router/utils/get-home-route"
-import { COMMON_ROUTES } from "@/router/rotas/comun"
-import router from "@/router"
 import { PROFESSOR_ROUTES } from "@/router/rotas/professor"
 import { TUTOR_ROUTES } from "@/router/rotas/tutor"
+import Auth from "@/store/modules/auth"
 
 interface UserMenuItem {
   to: string
@@ -23,15 +20,14 @@ export default class AppBarUserMenu extends Vue {
   user = this.authModule.user
 
   get menuItems(): UserMenuItem[] {
-    const menuItems: UserMenuItem[] = [
-      {
-        to: COMMON_ROUTES.MEU_PERFIL,
+    const menuItems: UserMenuItem[] = []
+    if (this.user?.role === "tutor") {
+      menuItems.push({
+        to: TUTOR_ROUTES.PERFIL,
         icon: "mdi-account",
         text: "Minha conta",
         path: "meu-perfil"
-      }
-    ]
-    if (this.user?.role === "tutor") {
+      })
       menuItems.push({
         to: TUTOR_ROUTES.AGENDA,
         icon: "mdi-calendar",
@@ -46,6 +42,12 @@ export default class AppBarUserMenu extends Vue {
       })
     }
     if (this.user?.role === "professor") {
+      menuItems.push({
+        to: PROFESSOR_ROUTES.PERFIL,
+        icon: "mdi-account",
+        text: "Minha conta",
+        path: "meu-perfil"
+      })
       menuItems.push({
         to: PROFESSOR_ROUTES.ESCOLHER_TUTOR,
         icon: "mdi-star",
@@ -62,7 +64,7 @@ export default class AppBarUserMenu extends Vue {
 
   logout() {
     this.authModule.logout()
-    router.push({ path: "/login" })
+    this.$router.push({ path: "/login" })
   }
 }
 </script>

@@ -1,4 +1,5 @@
 <script lang="ts">
+import { getApropriateTelefoneMask } from "@/utils/inputs/mask"
 import { Vue, Component, Prop } from "vue-property-decorator"
 
 @Component({ name: "ModalAceitarTutoria" })
@@ -13,11 +14,8 @@ export default class ModalAceitarTutoria extends Vue {
     window.open(`https://wa.me/55${this.telefone}`)
   }
 
-  get telefoneFilter(): string {
-    if (this.telefone.length <= 8) return "####-####"
-    if (this.telefone.length === 9) return "#####-####"
-    if (this.telefone.length === 10) return "(##) ####-####"
-    return "(##) #####-####"
+  get mascaraTelefone(): string {
+    return getApropriateTelefoneMask(this.telefone)
   }
 }
 </script>
@@ -53,7 +51,7 @@ export default class ModalAceitarTutoria extends Vue {
             <span>Telefone</span>
           </v-card-subtitle>
           <span v-if="telefone.length" @click="openTutorWhatsAppLink">
-            {{ telefone | VMask(telefoneFilter) }}
+            {{ telefone | VMask(mascaraTelefone) }}
           </span>
         </v-col>
         <v-col cols="6">
