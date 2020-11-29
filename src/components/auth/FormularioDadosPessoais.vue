@@ -146,7 +146,6 @@ export default class FormularioDadosPessoais extends Vue {
 
       see: https://vuetifyjs.com/en/api/v-text-field/#props
     -->
-    {{ dados.cpf }}
     <v-text-field
       v-model="maskedCpf"
       v-mask="'###.###.###-##'"

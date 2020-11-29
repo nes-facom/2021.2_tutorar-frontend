@@ -1,9 +1,7 @@
 <script lang="ts">
 import { Vue, Component, Prop } from "vue-property-decorator"
 
-@Component({
-  name: "ModalAceitarTutoria"
-})
+@Component({ name: "ModalAceitarTutoria" })
 export default class ModalAceitarTutoria extends Vue {
   @Prop({ required: true })
   value!: boolean

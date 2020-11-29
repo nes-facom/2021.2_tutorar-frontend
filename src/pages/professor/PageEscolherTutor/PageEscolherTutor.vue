@@ -16,12 +16,12 @@ export default class PageHome extends Vue {
   showMenuCalendario = false
 
   tutores = [
-    { nome: "Amanda", curso: "Biologia", universidade: "UFMS", descricao: "Descrição do tutor" },
-    { nome: "Amanda", curso: "Biologia", universidade: "UFMS", descricao: "Descrição do tutor" },
-    { nome: "Amanda", curso: "Biologia", universidade: "UFMS", descricao: "Descrição do tutor" },
-    { nome: "Amanda", curso: "Biologia", universidade: "UFMS", descricao: "Descrição do tutor" },
-    { nome: "Amanda", curso: "Biologia", universidade: "UFMS", descricao: "Descrição do tutor" },
-    { nome: "Amanda", curso: "Biologia", universidade: "UFMS", descricao: "Descrição do tutor" }
+    { nome: "Amanda" },
+    { nome: "Amanda" },
+    { nome: "Amanda" },
+    { nome: "Amanda" },
+    { nome: "Amanda" },
+    { nome: "Amanda" }
   ]
 
   get dataFormatada() {
@@ -30,7 +30,7 @@ export default class PageHome extends Vue {
     return `${d[2]}/${d[1]}/${d[0].substring(2)}`
   }
 
-  irPerfilTutor(tutor: never) {
+  irPerfilTutor(tutor: any) {
     //TODO Colocar Pagina do tutor selecionado
     this.$router.push({ path: "/tutor/perfil" })
     console.log(tutor)

@@ -61,22 +61,18 @@ export default class CardPerfilResumidoTutor extends Vue {
               </div>
 
               <v-card-text class="text-center">
-                <h3 class="blue--text" v-text="tutor.nome"></h3>
+                <h3 class="blue--text" v-text="tutor.nome" />
               </v-card-text>
             </div>
             <v-divider />
-            <div class="">
+            <div>
               <v-card-text>
-                <h3 class="grey--text">
-                  Curso
-                </h3>
-                <h4 class="blue--text">{{ tutor.curso }}</h4>
+                <h3 class="grey--text">Curso</h3>
+                <h4 class="blue--text" v-text="tutor.curso" />
               </v-card-text>
               <v-card-text>
-                <h3 class="grey--text">
-                  Universidade
-                </h3>
-                <h4 class="blue--text">{{ tutor.universidade }}</h4>
+                <h3 class="grey--text">Universidade</h3>
+                <h4 class="blue--text" v-text="tutor.universidade" />
               </v-card-text>
             </div>
           </v-col>
@@ -86,18 +82,15 @@ export default class CardPerfilResumidoTutor extends Vue {
             <v-list two-line>
               <v-list-item v-for="dias in diasSemanaTutor" :key="dias.num">
                 <v-list-item-icon v-if="dias.num == 1">
-                  <v-icon color="primary">
-                    mdi-calendar
-                  </v-icon>
+                  <v-icon color="primary">mdi-calendar</v-icon>
                 </v-list-item-icon>
-                <v-list-item-action v-else></v-list-item-action>
 
                 <v-list-item-content>
-                  <v-list-item-title>{{ dias.dia }}</v-list-item-title>
-                  <v-list-item-subtitle>{{ dias.disponibilidade }}</v-list-item-subtitle>
+                  <v-list-item-title v-text="dias.dia" />
+                  <v-list-item-subtitle v-text="dias.disponibilidade" />
                 </v-list-item-content>
               </v-list-item>
-              <v-divider inset></v-divider>
+              <v-divider inset />
 
               <v-list-item>
                 <v-list-item-icon>
@@ -112,12 +105,11 @@ export default class CardPerfilResumidoTutor extends Vue {
                     <v-chip-group>
                       <v-chip
                         v-for="(habilidades, index) in habilidadesTutor"
+                        v-text="habilidades.nome"
                         :key="index"
                         outlined
                         :color="habilidades.cor"
-                      >
-                        {{ habilidades.nome }}
-                      </v-chip>
+                      />
                     </v-chip-group>
                   </v-list-item-subtitle>
                 </v-list-item-content>
@@ -130,5 +122,3 @@ export default class CardPerfilResumidoTutor extends Vue {
     <ModalAgendarTutoria v-model="showModalAgendarTutoria" />
   </v-row>
 </template>
-
-<style scoped></style>

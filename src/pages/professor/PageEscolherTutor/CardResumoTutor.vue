@@ -4,9 +4,7 @@ import { Vue, Component } from "vue-property-decorator"
 @Component({
   name: "CardResumoTutor"
 })
-export default class CardResumoTutor extends Vue {
-  model = null
-}
+export default class CardResumoTutor extends Vue {}
 </script>
 
 <template>
