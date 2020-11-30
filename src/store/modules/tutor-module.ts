@@ -3,6 +3,7 @@ import { Professor, Tutor, User } from "@/store/modules/auth-types"
 import CrudModule from "../utils/crud-module"
 import updateTutorService from "@/api/tutor/update-tutor"
 import { RawTutor } from "./users-types"
+import cadastroTutorService, { DadosCadastroTutor } from "@/api/tutor/cadastro-tutor"
 
 export function isTutor(user?: User | Tutor | Professor | null): user is Tutor {
   if (!user) return false
@@ -41,9 +42,9 @@ export default class TutorModule extends CrudModule<Tutor> {
    * Cadastra um tutor na plataforma
    */
   @Action({ rawError: true })
-  async cadastraTutor(tutor: Tutor, foto: File) {
-    console.log(tutor, foto)
-    return null
+  async cadastraTutor(payload: DadosCadastroTutor): Promise<Tutor> {
+    const tutorCadastrado = await cadastroTutorService(payload)
+    return normalizaTutor(tutorCadastrado)
   }
 
   /**

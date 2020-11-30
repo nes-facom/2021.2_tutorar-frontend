@@ -40,7 +40,8 @@ export default class CadastroProfessor extends Vue {
     email: "",
     cpf: "",
     genero: "",
-    celular: ""
+    celular: "",
+    dataNascimento: ""
   }
 
   professor: { [x: string]: unknown; foto: File | null } = {

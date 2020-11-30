@@ -7,28 +7,34 @@ import { unmask } from "@/utils/inputs/mask"
 import { Vue, Component, Watch } from "vue-property-decorator"
 
 import findUserByCpf from "@/api/users/find-by-cpf"
+import { ddmmyyyyStringToIso } from "@/utils"
 
 export interface DadosPessoais {
-  cpf: string | undefined
-  nome: string | undefined
-  email: string | undefined
-  genero: string | undefined
-  celular: string | undefined
+  cpf: string
+  nome: string
+  email: string
+  genero: string
+  celular: string
+  dataNascimento: string
 }
 
 @Component({ name: "FormularioDadosPessoais" })
 export default class FormularioDadosPessoais extends Vue {
   dados: DadosPessoais = {
+    cpf: "",
     nome: "",
     email: "",
-    cpf: "",
     genero: "",
-    celular: ""
+    celular: "",
+    dataNascimento: ""
   }
 
   maskedCpf = ""
   isCpfEmUso = false
   isCheckingCpf = false
+
+  maskedTelefone = ""
+  dataNascimentoNaoFormatada = ""
 
   opcoes = {
     genero: [
@@ -37,12 +43,12 @@ export default class FormularioDadosPessoais extends Vue {
     ]
   }
 
-  getCelularMask(telefone: string) {
+  getCelularMask(telefone?: string) {
     if (!telefone) return "(##) ####-####"
-    return telefone.length > 14 ? "(##) #####-####" : "(##) ####-####"
+    return telefone.length <= 14 ? "(##) ####-####" : "(##) #####-####"
   }
 
-  verificaCpf(cpf: string | undefined): true | string {
+  verificaCpf(cpf?: string): true | string {
     if (!cpf) return "CPF é obrigatório"
 
     if (!isValidCpf(cpf)) return "CPF inválido"
@@ -76,13 +82,25 @@ export default class FormularioDadosPessoais extends Vue {
   }
 
   @Watch("dados", { deep: true })
-  onFormDataChange(value: DadosPessoais) {
-    this.$emit("input", value)
+  onFormDataChange(dados: DadosPessoais) {
+    this.$emit("input", dados)
+  }
+
+  @Watch("maskedTelefone")
+  onMaskedTelefoneChange(celular?: string) {
+    this.dados.celular = unmask(celular, this.getCelularMask(celular))
+  }
+
+  @Watch("dataNascimentoNaoFormatada")
+  onDataNascimentoChange(dataNascimento?: string) {
+    this.dados.dataNascimento = dataNascimento?.length === 10 ? ddmmyyyyStringToIso(dataNascimento) : ""
   }
 
   @Watch("maskedCpf")
   onCpfChange(maskedCpf?: string) {
     const cpf = maskedCpf ? unmask(maskedCpf, "###.###.###-##") : ""
+
+    this.dados.cpf = cpf
 
     if (!cpf || !isValidCpf(cpf)) {
       this.isCpfEmUso = false
@@ -107,26 +125,6 @@ export default class FormularioDadosPessoais extends Vue {
 
 <template>
   <div>
-    <v-row align="center" class="mx-auto">
-      <v-col>
-        <h5>Registrar-se com:</h5>
-      </v-col>
-      <v-col>
-        <v-btn
-          color="blue lighten-1"
-          outlined
-          class="white--text px-4 elevation-2"
-          style="text-transform: none"
-          block
-          x-large
-        >
-          <v-icon left dark color="red">
-            mdi-google
-          </v-icon>
-          Google
-        </v-btn>
-      </v-col>
-    </v-row>
     <h1 class="text-center headline mb-8">
       Passo 1 - Dados Pessoais
     </h1>
@@ -158,7 +156,7 @@ export default class FormularioDadosPessoais extends Vue {
     />
 
     <v-text-field
-      v-model="dados.dataNascimento"
+      v-model="dataNascimentoNaoFormatada"
       v-mask="'##/##/####'"
       :rules="rules.dataNascimento"
       placeholder="Data de Nascimento"
@@ -176,8 +174,8 @@ export default class FormularioDadosPessoais extends Vue {
     />
 
     <v-text-field
-      v-model="dados.celular"
-      v-mask="getCelularMask(dados.celular)"
+      v-model="maskedTelefone"
+      v-mask="getCelularMask(maskedTelefone)"
       :rules="rules.celular"
       placeholder="Celular"
       outlined

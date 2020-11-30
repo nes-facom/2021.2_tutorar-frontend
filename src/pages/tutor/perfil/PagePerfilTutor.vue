@@ -56,7 +56,7 @@ export default class PagePerfilTutor extends Vue {
               <v-spacer />
 
               <v-btn :color="isEditing ? 'red' : 'grey'" x-large text @click="toggleEditMode">
-                <span v-text="isEditing ? 'Cancelar Edição' : 'Editar'" />
+                <span v-text="isEditing ? 'Cancelar' : 'Editar'" />
                 <v-icon class="ml-3" v-text="isEditing ? 'mdi-pencil-off-outline' : 'mdi-pencil'" />
               </v-btn>
             </v-tabs>

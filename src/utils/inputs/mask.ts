@@ -4,7 +4,7 @@
  *
  * exemplo: valor: '(12) 34-56', mascara: '(##) ##-##' -> '123456'
  */
-export function unmask(maskedValue: string, mask: string) {
+export function unmask(maskedValue: string | undefined, mask: string) {
   if (!maskedValue) return ""
 
   const tokens = ["#", "X", "S", "A", "a", "!"]

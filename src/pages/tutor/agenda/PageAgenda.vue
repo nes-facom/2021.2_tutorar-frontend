@@ -66,7 +66,7 @@ export default class AgendaProfessor extends Vue {
     this.calendarTimeFrame = ""
   }
 
-  exibirEvento({ nativeEvent, event, eventParsed }) {
+  exibirEvento({ nativeEvent, event, eventParsed }: { [x: string]: any }) {
     console.log(nativeEvent)
     console.log("===========================")
     console.log(event)
