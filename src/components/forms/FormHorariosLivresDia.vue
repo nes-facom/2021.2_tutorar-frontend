@@ -10,6 +10,30 @@ export default class FormHorariosLivresDia extends Vue {
   value!: HorarioLivre[]
 
   /**
+   * @TODO transformar em computed pra reagir com o input do fim
+   * Cria uma função para validar o horário de início com base no indíce
+   */
+  createInicioValidationFunction(index: number) {
+    return (horarioInicio?: string) => {
+      const { fim: horarioFim } = this.value[index]
+
+      // Se não tem horario de início e de fim então não valide
+      if (!horarioFim && !horarioInicio) return true
+
+      if (horarioInicio && horarioFim) {
+        const fimNumber = Number(horarioFim.replace(/\D/g, ""))
+        const iniNumber = Number(horarioInicio.replace(/\D/g, ""))
+
+        // Se ambos existem verifico se o horario de fim é maior que o de inicio
+        return iniNumber < fimNumber || "Horário de início deve ser anterior ao horário de termino"
+      }
+
+      // Se falta um dos dois então é inválido
+      return false
+    }
+  }
+
+  /**
    * Os horários formatados para o vuetify funcionar corretamente,
    * se não há nem um horário, cria um vazio para ter o formulário
    */
@@ -50,7 +74,14 @@ export default class FormHorariosLivresDia extends Vue {
       <v-col cols="4">
         <v-menu :close-on-content-click="false" transition="scale-transition" offset-y>
           <template v-slot:activator="{ on, attrs }">
-            <v-text-field v-model="horario.inicio" v-bind="attrs" v-on="on" label="Inicio" readonly hide-details />
+            <v-text-field
+              v-model="horario.inicio"
+              :rules="[createInicioValidationFunction(i)]"
+              v-bind="attrs"
+              v-on="on"
+              label="Inicio"
+              readonly
+            />
           </template>
           <v-time-picker :value="horario.inicio" @change="setHorarioInicio($event, i)" format="24hr" />
         </v-menu>
@@ -59,7 +90,7 @@ export default class FormHorariosLivresDia extends Vue {
       <v-col cols="4">
         <v-menu :close-on-content-click="false" transition="scale-transition" offset-y>
           <template v-slot:activator="{ on, attrs }">
-            <v-text-field v-model="horario.fim" v-bind="attrs" v-on="on" label="Fim" hide-details readonly />
+            <v-text-field v-model="horario.fim" v-bind="attrs" v-on="on" label="Fim" readonly />
           </template>
           <v-time-picker :value="horario.fim" @change="setHorarioFim($event, i)" format="24hr" />
         </v-menu>

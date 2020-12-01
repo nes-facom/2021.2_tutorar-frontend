@@ -154,8 +154,8 @@ export default class SelecaoHabilidades extends Vue {
         <v-divider class="my-2" />
 
         <div class="pa-4">
-          <span class="grey--text text--darken-1 subtitle-1"
-            >Suas habilidades são utilizadas para que professores te encontrem com mais facilidade, selecione as 5 que
+          <span class="grey--text text--darken-1 subtitle-1">
+            Suas habilidades são utilizadas para que professores te encontrem com mais facilidade, selecione as 5 que
             você mais possui afinidade
           </span>
         </div>

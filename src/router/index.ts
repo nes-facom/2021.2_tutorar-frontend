@@ -9,8 +9,7 @@ import Auth from "@/store/modules/auth"
 import { RouteConfigSingleView } from "vue-router/types/router"
 
 import { AUTH_ROUTES } from "./rotas/comun"
-import getHomeRoute from "./utils/get-home-route"
-import { ERROR_ROUTES } from "./rotas/error"
+import { getHomeRoute } from "./utils/get-home-route"
 
 export interface RouteMeta {
   // Auth

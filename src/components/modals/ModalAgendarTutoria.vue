@@ -10,18 +10,18 @@ export default class ModalAgendarTutoria extends Vue {
 
   ferramentas = ["Foo", "Bar", "Fizz", "Buzz"]
 
-  dataInput = null
-  dataMenu = false
-  primHorarioInput = null
-  segHorarioInput = null
   dialog = false
+  dataMenu = false
+  dataInput = null
+  segHorarioInput = null
+  primHorarioInput = null
 }
 </script>
 
 <template>
   <v-dialog :value="value" width="500" @click:outside="$emit('input', false)">
     <v-card>
-      <v-card-title></v-card-title>
+      <v-card-title />
 
       <v-card-text>
         <h4 class="blue--text">Passo 1</h4>
@@ -60,7 +60,6 @@ export default class ModalAgendarTutoria extends Vue {
               ref="primMenu"
               :close-on-content-click="false"
               :nudge-right="40"
-              :return-value.sync="primHorario"
               transition="scale-transition"
               offset-y
               max-width="290px"

@@ -5,6 +5,7 @@ import { getModule } from "vuex-module-decorators"
 import { PROFESSOR_ROUTES } from "@/router/rotas/professor"
 import { TUTOR_ROUTES } from "@/router/rotas/tutor"
 import Auth from "@/store/modules/auth"
+import { getPerfilRoute } from "@/router/utils/get-home-route"
 
 interface UserMenuItem {
   to: string
@@ -19,41 +20,48 @@ export default class AppBarUserMenu extends Vue {
 
   user = this.authModule.user
 
+  // Pra usar na template
+  getPerfilRoute = getPerfilRoute
+
   get menuItems(): UserMenuItem[] {
     const menuItems: UserMenuItem[] = []
     if (this.user?.role === "tutor") {
-      menuItems.push({
-        to: TUTOR_ROUTES.PERFIL,
-        icon: "mdi-account",
-        text: "Minha conta",
-        path: "meu-perfil"
-      })
-      menuItems.push({
-        to: TUTOR_ROUTES.AGENDA,
-        icon: "mdi-calendar",
-        text: "Agenda",
-        path: "agenda"
-      })
-      menuItems.push({
-        to: TUTOR_ROUTES.HABILIDADES,
-        icon: "mdi-account-details",
-        text: "Habilidades",
-        path: "minhas-habilidades"
-      })
+      menuItems.push(
+        {
+          to: TUTOR_ROUTES.PERFIL,
+          icon: "mdi-account",
+          text: "Minha conta",
+          path: "meu-perfil"
+        },
+        {
+          to: TUTOR_ROUTES.AGENDA,
+          icon: "mdi-calendar",
+          text: "Agenda",
+          path: "agenda"
+        },
+        {
+          to: TUTOR_ROUTES.HABILIDADES,
+          icon: "mdi-account-details",
+          text: "Habilidades",
+          path: "minhas-habilidades"
+        }
+      )
     }
     if (this.user?.role === "professor") {
-      menuItems.push({
-        to: PROFESSOR_ROUTES.PERFIL,
-        icon: "mdi-account",
-        text: "Minha conta",
-        path: "meu-perfil"
-      })
-      menuItems.push({
-        to: PROFESSOR_ROUTES.ESCOLHER_TUTOR,
-        icon: "mdi-star",
-        text: "Procurar Tutores",
-        path: "escolher-tutor"
-      })
+      menuItems.push(
+        {
+          to: PROFESSOR_ROUTES.PERFIL,
+          icon: "mdi-account",
+          text: "Minha conta",
+          path: "meu-perfil"
+        },
+        {
+          to: PROFESSOR_ROUTES.ESCOLHER_TUTOR,
+          icon: "mdi-star",
+          text: "Procurar Tutores",
+          path: "escolher-tutor"
+        }
+      )
     }
     return menuItems
   }
@@ -78,7 +86,7 @@ export default class AppBarUserMenu extends Vue {
     </template>
     <v-card width="300px">
       <v-list>
-        <v-list-item @click="$router.push({ path: '/meu-perfil' })">
+        <v-list-item @click="goToRoute(getPerfilRoute())">
           <v-list-item-avatar>
             <v-img src="@/assets/dog.jpg" alt="Usuário" />
           </v-list-item-avatar>

@@ -7,14 +7,14 @@ import { getModule } from "vuex-module-decorators"
 import Auth from "@/store/modules/auth"
 
 const InputTipoExibicaoCalendario = () => import("@/components/inputs/InputTipoExibicaoCalendario.vue")
-const ModalConfigurarAgenda = () => import("@/pages/tutor/agenda/ModalConfigurarAgenda.vue")
+const ModalConfigurarHorarios = () => import("@/pages/tutor/agenda/ModalConfigurarHorarios.vue")
 const CardPedidoTutoria = () => import("@/components/cards/CardPedidoTutoria.vue")
 
 @Component({
   name: "AgendaProfessor",
   components: {
     CardPedidoTutoria,
-    ModalConfigurarAgenda,
+    ModalConfigurarHorarios,
     InputTipoExibicaoCalendario
   }
 })
@@ -24,14 +24,14 @@ export default class AgendaProfessor extends Vue {
 
   authModule = getModule(Auth, this.$store)
 
-  showModalConfigurarAgenda = false
+  showModalConfigurarHorarios = false
 
   exibirMenuEventoSelecionado = false
 
   tipoExibicaoCalendario: "month" | "week" | "day" = "month"
 
   horariosTutorMock: AgendaHorarios = {
-    segunda: [{ inicio: "1580", fim: "1830" }],
+    segunda: [{ inicio: "1550", fim: "1830" }],
     terca: [],
     quarta: [],
     quinta: [],
@@ -118,10 +118,14 @@ export default class AgendaProfessor extends Vue {
   <div>
     {{ horariosTutorMock }}
     <v-divider></v-divider>
-    {{ calendarTimeFrame }}
-    <v-divider></v-divider>
-    {{ authModule.user }}
-    <ModalConfigurarAgenda v-model="showModalConfigurarAgenda" :horarios-tutor="horariosTutorMock" />
+    <!-- {{ calendarTimeFrame }} -->
+    <!-- <v-divider></v-divider> -->
+    <!-- {{ authModule.user }} -->
+    <ModalConfigurarHorarios
+      v-model="showModalConfigurarHorarios"
+      :horarios-tutor="horariosTutorMock"
+      @horarios-atualizados="horariosTutorMock = $event"
+    />
 
     <v-toolbar flat class="px-0">
       <v-btn outlined class="mr-4" color="grey darken-2" @click="setToday">Hoje</v-btn>
@@ -141,7 +145,7 @@ export default class AgendaProfessor extends Vue {
 
       <v-spacer />
 
-      <v-btn @click="showModalConfigurarAgenda = true" color="primary" class="mr-6">Meus Horários</v-btn>
+      <v-btn @click="showModalConfigurarHorarios = true" color="primary" class="mr-6">Meus Horários</v-btn>
 
       <InputTipoExibicaoCalendario v-model="tipoExibicaoCalendario" />
     </v-toolbar>

@@ -1,7 +1,7 @@
 <script lang="ts">
 import AppBarCadastro from "@/components/auth/AppBarCadastro.vue"
 import { Component, Ref, Vue } from "vue-property-decorator"
-import getHomeRoute from "@/router/utils/get-home-route"
+import { getHomeRoute } from "@/router/utils/get-home-route"
 import { getModule } from "vuex-module-decorators"
 import { StringFieldRules } from "@/utils/form"
 import { LOGIN_ERRORS } from "@/api/auth/login"
