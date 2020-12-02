@@ -156,6 +156,7 @@ export default class AgendaProfessor extends Vue {
 
     <v-sheet height="600">
       <v-calendar
+        locale="pt-br"
         ref="calendar"
         v-model="calendarTimeFrame"
         color="primary"
