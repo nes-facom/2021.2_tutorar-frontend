@@ -123,7 +123,11 @@ export default class ModalRegistrarTutoria extends Vue {
           </v-col>
         </v-row>
         <h4 class="blue--text">Descrição</h4>
-        <v-textarea label="Descrição" counter="250"></v-textarea>
+        <v-textarea
+            label="Descrição"
+            counter
+            maxlength="1000"
+        ></v-textarea>
       </v-card-text>
 
       <v-divider />
