@@ -108,36 +108,41 @@ export default class PageLogin extends Vue {
             class="pa-6 elevation-6"
             @keyup.enter="canSendLoginRequest ? sendLoginRequest() : () => null"
           >
-            <v-row align="center" class="mx-auto">
-              <v-col>
-                <h5>Fazer Login com:</h5>
-              </v-col>
-              <v-col>
-                <v-btn
-                  color="blue lighten-1"
-                  outlined
-                  class="white--text px-4 elevation-2"
-                  style="text-transform: none"
-                  block
-                  x-large
-                >
-                  <v-icon left dark color="red">
-                    mdi-google
-                  </v-icon>
-                  Google
-                </v-btn>
-              </v-col>
-            </v-row>
+            <h3 class="my-5 text-center">Realizar Login</h3>
 
-            <v-row>
-              <v-col>
-                <v-divider class="my-5" />
-              </v-col>
-              <div class="my-5" style="color: #34A853">ou</div>
-              <v-col>
-                <v-divider class="my-5" />
-              </v-col>
-            </v-row>
+            <v-divider class="my-5" />
+<!--            O que está comentado era para ser o Login com o Google -->
+<!--            <v-row align="center" class="mx-auto">-->
+<!--              <v-col>-->
+<!--                <h5>Fazer Login com:</h5>-->
+<!--              </v-col>-->
+<!--              <v-col>-->
+<!--                <v-btn-->
+<!--                  color="blue lighten-1"-->
+<!--                  outlined-->
+<!--                  class="white&#45;&#45;text px-4 elevation-2"-->
+<!--                  style="text-transform: none"-->
+<!--                  block-->
+<!--                  x-large-->
+<!--                >-->
+<!--                  <v-icon left dark color="red">-->
+<!--                    mdi-google-->
+<!--                  </v-icon>-->
+<!--                  Google-->
+<!--                </v-btn>-->
+<!--              </v-col>-->
+<!--            </v-row>-->
+
+<!--            <v-row>-->
+<!--              <v-col>-->
+<!--                <v-divider class="my-5" />-->
+<!--              </v-col>-->
+<!--              <div class="my-5" style="color: #34A853">ou</div>-->
+<!--              <v-col>-->
+<!--                <v-divider class="my-5" />-->
+<!--              </v-col>-->
+<!--            </v-row>-->
+<!--            Fim comentário login com o google -->
 
             <v-form v-model="isFormValid" ref="loginForm">
               <!-- 

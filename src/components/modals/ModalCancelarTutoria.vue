@@ -14,9 +14,9 @@ export default class ModalCancelarTutoria extends Vue {
 </script>
 
 <template>
-  <v-dialog :value="value" persistent width="400">
+  <v-dialog :value="value" persistent width="500">
     <v-card>
-      <v-img class="mx-auto" width="350" src="@/assets/imagens/Usuário_Desativar.svg" />
+      <v-img class="mx-auto" width="276" src="@/assets/imagens/Tutoria_Cancelada.svg" />
       <v-card-title class="font-weight-bold headline justify-center">
         Cancelar a tutoria ?
       </v-card-title>
@@ -29,7 +29,7 @@ export default class ModalCancelarTutoria extends Vue {
         <v-btn color="grey darken-1" @click="$emit('input', false)" text>Voltar</v-btn>
         <v-spacer />
         <v-btn color="primary" class="white--text" @click="cancelarTutoria">
-          Sim, Cancelar Tutoria
+          Cancelar
         </v-btn>
       </v-card-actions>
     </v-card>

@@ -112,6 +112,10 @@ export default class AgendaProfessor extends Vue {
     this.setEvent("", new Date("2020-11-11 12:30"), new Date("2020-11-11 21:00"), "blue", false)
   }
 }
+/*Todo Adicionar rota para após a seleção de habilidades, após cadastro de tutor.
+    Caso configure sua agenda : continuar na página atual.
+    Caso não queira fazer isso agora : ir para home.
+*/
 </script>
 
 <template>

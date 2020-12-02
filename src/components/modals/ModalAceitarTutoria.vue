@@ -21,7 +21,7 @@ export default class ModalAceitarTutoria extends Vue {
 </script>
 
 <template>
-  <v-dialog :value="value" width="500" @click:outside="$emit('input', false)">
+  <v-dialog :value="value" persistent width="500" @click:outside="$emit('input', false)">
     <v-card>
       <v-card-title>
         <v-avatar size="100">
@@ -50,9 +50,9 @@ export default class ModalAceitarTutoria extends Vue {
           <v-card-subtitle class="pl-0 pb-2">
             <span>Telefone</span>
           </v-card-subtitle>
-          <span v-if="telefone.length" @click="openTutorWhatsAppLink">
+          <a v-if="telefone.length" @click="openTutorWhatsAppLink">
             {{ telefone | VMask(mascaraTelefone) }}
-          </span>
+          </a>
         </v-col>
         <v-col cols="6">
           <v-card-subtitle class="pl-0 pb-2">

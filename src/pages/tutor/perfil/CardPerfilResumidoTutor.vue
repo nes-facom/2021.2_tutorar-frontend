@@ -38,13 +38,12 @@ export default class CardPerfilResumidoTutor extends Vue {
     <v-col cols="12" md="10">
       <v-card>
         <v-row>
-          <v-col cols="3">
+          <v-col cols="6">
             <v-btn color="primary" text @click="$router.push({ path: '/home' })">
               <v-icon>mdi-arrow-left</v-icon>
             </v-btn>
           </v-col>
-          <v-col cols="9" class="d-flex justify-space-between">
-            <h3 class="grey--text ml-2">Disponibilidade do tutor</h3>
+          <v-col cols="6" class="d-flex justify-end">
             <v-btn color="green" small class="white--text mr-3" @click="escolherTutoria()">
               <span>Agendar Tutoria</span>
             </v-btn>
@@ -78,19 +77,24 @@ export default class CardPerfilResumidoTutor extends Vue {
           </v-col>
 
           <v-col cols="9" style="border-left: 1px solid #e3e3e3; min-height: 300px">
-            <h4 class="grey--text px-3 py-3">O tutor possui disponibilidade nos seguintes dias da semana e períodos</h4>
             <v-list two-line>
-              <v-list-item v-for="dias in diasSemanaTutor" :key="dias.num">
-                <v-list-item-icon v-if="dias.num == 1">
+              <v-list-item>
+                <v-list-item-icon>
                   <v-icon color="primary">mdi-calendar</v-icon>
                 </v-list-item-icon>
 
                 <v-list-item-content>
-                  <v-list-item-title v-text="dias.dia" />
+                  <v-list-item-title>Disponiblidade do Tutor</v-list-item-title>
+                  <v-list-item-subtitle>O tutor possui disponiblidade nos seguintes dias da semana e períodos</v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+              <v-list-item v-for="dias in diasSemanaTutor" :key="dias.num">
+                <v-list-item-content>
+                  <v-list-item-title class="blue--text" v-text="dias.dia" />
                   <v-list-item-subtitle v-text="dias.disponibilidade" />
                 </v-list-item-content>
               </v-list-item>
-              <v-divider inset />
+              <v-divider class="py-1"/>
 
               <v-list-item>
                 <v-list-item-icon>

@@ -6,10 +6,10 @@ import { getModule } from "vuex-module-decorators"
 const ModalAceitarTutoria = () => import("@/components/modals/ModalAceitarTutoria.vue")
 
 @Component({
-  name: "PainelControle",
+  name: "SolicitacoesTutoria",
   components: { ModalAceitarTutoria }
 })
-export default class PainelControle extends Vue {
+export default class SolicitacoesTutoria extends Vue {
   authModule = getModule(Auth, this.$store)
 
   showModalAceitarTutoria = false
@@ -25,17 +25,20 @@ export default class PainelControle extends Vue {
       value: "nome"
     },
     {
+      text: "Data",
+      value: "data"
+    },
+    {
       text: "Horário",
       value: "horario"
     },
     {
       text: "Ação",
       value: "acao",
-      align: "end"
     }
   ]
 
-  solicitacoes = [{ nome: "Leonarda Kauan Pereira", horario: "09 de novembro às 12:00" }]
+  solicitacoes = [{ nome: "Leonarda Kauan Pereira", data: "07 de setembro de 2020", horario: "07:00 pm" }]
 
   escolherTutoria(tutoria: any) {
     console.log(tutoria)
@@ -54,9 +57,6 @@ export default class PainelControle extends Vue {
 
 <template>
   <v-row no-gutters class="mt-6">
-    <v-col cols="12">
-      <v-card-title class="grey--text py-0">Solicitações de Tutorias</v-card-title>
-    </v-col>
     <v-col cols="12">
       <v-data-table :headers="headers" :items="solicitacoes" hide-default-footer>
         <template #item.avatar>

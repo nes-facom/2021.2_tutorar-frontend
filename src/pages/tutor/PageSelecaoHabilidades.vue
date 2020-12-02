@@ -140,6 +140,10 @@ export default class SelecaoHabilidades extends Vue {
       })
   }
 }
+/*Todo Adicionar rota para após o registro de tutor.
+    Caso selecione habilidades : ir para configuração da agenda.
+    Caso não queira fazer isso agora : ir para configuração da agenda.
+*/
 </script>
 
 <template>

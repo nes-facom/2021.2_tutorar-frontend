@@ -19,7 +19,7 @@ export default class ModalAgendarTutoria extends Vue {
 </script>
 
 <template>
-  <v-dialog :value="value" width="500" @click:outside="$emit('input', false)">
+  <v-dialog :value="value" persistent width="500">
     <v-card>
       <v-card-title />
 
@@ -128,11 +128,11 @@ export default class ModalAgendarTutoria extends Vue {
             </v-btn>
           </template>
           <v-card>
-            <v-img class="mx-auto" width="276" src="@/assets/imagens/Usuário_Desativar.svg" />
+            <v-img class="mx-auto" width="276" src="@/assets/imagens/Tutoria_Cancelada.svg" />
             <v-card-title class="font-weight-bold headline d-flex justify-center">
               Tutoria solicitada
             </v-card-title>
-            <v-card-text>
+            <v-card-text class="text-center">
               Aguarde que em breve o tutor irá analisar a solicitação e entrará em contato
             </v-card-text>
           </v-card>

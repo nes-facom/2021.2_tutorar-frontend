@@ -108,7 +108,7 @@ export default class RecuperarSenha extends Vue {
               class="pa-6 elevation-6"
           >
             <v-col>
-              <h2>Seu e-mail foi enviado</h2>
+              <h2>E-mail enviado com sucesso</h2>
               <h4>Verifique sua caixa de mensagens.</h4>
             </v-col>
             <v-col>

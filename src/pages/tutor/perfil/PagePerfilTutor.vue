@@ -7,11 +7,12 @@ import DadosUsuario from "@/pages/common/MeuPerfil/DadosUsuario.vue"
 import DadosPessoais from "@/pages/common/MeuPerfil/DadosPessoais.vue"
 import ProfileSidebar from "@/pages/common/MeuPerfil/ProfileSidebar.vue"
 import GraduacaoTutor from "@/pages/common/MeuPerfil/GraduacaoTutor.vue"
-import PainelControle from "@/pages/professor/perfil/PainelControle.vue"
+import SolicitacoesTutoria from "@/pages/professor/perfil/SolicitacoesTutoria.vue"
+import Tutorias from "@/pages/professor/perfil/Tutorias.vue"
 
 @Component({
   name: "PagePerfilTutor",
-  components: { GraduacaoTutor, DadosPessoais, ProfileSidebar, DadosUsuario, PainelControle }
+  components: { GraduacaoTutor, DadosPessoais, ProfileSidebar, DadosUsuario, SolicitacoesTutoria, Tutorias }
 })
 export default class PagePerfilTutor extends Vue {
   private authModule = getModule(Auth, this.$store)
@@ -48,7 +49,8 @@ export default class PagePerfilTutor extends Vue {
 
           <v-col cols="9" align-self="start" style="border-left: 1px solid #e3e3e3; min-height: 380px">
             <v-tabs v-model="tab">
-              <v-tab :disabled="isEditing">Painel de Controle</v-tab>
+              <v-tab :disabled="isEditing">Solicitações Tutoria</v-tab>
+              <v-tab :disabled="isEditing">Tutorias</v-tab>
               <v-tab>Dados Pessoais</v-tab>
               <v-tab>Graduação</v-tab>
               <v-tab>Minha Conta</v-tab>
@@ -63,7 +65,11 @@ export default class PagePerfilTutor extends Vue {
 
             <v-tabs-items v-model="tab">
               <v-tab-item>
-                <PainelControle />
+                <SolicitacoesTutoria />
+              </v-tab-item>
+
+              <v-tab-item>
+                <Tutorias />
               </v-tab-item>
 
               <v-tab-item>

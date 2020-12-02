@@ -88,6 +88,7 @@ export default class CadastroTutor extends Vue {
     const tutorCadastrado = await this.tutorModule.cadastraTutor(dadosCadastro)
     if (!tutorCadastrado) return
 
+    //Todo Rota para cadastrar habilidades depois de estar logado.
     this.authModule.login({ email: tutorCadastrado.email, password: dadosCadastro.password }).then(() => {
       this.$router.push(TUTOR_ROUTES.PERFIL)
     })

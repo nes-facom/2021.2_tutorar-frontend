@@ -43,7 +43,7 @@ export default class DadosUsuario extends Vue {
             <v-card-title class="font-weight-bold headline d-flex justify-center">
               Desativar Usuário?
             </v-card-title>
-            <v-card-text>
+            <v-card-text class="text-center">
               Desativando seu usuário você perderá seu acesso ao sistema
             </v-card-text>
             <v-divider />
