@@ -98,6 +98,7 @@ export default class AppBar extends Vue {
           Caso o tutor não esteja na home (perfil), disponiblizar um botão indicando o "Painel de Controle".
           Caso o professor não esteja na home (busca de tutoria), disponibilizar um botão indicando "Buscar Tutoria".
           Caso o coordenador não esteja na home (listagem de usuários), disponibilizar um botão indicando "Lista de Usuários".
+          Caso o coordenador esteja na home (listagem de usuários), disponiblizar um botão indicando "Relatórios".
 -->
     <v-breadcrumbs :items="routeSections" divider="/" class="hidden-sm-and-down" large />
 
