@@ -1,7 +1,7 @@
 import store from "@/store"
 import AuthModule from "@/store/modules/auth"
 import { getModule } from "vuex-module-decorators"
-import loginService, { LoginResponse } from "@/api/auth/login"
+import { LoginResponse, loginService } from "@/api/auth/login"
 import { FORMACAO_ACADEMICA } from "@/utils/constants/formacao-academica"
 import { NIVEL_LECIONAMENTO } from "@/utils/constants/nivel-lecionamento"
 

@@ -1,11 +1,11 @@
 import handleAxiosError from "@/api/axios-error-handler"
-import axios from "@/api/axios-instance-creator"
+import { api } from "@/api/axios-instance-creator"
 import { User } from "@/store/modules/auth-types"
 import { RawUser } from "@/store/modules/users-types"
 
-export default (): Promise<User[]> => {
+export function findAllUsersService(): Promise<User[]> {
   return new Promise((resolve, reject) => {
-    axios()
+    api()
       .get("users")
       .then(res => {
         const users: RawUser[] = res.data

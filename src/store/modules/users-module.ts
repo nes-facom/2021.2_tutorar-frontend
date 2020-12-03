@@ -1,6 +1,6 @@
 import { Action, Module } from "vuex-module-decorators"
 import { User } from "@/store/modules/auth-types"
-import getAllUsers from "@/api/users/get-all"
+import { findAllUsersService } from "@/api/users/get-all"
 import CrudModule from "../utils/crud-module"
 
 @Module({
@@ -10,7 +10,7 @@ import CrudModule from "../utils/crud-module"
 export default class UsersModule extends CrudModule<User> {
   @Action({ rawError: true })
   async getAll() {
-    return getAllUsers().then(users => {
+    return findAllUsersService().then(users => {
       this.SET_ITEMS(users)
     })
   }

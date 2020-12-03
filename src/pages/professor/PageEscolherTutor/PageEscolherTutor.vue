@@ -2,6 +2,8 @@
 import { Vue, Component } from "vue-property-decorator"
 import { getModule } from "vuex-module-decorators"
 import Auth from "@/store/modules/auth"
+import TutorModule from "@/store/modules/tutor-module"
+import { Tutor } from "@/store/modules/auth-types"
 
 const CardResumoTutor = () => import("@/pages/professor/PageEscolherTutor/CardResumoTutor.vue")
 
@@ -11,18 +13,10 @@ const CardResumoTutor = () => import("@/pages/professor/PageEscolherTutor/CardRe
 })
 export default class PageHome extends Vue {
   authModule = getModule(Auth, this.$store)
+  tutorModule = getModule(TutorModule, this.$store)
 
   data = ""
   showMenuCalendario = false
-
-  tutores = [
-    { nome: "Amanda" },
-    { nome: "Amanda" },
-    { nome: "Amanda" },
-    { nome: "Amanda" },
-    { nome: "Amanda" },
-    { nome: "Amanda" }
-  ]
 
   get dataFormatada() {
     if (!this.data) return ""
@@ -30,10 +24,18 @@ export default class PageHome extends Vue {
     return `${d[2]}/${d[1]}/${d[0].substring(2)}`
   }
 
-  irPerfilTutor(tutor: any) {
+  get tutores() {
+    return this.tutorModule.asArray
+  }
+
+  irPerfilTutor(tutor: Tutor) {
     //TODO Colocar Pagina do tutor selecionado
     this.$router.push({ path: "/tutor/perfil" })
     console.log(tutor)
+  }
+
+  mounted() {
+    this.tutorModule.getAllTutores()
   }
 }
 </script>
@@ -68,13 +70,12 @@ export default class PageHome extends Vue {
 
           <v-col cols="3">
             <v-menu
-              ref="menu"
               v-model="showMenuCalendario"
               :close-on-content-click="false"
               :return-value.sync="data"
               transition="scale-transition"
-              offset-y
               min-width="290px"
+              offset-y
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
@@ -83,15 +84,15 @@ export default class PageHome extends Vue {
                   v-on="on"
                   label="Qual dia?"
                   append-icon="mdi-calendar"
+                  hide-details
                   outlined
                   readonly
-                  hide-details
                 />
               </template>
               <v-date-picker v-model="data" no-title scrollable locale="pt-BR">
                 <v-spacer />
                 <v-btn text color="primary" @click="showMenuCalendario = false">Fechar</v-btn>
-                <v-btn text color="primary" @click="$refs.menu.save(data)">OK</v-btn>
+                <v-btn text color="primary">OK</v-btn>
               </v-date-picker>
             </v-menu>
           </v-col>
@@ -99,7 +100,7 @@ export default class PageHome extends Vue {
 
         <v-row align="center" class="mt-4">
           <v-col v-for="(tutor, index) in tutores" :key="index" cols="12" sm="6" md="4" class="mb-4">
-            <CardResumoTutor class="mx-2" />
+            <CardResumoTutor class="mx-2" :tutor="tutor" />
           </v-col>
         </v-row>
       </v-col>

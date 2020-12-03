@@ -1,10 +1,14 @@
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator"
+import { Tutor } from "@/store/modules/auth-types"
+import { Vue, Component, Prop } from "vue-property-decorator"
 
 @Component({
   name: "CardResumoTutor"
 })
-export default class CardResumoTutor extends Vue {}
+export default class CardResumoTutor extends Vue {
+  @Prop({ required: true, type: Object })
+  tutor!: Tutor
+}
 </script>
 
 <template>
@@ -19,7 +23,7 @@ export default class CardResumoTutor extends Vue {}
       src="@/assets/taylor.jpg"
       gradient="to top right, rgba(100,100,100,.9), rgba(0,0,0,.0)"
     >
-      <v-card-title class="white--text font-weight-black">Fulana da Silva</v-card-title>
+      <v-card-title class="white--text font-weight-black" v-text="tutor.nome" />
       <v-card-subtitle class="white--text font-weight-bold">Letras - UFMS</v-card-subtitle>
     </v-img>
 
@@ -44,9 +48,7 @@ export default class CardResumoTutor extends Vue {}
 
       <v-spacer />
 
-      <v-btn color="green lighten-2" text>
-        Agendar
-      </v-btn>
+      <v-btn color="green lighten-2" text>Agendar</v-btn>
     </v-card-actions>
   </v-card>
 </template>

@@ -1,8 +1,8 @@
-import loginService, { LoginResponse, JWT } from "@/api/auth/login"
 import { Module, VuexModule, Mutation, Action, getModule } from "vuex-module-decorators"
 import { LogoutPayload, UpdateUserPayload, User } from "./auth-types"
-import TutorModule, { isProfessor, isTutor } from "./tutor-module"
-import { UpdateTutorPayload } from "@/store/modules/tutor-module"
+import { LoginResponse, JWT, loginService } from "@/api/auth/login"
+import TutorModule, { isTutor } from "./tutor-module"
+import { isProfessor } from "./professor-module"
 import store from ".."
 
 @Module({
@@ -45,6 +45,7 @@ export default class Auth extends VuexModule {
       localStorage.setItem("api_token", token.value)
       this.token = token
     }
+
     this.user = user
   }
 
@@ -68,7 +69,7 @@ export default class Auth extends VuexModule {
 
   /**
    * Realiza logout, unica diferença de chamar AUTH_LOGOUT é que aqui podemos
-   * especificar se queremos limpar todo o state da aplicação
+   * especificar se queremos limpar TODO o state da aplicação
    *
    * @fires AUTH_LOGOUT
    * @fires root/RESET_VUEX_STATE - se payload.clearState é true
@@ -79,9 +80,10 @@ export default class Auth extends VuexModule {
   logout(payload?: LogoutPayload) {
     const options = { ...{ clearState: true }, ...payload }
 
-    if (options?.clearState) this.context.dispatch("RESET_VUEX_STATE", null, { root: true })
-
+    // Importante, isso deve ocorrer primeiro
     this.AUTH_LOGOUT()
+
+    if (options?.clearState) this.context.dispatch("RESET_VUEX_STATE", null, { root: true })
   }
 
   @Action({ rawError: true })
@@ -89,19 +91,20 @@ export default class Auth extends VuexModule {
     const { user, id, foto } = payload
 
     if (isTutor(user)) {
-      const payload: UpdateTutorPayload = {
-        data: { tutor: user, id, foto },
-        options: { updateRecord: false }
-      }
-
       const tutorModule = getModule(TutorModule, store)
 
-      tutorModule.updateTutor(payload).then(updatedTutor => {
-        const updatedUser = { ...updatedTutor, isAdmin: user.isAdmin, isMonitor: user.isMonitor }
-        this.AUTH_UPDATE({ user: updatedUser })
-      })
+      tutorModule
+        .updateTutor({
+          data: { tutor: user, id, foto },
+          options: { updateRecord: false }
+        })
+        .then(updatedTutor => {
+          const updatedUser = { ...updatedTutor, isAdmin: user.isAdmin, isMonitor: user.isMonitor }
+          this.AUTH_UPDATE({ user: updatedUser })
+        })
     }
 
+    // TODO
     if (isProfessor(user)) console.log("A implementar update de usuario professor")
   }
 }

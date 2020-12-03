@@ -1,9 +1,10 @@
 import { getModule } from "vuex-module-decorators"
 import auth from "@/store/modules/auth"
 import store from "@/store"
-import { isProfessor, isTutor } from "@/store/modules/tutor-module"
+import { isTutor } from "@/store/modules/tutor-module"
 import { PROFESSOR_ROUTES } from "../rotas/professor"
 import { TUTOR_ROUTES } from "../rotas/tutor"
+import { isProfessor } from "@/store/modules/professor-module"
 
 export enum HOME_ROUTES {
   DEFAULT = "/home",

@@ -1,10 +1,7 @@
 import handleAxiosError from "@/api/axios-error-handler"
-import axios from "@/api/axios-instance-creator"
+import { api } from "@/api/axios-instance-creator"
 import { RawTutor } from "@/store/modules/users-types"
 
-/**
- * Como os dados devem ser mandados a API
- */
 export interface DadosCadastroTutor {
   nome: string
   email: string
@@ -21,9 +18,9 @@ export interface DadosCadastroTutor {
   }
 }
 
-export default (dados: DadosCadastroTutor): Promise<RawTutor> => {
+export function cadastroTutorService(dados: DadosCadastroTutor): Promise<RawTutor> {
   return new Promise((resolve, reject) => {
-    axios()
+    api()
       .post("users/tutores/", dados)
       .then(res => {
         resolve(res.data)

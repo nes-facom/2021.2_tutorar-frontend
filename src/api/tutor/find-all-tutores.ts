@@ -1,16 +1,16 @@
 import handleAxiosError from "@/api/axios-error-handler"
 import { api } from "@/api/axios-instance-creator"
-import { RawUser } from "@/store/modules/users-types"
+import { RawTutor } from "@/store/modules/users-types"
 
-export function findUserByCpfService(cpf: string): Promise<RawUser> {
+export function findAllTutoresService(): Promise<RawTutor[]> {
   return new Promise((resolve, reject) => {
     api()
-      .post("users/find-by-cpf", { cpf })
+      .get("users/tutores")
       .then(res => {
         resolve(res.data)
       })
-      .catch(err => {
-        const apiError = handleAxiosError(err)
+      .catch(error => {
+        const apiError = handleAxiosError(error)
         reject(apiError)
       })
   })

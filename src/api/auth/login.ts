@@ -1,4 +1,4 @@
-import axios from "@/api/axios-instance-creator"
+import { api } from "@/api/axios-instance-creator"
 import handleAxiosError from "@/api/axios-error-handler"
 import { Professor, Tutor, User } from "@/store/modules/auth-types"
 import { RawUser } from "@/store/modules/users-types"
@@ -52,43 +52,25 @@ function normalizaUsuario(rawUser: RawUser): User {
  * @param username - O username do usuário
  * @param password - A senha do usuario
  */
-//TODO RETIRAR
-const mockLogin = (): Promise<LoginResponse> => {
-  return new Promise(resolve => {
-    const responseMock: LoginApiResponse = {
-      user: {
-        isAdmin: false,
-        isActive: true,
-        _id: "5fb706d74f06c9004459a4b8",
-        nome: "Vitor Andrade Guidorizzi"  ,
-        email: "teste@gmail.com",
-        dataNascimento: "1997-02-21T00:00:00.000Z",
-        cpf: "03690208122",
-        genero: "M",
-        celular: "67998801996",
-        tutor: {
-          universidade: "UFMS",
-          cursoLicensiatura: "batata",
-          semestreAtual: 7,
-          habilidades: ["5fb002fbda264700ecec5677", "5fb002fbda264700ecec5678", "5fb002fbda264700ecec5694"]
-        },
-        __v: 0
-      },
-      token: {
-        type: "bearer",
-        value:
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZmI3MDZkNzRmMDZjOTAwNDQ1OWE0YjgiLCJpYXQiOjE2MDU4MzAzNjQsImV4cCI6MTYwNTgzMDQyNH0.jn_XbZLWydbkF8txVsDEsMKROGPCwL7hlYwnhPl48q0"
-      }
-    }
-    const { user: rawUser, token } = responseMock
+export function loginService(email: string, password: string): Promise<LoginResponse> {
+  return new Promise((resolve, reject) => {
+    api()
+      .post("users/auth/login", { email, password })
+      .then(response => {
+        const { user: rawUser, token } = response.data as LoginApiResponse
 
-    const user = normalizaUsuario(rawUser)
+        const user = normalizaUsuario(rawUser)
 
-    resolve({ user, token })
+        resolve({ user, token })
+      })
+      .catch((error: AxiosError) => {
+        let { message } = handleAxiosError(error)
+
+        if (error.response?.data?.statusCode === 400) message = LOGIN_ERRORS.INVALID_REQUEST
+        if (error.response?.data?.statusCode === 401) message = LOGIN_ERRORS.INVALID_PASSWORD
+        if (error.response?.data?.statusCode === 404) message = LOGIN_ERRORS.EMAIL_NAO_ENCONTRADO
+
+        reject(message)
+      })
   })
-}
-
-export default (email: string, password: string): Promise<LoginResponse> => {
-  console.log(email, password)
-  return mockLogin()
 }

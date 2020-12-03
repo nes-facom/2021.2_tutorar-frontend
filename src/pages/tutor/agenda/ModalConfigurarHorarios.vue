@@ -3,9 +3,10 @@ import { Vue, Component, Prop } from "vue-property-decorator"
 import { diasSemana } from "@/components/forms/FormHorariosLivresDia.vue"
 import { AgendaHorarios } from "./agenda"
 import { cloneDeep } from "lodash"
-import updateAgendaService from "@/api/tutor/update-agenda-tutor"
+import { updateAgendaTutorService } from "@/api/tutor/update-agenda-tutor"
 import { getModule } from "vuex-module-decorators"
 import Auth from "@/store/modules/auth"
+import { isTutor } from "@/store/modules/tutor-module"
 
 const FormHorariosLivresDia = () => import("@/components/forms/FormHorariosLivresDia.vue")
 
@@ -25,13 +26,16 @@ const defaultFormValueFactory = (): AgendaHorarios => ({
 export default class ModalConfigurarHorarios extends Vue {
   authModule = getModule(Auth, this.$store)
 
+  /**
+   * Se o modal esta em exibição
+   */
   @Prop({ required: true })
   value!: boolean
 
   /**
    * Os horários livres do tutor
    */
-  @Prop({ type: Object, required: true })
+  @Prop({ type: Object, required: false, default: defaultFormValueFactory })
   horariosTutor!: AgendaHorarios
 
   /**
@@ -85,22 +89,38 @@ export default class ModalConfigurarHorarios extends Vue {
   }
 
   salvaConfiguracao() {
-    const idTutor = this.authModule.user?._id
-    if (!idTutor) return
+    const tutor = this.authModule.user
+    if (!isTutor(tutor)) return
+
     const agendaFormatada = this.removeHorariosVazios(this.copiaHorarios)
 
-    updateAgendaService(idTutor, agendaFormatada).then(novosHorarios => {
-      console.log(novosHorarios)
-      this.$emit("horarios-atualizados", novosHorarios)
+    updateAgendaTutorService(tutor._id, agendaFormatada).then(novaAgenda => {
+      // sinalizo os novos horários pra agenda, isso provavelmente sera util numa feature, xis de
+      this.$emit("horarios-atualizados", novaAgenda)
+
+      const user = this.authModule.user
+      if (!isTutor(user)) return
+
+      // Não altero o usuario diretamente, chamo uma mutation, ver se tem como encurtar isso
+      const userCopy = cloneDeep(user)
+      userCopy.agenda = novaAgenda
+
+      this.authModule.AUTH_UPDATE({ user: userCopy })
+
+      // Sinalizo pro componente pai fechar o modal
+      this.$emit("input", false)
     })
   }
 
   resetaHorarios() {
     this.copiaHorarios = cloneDeep(this.horariosTutor)
+
     Object.keys(this.copiaHorarios).map(_dia => {
       const dia = _dia as keyof AgendaHorarios
       const horariosDia = this.copiaHorarios[dia]
+
       if (horariosDia.length === 0) horariosDia.push({ inicio: "", fim: "" })
+
       this.copiaHorarios[dia] = horariosDia
     })
   }
@@ -123,12 +143,10 @@ export default class ModalConfigurarHorarios extends Vue {
       </v-card-subtitle>
 
       <div class="px-6 pb-4">
-        {{ canSalvarConfiguracao }}
         <v-form v-model="canSalvarConfiguracao">
           <v-chip-group v-model="diaSelecionado" active-class="primary white--text" mandatory>
             <v-chip v-for="(dia, i) in diasSemana" :key="i" :value="dia.value" v-text="dia.nome" />
           </v-chip-group>
-
           <!-- 
             Esse loop é necessário para criar todos os formulários, se eu criasse apenas 
             o do dia selecionado não consigo validar se um usuário tem um horário inválido

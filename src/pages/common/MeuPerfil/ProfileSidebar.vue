@@ -1,5 +1,5 @@
 <script lang="ts">
-import fetchHabilidades, { Habilidade } from "@/api/habilidades/get-all"
+import { Habilidade, getAllHabilidadesService } from "@/api/habilidades/get-all"
 import Auth from "@/store/modules/auth"
 import { getModule } from "vuex-module-decorators"
 import { Vue, Component } from "vue-property-decorator"
@@ -28,7 +28,7 @@ export default class ProfileSidebar extends Vue {
   }
 
   mounted() {
-    fetchHabilidades().then(habilidades => {
+    getAllHabilidadesService().then(habilidades => {
       this.habilidades = habilidades
     })
   }

@@ -1,5 +1,5 @@
 import handleAxiosError from "@/api/axios-error-handler"
-import axios from "@/api/axios-instance-creator"
+import { api } from "@/api/axios-instance-creator"
 import { Tutor } from "@/store/modules/auth-types"
 import { DadosTutor, RawTutor } from "@/store/modules/users-types"
 
@@ -18,12 +18,12 @@ interface RequestBody {
   tutor?: Partial<DadosTutor>
 }
 
-export default (id: string, tutor: Tutor): Promise<RawTutor> => {
+export function updateTutorService(id: string, tutor: Tutor): Promise<RawTutor> {
   const { universidade, cursoLicensiatura, semestreAtual, habilidades, ...copiaTutor } = tutor
   const body: RequestBody = { ...copiaTutor, tutor: { universidade, cursoLicensiatura, semestreAtual, habilidades } }
 
   return new Promise((resolve, reject) => {
-    axios()
+    api()
       .put(`users/tutores/${id}`, body)
       .then(res => {
         resolve(res.data)

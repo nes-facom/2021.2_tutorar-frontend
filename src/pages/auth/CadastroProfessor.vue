@@ -1,19 +1,24 @@
 <script lang="ts">
-// Tipagem
+import { DadosCadastroProfessor } from "@/api/professor/cadastro-professor"
 import { StringFieldRules } from "@/utils/form"
-import { Vue, Component } from "vue-property-decorator"
+import { Vue, Component, Watch } from "vue-property-decorator"
 
-// Componentes
 import FormularioDadosPessoais, { DadosPessoais } from "@/components/auth/FormularioDadosPessoais.vue"
 
 import LoginLink from "@/components/auth/LoginLink.vue"
 import AppBarCadastro from "@/components/auth/AppBarCadastro.vue"
 import FormularioSenha from "@/components/auth/FormularioSenha.vue"
 import FotoDropZone from "@/components/inputs/FotoDropZone.vue"
+import CadastroStepNavigator from "@/components/stepper/CadastroStepNavigator.vue"
 
 import { NIVEL_LECIONAMENTO } from "@/utils/constants/nivel-lecionamento"
 import { FORMACAO_ACADEMICA } from "@/utils/constants/formacao-academica"
 import isValidDdMmYyyy from "@/utils/form/is-valid-dd-mm-yyyy"
+import { PROFESSOR_ROUTES } from "@/router/rotas/professor"
+import { getModule } from "vuex-module-decorators"
+import Auth from "@/store/modules/auth"
+import { ddmmyyyyStringToIso, fileToBase64 } from "@/utils"
+import ProfessorModule from "@/store/modules/professor-module"
 
 @Component({
   name: "CadastroProfessor",
@@ -22,17 +27,27 @@ import isValidDdMmYyyy from "@/utils/form/is-valid-dd-mm-yyyy"
     FotoDropZone,
     AppBarCadastro,
     FormularioSenha,
+    CadastroStepNavigator,
     FormularioDadosPessoais
   }
 })
 export default class CadastroProfessor extends Vue {
+  authModule = getModule(Auth, this.$store)
+  professorModule = getModule(ProfessorModule, this.$store)
+
   currentStep = 0
 
-  validadePassos = {
-    0: false,
-    1: false,
-    2: false
+  validadePassos = { 0: false, 1: false, 2: false }
+
+  @Watch("dataInicioLecionamentoNaoFormatada")
+  handle(data: string) {
+    // prettier-ignore
+    this.dadosProfessor.inicioLecionamento = data?.length === 10
+      ? ddmmyyyyStringToIso(data)
+      : ""
   }
+
+  dataInicioLecionamentoNaoFormatada = ""
 
   // Passo 0
   dadosPessoais: DadosPessoais = {
@@ -44,20 +59,22 @@ export default class CadastroProfessor extends Vue {
     dataNascimento: ""
   }
 
-  professor: { [x: string]: unknown; foto: File | null } = {
-    // Passo 1
-    formacao: "",
-    nivel: "",
-    inicioLecionamento: "",
-
-    // Passo 2
-    senha: "",
-    foto: null
+  // Passo 1
+  dadosProfessor = {
+    nivelLecionamento: "",
+    formacaoAcademica: "",
+    inicioLecionamento: ""
   }
 
-  // @see https://www.vestibulandoweb.com.br/formacao.htm
+  // Passo 2
+  senha = ""
+
+  // Passo 3
+  fotoPerfil: null | File = null
+
   opcoes = {
-    formacao: [
+    // @see https://www.vestibulandoweb.com.br/formacao.htm
+    formacaoAcademica: [
       FORMACAO_ACADEMICA.BACHARELADO,
       FORMACAO_ACADEMICA.LICENSIATURA,
       FORMACAO_ACADEMICA.TECNOLOGICO,
@@ -66,18 +83,14 @@ export default class CadastroProfessor extends Vue {
       FORMACAO_ACADEMICA.EDUCACAO_A_DISTANCIA
     ],
 
-    nivelEnsino: [
+    nivelLecionamento: [
       NIVEL_LECIONAMENTO.ENSINO_MEDIO,
       NIVEL_LECIONAMENTO.ENSINO_SUPERIOR,
-      NIVEL_LECIONAMENTO.ENSINO_FUNDAMENTAL,
-      NIVEL_LECIONAMENTO.EDUCACAO_INFANTIL
+      NIVEL_LECIONAMENTO.EDUCACAO_INFANTIL,
+      NIVEL_LECIONAMENTO.ENSINO_FUNDAMENTAL
     ]
   }
 
-  /**
-   * @TODO: Rever com o time se preferem uma biblioteca de validação, fazer
-   * na mão ou ambos, como as desse form é simples fiz na mão.
-   */
   rules: { [x: string]: StringFieldRules } = {
     campoObrigatorio: [v => !!v || "Campo Obrigatório"],
     inicioLecionamento: [
@@ -86,12 +99,27 @@ export default class CadastroProfessor extends Vue {
     ]
   }
 
-  submit() {
-    const professor = { ...this.dadosPessoais, ...this.professor }
-  }
+  async submit() {
+    if (!this.fotoPerfil) return
 
-  gotoNextStep() {
-    this.currentStep === 2 ? this.submit() : this.currentStep++
+    const foto64 = await fileToBase64(this.fotoPerfil)
+
+    const dadosCadastro: DadosCadastroProfessor = {
+      ...this.dadosPessoais,
+      password: this.senha,
+      // Esse cast aqui é pra suprimir aviso de que strin <> enum, inofensivo,
+      // TODO fixme
+      professor: this.dadosProfessor as DadosCadastroProfessor["professor"],
+      fotoPerfil: foto64
+    }
+
+    const professorCadastrado = await this.professorModule.cadastraTutor(dadosCadastro)
+    if (!professorCadastrado) return
+
+    // TODO Rota para cadastrar habilidades depois de estar logado.
+    this.authModule.login({ email: professorCadastrado.email, password: dadosCadastro.password }).then(() => {
+      this.$router.push(PROFESSOR_ROUTES.PERFIL)
+    })
   }
 }
 </script>
@@ -105,9 +133,7 @@ export default class CadastroProfessor extends Vue {
           <v-img contain src="@/assets/imagens/Alunos_Conexao.svg" alt="img" />
         </v-col>
         <v-col cols="4">
-          <h1 class="display-1 font-weight-bold">
-            Agora vamos realizar o seu cadastro
-          </h1>
+          <h1 class="display-1 font-weight-bold">Agora vamos realizar o seu cadastro</h1>
 
           <span class="subtitle-1 grey--text text--darken-1">
             Aqui você pode encontrar uma tutoria personalizada de acordo com suas necessidades de aprendizagem
@@ -129,23 +155,23 @@ export default class CadastroProfessor extends Vue {
                   </h1>
 
                   <v-select
-                    v-model="professor.formacao"
-                    :items="opcoes.formacao"
-                    :rules="rules.formacao"
+                    v-model="dadosProfessor.formacaoAcademica"
+                    :items="opcoes.formacaoAcademica"
+                    :rules="rules.campoObrigatorio"
                     placeholder="Qual sua Formação ?"
                     outlined
                   />
 
                   <v-select
-                    v-model="professor.nivel"
-                    :items="opcoes.nivelEnsino"
+                    v-model="dadosProfessor.nivelLecionamento"
+                    :items="opcoes.nivelLecionamento"
                     :rules="rules.campoObrigatorio"
                     placeholder="Qual nível você leciona ?"
                     outlined
                   />
 
                   <v-text-field
-                    v-model="professor.inicioLecionamento"
+                    v-model="dataInicioLecionamentoNaoFormatada"
                     v-mask="'##/##/####'"
                     :rules="rules.inicioLecionamento"
                     placeholder="Quando começou a lecionar ?"
@@ -154,16 +180,14 @@ export default class CadastroProfessor extends Vue {
                     outlined
                   />
 
-                  <FormularioSenha v-model="professor.senha" />
+                  <FormularioSenha v-model="senha" />
                 </v-form>
               </v-window-item>
 
               <v-window-item>
                 <v-form v-model="validadePassos['2']">
-                  <h1 class="text-center headline mb-8">
-                    Passo 4 - Foto
-                  </h1>
-                  <FotoDropZone v-model="professor.foto" class="mt-4 mb-8 mx-4" />
+                  <h1 class="text-center headline mb-8">Passo 4 - Foto</h1>
+                  <FotoDropZone v-model="fotoPerfil" class="mt-4 mb-8 mx-4" />
                 </v-form>
               </v-window-item>
             </v-window>
@@ -172,25 +196,13 @@ export default class CadastroProfessor extends Vue {
 
             <div>
               <LoginLink />
-              <v-card-actions class="mb-2 mt-5">
-                <v-spacer />
 
-                <v-btn
-                  color="green"
-                  class="white--text pl-4"
-                  @click="gotoNextStep"
-                  :disabled="!validadePassos[currentStep]"
-                >
-                  <span>
-                    {{ currentStep === 2 ? "Finalizar" : "Próximo" }}
-                  </span>
-                  <v-icon dark right>
-                    mdi-arrow-right
-                  </v-icon>
-                </v-btn>
-
-                <v-spacer />
-              </v-card-actions>
+              <CadastroStepNavigator
+                :steps-validity="validadePassos"
+                :current-step="currentStep"
+                @passo-concluido="currentStep++"
+                @cadastro-concluido="submit"
+              />
             </div>
           </v-card>
         </v-col>

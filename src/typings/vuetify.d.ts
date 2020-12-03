@@ -1,17 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 /**
- * Tipagens adicionais para o compodente de calendário / agenda,
- * o vuetify fornece algumas mas não todas, ver DOCS
- *
- * @see https://vuetifyjs.com/en/api/v-calendar/#events
+ * Tipagem de componentes do vuetify, baseado na API da documentação deles,
+ * infelizmente eles não proveem tipagem para tudo
  */
-import { CalendarTimeDelta, CalendarTimestamp, CalendarTimeToY } from "vuetify"
+export type VForm = Vue & {
+  validate: () => boolean
+  reset: () => void
+  resetValidation: () => void
+}
 
-/**
- * Componente do calendário, para utilizar como REF
- */
-export interface VuetifyCalendarComponent extends Vue {
+export interface VCalendar extends Vue {
   prev: () => void
   next: () => void
   checkChange: () => void

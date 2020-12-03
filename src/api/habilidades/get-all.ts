@@ -1,5 +1,5 @@
 import handleAxiosError from "@/api/axios-error-handler"
-import axios from "@/api/axios-instance-creator"
+import { api } from "@/api/axios-instance-creator"
 
 export enum CATEGORIAS {
   GOOGLE = "google",
@@ -18,9 +18,9 @@ export interface Habilidade {
   descricao?: string
 }
 
-export default (): Promise<Habilidade[]> => {
+export function getAllHabilidadesService(): Promise<Habilidade[]> {
   return new Promise((resolve, reject) => {
-    axios()
+    api()
       .get("habilidades")
       .then(res => {
         const habilidades: Habilidade[] = res.data

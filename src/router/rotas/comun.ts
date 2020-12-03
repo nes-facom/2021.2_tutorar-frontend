@@ -4,9 +4,10 @@ import store from "../../store/index"
 import { getModule } from "vuex-module-decorators"
 import Auth from "@/store/modules/auth"
 import { ERROR_ROUTES } from "./error"
-import { isProfessor, isTutor } from "@/store/modules/tutor-module"
+import { isTutor } from "@/store/modules/tutor-module"
 import { TUTOR_ROUTES } from "./tutor"
 import { PROFESSOR_ROUTES } from "./professor"
+import { isProfessor } from "@/store/modules/professor-module"
 
 export enum AUTH_ROUTES {
   LOGIN = "/login",

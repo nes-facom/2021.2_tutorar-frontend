@@ -1,10 +1,12 @@
 <script lang="ts">
-import { CalendarClickAtEventEvent, VuetifyCalendarComponent } from "@/pages/tutor/agenda/calendar"
+import { VCalendar } from "@/typings/vuetify"
 import { CalendarDaySlotScope, CalendarEvent } from "vuetify"
 import { Vue, Component, Ref } from "vue-property-decorator"
 import { AgendaHorarios } from "./agenda"
 import { getModule } from "vuex-module-decorators"
 import Auth from "@/store/modules/auth"
+import { Tutor } from "@/store/modules/auth-types"
+import { affirmIsTutorAndReturn, isTutor } from "@/store/modules/tutor-module"
 
 const InputTipoExibicaoCalendario = () => import("@/components/inputs/InputTipoExibicaoCalendario.vue")
 const ModalConfigurarHorarios = () => import("@/pages/tutor/agenda/ModalConfigurarHorarios.vue")
@@ -20,7 +22,7 @@ const CardPedidoTutoria = () => import("@/components/cards/CardPedidoTutoria.vue
 })
 export default class AgendaProfessor extends Vue {
   @Ref("calendar")
-  calendar!: VuetifyCalendarComponent
+  calendar!: VCalendar
 
   authModule = getModule(Auth, this.$store)
 
@@ -29,14 +31,6 @@ export default class AgendaProfessor extends Vue {
   exibirMenuEventoSelecionado = false
 
   tipoExibicaoCalendario: "month" | "week" | "day" = "month"
-
-  horariosTutorMock: AgendaHorarios = {
-    segunda: [{ inicio: "1550", fim: "1830" }],
-    terca: [],
-    quarta: [],
-    quinta: [],
-    sexta: []
-  }
 
   /**
    * A date in the format of YYYY-MM-DD which determines
@@ -52,11 +46,19 @@ export default class AgendaProfessor extends Vue {
 
   telefone = 67991121434
 
+  /**
+   * O tutor que esta acessando a página
+   */
+  get tutor(): Tutor {
+    return affirmIsTutorAndReturn(this.authModule.user)
+  }
+
   viewDay({ date }: CalendarDaySlotScope) {
     this.calendarTimeFrame = date
     this.tipoExibicaoCalendario = "day"
   }
 
+  // TODO se livrar do any
   getEventColor(event: any) {
     if (!event) return null
     return event.color
@@ -66,12 +68,8 @@ export default class AgendaProfessor extends Vue {
     this.calendarTimeFrame = ""
   }
 
-  exibirEvento({ nativeEvent, event, eventParsed }: { [x: string]: any }) {
-    console.log(nativeEvent)
-    console.log("===========================")
-    console.log(event)
-    console.log("===========================")
-    console.log(eventParsed)
+  // TODO se livrar do any
+  exibirEvento({ nativeEvent, event }: { [x: string]: any }) {
     const open = () => {
       this.selectedEvent = event
       this.selectedElement = nativeEvent.target
@@ -90,6 +88,7 @@ export default class AgendaProfessor extends Vue {
     nativeEvent.stopPropagation()
   }
 
+  // TODO: se livrar desses anys
   setEvent(nome: any, inicio: any, fim: any, cor: any, diaTodo: any) {
     this.events.push({
       name: nome,
@@ -112,23 +111,14 @@ export default class AgendaProfessor extends Vue {
     this.setEvent("", new Date("2020-11-11 12:30"), new Date("2020-11-11 21:00"), "blue", false)
   }
 }
-/*Todo Adicionar rota para após a seleção de habilidades, após cadastro de tutor.
-    Caso configure sua agenda : continuar na página atual.
-    Caso não queira fazer isso agora : ir para home.
-*/
 </script>
 
 <template>
   <div>
-    {{ horariosTutorMock }}
-    <v-divider></v-divider>
-    <!-- {{ calendarTimeFrame }} -->
-    <!-- <v-divider></v-divider> -->
-    <!-- {{ authModule.user }} -->
     <ModalConfigurarHorarios
       v-model="showModalConfigurarHorarios"
-      :horarios-tutor="horariosTutorMock"
-      @horarios-atualizados="horariosTutorMock = $event"
+      :horarios-tutor="tutor.agenda"
+      @horarios-atualizados="$log('horarios-att !', $event)"
     />
 
     <v-toolbar flat class="px-0">
@@ -174,6 +164,7 @@ export default class AgendaProfessor extends Vue {
         :activator="selectedElement"
         offset-x
       >
+        <!-- TODO, passar o pedido de tutoria pra ca -->
         <CardPedidoTutoria />
       </v-menu>
     </v-sheet>

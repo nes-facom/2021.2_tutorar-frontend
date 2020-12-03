@@ -1,0 +1,30 @@
+=============== VINICIUS ================
+
+Todo Adicionar rota para após a seleção de habilidades, após cadastro de tutor.
+Caso configure sua agenda : continuar na página atual.
+Caso não queira fazer isso agora : ir para home.
+
+=============================================
+
+1- Normalizar dado de tempo de lecionamento para data
+3- Arruma data do padrão ISO para dd/mm/yyyy na pagina de exibição e listagem de usuario
+4- arrumar link para a pagina de perfil ao clicar em row da tabela de listagem de usuario
+7- Utilizar instancia do mongo proprio no pra cada MS
+
+================================= FUTURO =================================
+
+1- VERIFICAR AGENDA
+
+2- TESTAR AGENDA
+
+================================= Melhorias =================================
+
+1- Verificar se tutor tem ao menos uma habilidade, se não tem sugerir que ele escolha
+
+
+cd ~
+mv .zsh_history .zsh_history_bad
+strings .zsh_history_bad > .zsh_history
+fc -R .zsh_history
+
+dv-006

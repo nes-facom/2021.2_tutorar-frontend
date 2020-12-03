@@ -1,3 +1,4 @@
+import { AgendaHorarios } from "@/pages/tutor/agenda/agenda"
 import { FORMACAO_ACADEMICA } from "@/utils/constants/formacao-academica"
 import { NIVEL_LECIONAMENTO } from "@/utils/constants/nivel-lecionamento"
 
@@ -36,6 +37,9 @@ export interface Tutor extends Pessoa {
   role: "tutor"
 
   habilidades: string[]
+
+  agenda?: AgendaHorarios
+
   universidade: string
   semestreAtual: number
   cursoLicensiatura: string
@@ -47,5 +51,9 @@ export interface Monitor extends Pessoa {
 
 export type User = (Professor | Tutor | Monitor) & {
   isAdmin: boolean
+
+  // Essa flag is monitor é redundante,
+  // é que no back não temos nenhum dado especifico para monitor,
+  // então criamos essa flag
   isMonitor: boolean
 }

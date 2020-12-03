@@ -1,24 +1,22 @@
 <script lang="ts">
-// Tipagem
 import { Vue, Component } from "vue-property-decorator"
 
-// Componentes
 import LoginLink from "@/components/auth/LoginLink.vue"
 import AppBarCadastro from "@/components/auth/AppBarCadastro.vue"
 import FotoDropZone from "@/components/inputs/FotoDropZone.vue"
 import FormularioSenha from "@/components/auth/FormularioSenha.vue"
+import CadastroStepNavigator from "@/components/stepper/CadastroStepNavigator.vue"
 import FormularioDadosPessoais, { DadosPessoais } from "@/components/auth/FormularioDadosPessoais.vue"
 
-// Outros
 import { StringFieldRules } from "@/utils/form"
 import { getModule } from "vuex-module-decorators"
 import TutorModule from "@/store/modules/tutor-module"
 import siglasUniversidades from "@/utils/autocomplete/siglas-universidades"
 
-import { fileToBase64 } from "@/utils/index"
-import { DadosCadastroTutor } from "@/api/tutor/cadastro-tutor"
 import Auth from "@/store/modules/auth"
+import { fileToBase64 } from "@/utils/index"
 import { TUTOR_ROUTES } from "@/router/rotas/tutor"
+import { DadosCadastroTutor } from "@/api/tutor/cadastro-tutor"
 
 @Component({
   name: "CadastroTutor",
@@ -27,7 +25,8 @@ import { TUTOR_ROUTES } from "@/router/rotas/tutor"
     FotoDropZone,
     AppBarCadastro,
     FormularioSenha,
-    FormularioDadosPessoais
+    FormularioDadosPessoais,
+    CadastroStepNavigator
   }
 })
 export default class CadastroTutor extends Vue {
@@ -36,7 +35,6 @@ export default class CadastroTutor extends Vue {
 
   passoAtual = 0
 
-  // Uso dentro da template, logo preciso passar pra dentro da classe
   siglasUniversidades = siglasUniversidades
 
   validadePassosFormulario = { 0: false, 1: false, 2: false }
@@ -72,7 +70,6 @@ export default class CadastroTutor extends Vue {
   // Passo 3
   fotoPerfil: null | File = null
 
-  // @TODO rever
   async submit() {
     if (!this.fotoPerfil) return
 
@@ -88,7 +85,7 @@ export default class CadastroTutor extends Vue {
     const tutorCadastrado = await this.tutorModule.cadastraTutor(dadosCadastro)
     if (!tutorCadastrado) return
 
-    //Todo Rota para cadastrar habilidades depois de estar logado.
+    // TODO Rota para cadastrar habilidades depois de estar logado.
     this.authModule.login({ email: tutorCadastrado.email, password: dadosCadastro.password }).then(() => {
       this.$router.push(TUTOR_ROUTES.PERFIL)
     })
@@ -108,15 +105,15 @@ export default class CadastroTutor extends Vue {
         <v-col cols="4">
           <v-img contain src="@/assets/imagens/Alunos_Conexao.svg" alt="img" />
         </v-col>
+
         <v-col cols="4">
-          <h1 class="display-1 font-weight-bold">
-            Agora vamos realizar o seu cadastro
-          </h1>
+          <h1 class="display-1 font-weight-bold">Agora vamos realizar o seu cadastro</h1>
 
           <span class="subtitle-1 grey--text text--darken-1">
             Aqui você pode oferecer sua tutoria a professores do brasil inteiro !
           </span>
         </v-col>
+
         <v-col cols="4">
           <v-card width="450" min-height="715" class="pa-6 elevation-6 d-flex flex-column">
             <v-window v-model="passoAtual">
@@ -173,23 +170,12 @@ export default class CadastroTutor extends Vue {
 
             <LoginLink />
 
-            <v-card-actions class="mb-2 mt-5">
-              <v-spacer />
-
-              <v-btn
-                color="green"
-                class="white--text pl-4"
-                @click="gotoNextStep"
-                :disabled="!validadePassosFormulario[passoAtual]"
-              >
-                <span v-text="passoAtual === 2 ? 'Finalizar' : 'Próximo'" />
-                <v-icon dark right>
-                  mdi-arrow-right
-                </v-icon>
-              </v-btn>
-
-              <v-spacer />
-            </v-card-actions>
+            <CadastroStepNavigator
+              :steps-validity="validadePassosFormulario"
+              :current-step="passoAtual"
+              @passo-concluido="passoAtual++"
+              @cadastro-concluido="submit"
+            />
           </v-card>
         </v-col>
       </v-row>

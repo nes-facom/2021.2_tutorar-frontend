@@ -6,7 +6,7 @@ import { unmask } from "@/utils/inputs/mask"
 
 import { Vue, Component, Watch } from "vue-property-decorator"
 
-import findUserByCpf from "@/api/users/find-by-cpf"
+import { findUserByCpfService } from "@/api/users/find-by-cpf"
 import { ddmmyyyyStringToIso } from "@/utils"
 
 export interface DadosPessoais {
@@ -68,7 +68,7 @@ export default class FormularioDadosPessoais extends Vue {
     dataNascimento: [
       v => !!v || "Data de nascimento é obrigatório",
       v => {
-        // @TODO Eca, refatorar depois
+        // TODO Eca, refatorar depois
         const maxYear = new Date().getFullYear() - 16
         if (!v) return "Campo Obrigatório"
         const error = isValidDMY(v, { maxYear })
@@ -109,7 +109,7 @@ export default class FormularioDadosPessoais extends Vue {
 
     this.isCheckingCpf = true
 
-    findUserByCpf(cpf)
+    findUserByCpfService(cpf)
       .then(user => {
         if (user) this.isCpfEmUso = true
       })

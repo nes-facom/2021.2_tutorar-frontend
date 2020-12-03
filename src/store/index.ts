@@ -6,6 +6,7 @@ import auth from "@/store/modules/auth"
 import theme from "@/store/modules/theme"
 import users from "@/store/modules/users-module"
 import tutores from "@/store/modules/tutor-module"
+import professores from "@/store/modules/professor-module"
 
 interface ResetStateOptions {
   clearLocalStorage?: boolean
@@ -13,7 +14,7 @@ interface ResetStateOptions {
 
 Vue.use(Vuex)
 
-const modules = { auth, theme, tutores, users }
+const modules = { auth, theme, tutores, users, professores }
 
 type vuexModules = typeof modules
 export type vuexModuleName = keyof vuexModules
@@ -43,9 +44,9 @@ const actions = {
 const persistedStateOptions: { key: string; paths: vuexModuleName[] } = {
   key: "logistrack",
 
-  paths: ["auth", "theme", "tutores", "users"]
+  // Módulos cujos state devem persitidos na localstorage
+  paths: ["auth", "theme", "tutores", "users", "professores"]
 }
-// Módulos cujos state devem persitidos na localstorage
 
 export default new Vuex.Store({
   state: rootState,

@@ -1,18 +1,19 @@
 import { Action, Module } from "vuex-module-decorators"
 import { Professor, Tutor, User } from "@/store/modules/auth-types"
 import CrudModule from "../utils/crud-module"
-import updateTutorService from "@/api/tutor/update-tutor"
+import { updateTutorService } from "@/api/tutor/update-tutor"
 import { RawTutor } from "./users-types"
-import cadastroTutorService, { DadosCadastroTutor } from "@/api/tutor/cadastro-tutor"
+import { DadosCadastroTutor, cadastroTutorService } from "@/api/tutor/cadastro-tutor"
+import { findAllTutoresService } from "@/api/tutor/find-all-tutores"
 
 export function isTutor(user?: User | Tutor | Professor | null): user is Tutor {
   if (!user) return false
   return (user as Tutor).habilidades !== undefined && user.role === "tutor"
 }
 
-export function isProfessor(user?: User | Tutor | Professor | null): user is Professor {
-  if (!user) return false
-  return (user as Professor).nivelLecionamento !== undefined && user.role === "professor"
+export function affirmIsTutorAndReturn(user?: User | Tutor | Professor | null): Tutor {
+  if (isTutor(user)) return user
+  throw new Error("Could affirm user role as tutor")
 }
 
 export interface UpdateTutorPayload {
@@ -24,7 +25,7 @@ export interface UpdateTutorPayload {
   options?: {
     /**
      * Se o registro do tutor deve ser atualizado na store
-     * caso a chamada de certo
+     * caso a chamada de certo (default: true)
      */
     updateRecord?: boolean
   }
@@ -36,8 +37,22 @@ function normalizaTutor(raw: RawTutor): Tutor {
   return tutor
 }
 
-@Module({ namespaced: true, name: "tutores" })
+@Module({
+  namespaced: true,
+  name: "tutores"
+})
 export default class TutorModule extends CrudModule<Tutor> {
+  /**
+   * Retorna todos os tutores cadastrados na plataforma
+   */
+  @Action({ rawError: true })
+  async getAllTutores(saveInState = true): Promise<Tutor[]> {
+    const tutoresCru = await findAllTutoresService()
+    const tutores = tutoresCru.map(tutor => normalizaTutor(tutor))
+    if (saveInState) this.SET_ITEMS(tutores)
+    return tutores
+  }
+
   /**
    * Cadastra um tutor na plataforma
    */

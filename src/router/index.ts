@@ -10,6 +10,7 @@ import { RouteConfigSingleView } from "vue-router/types/router"
 
 import { AUTH_ROUTES } from "./rotas/comun"
 import { getHomeRoute } from "./utils/get-home-route"
+import { ERROR_ROUTES } from "./rotas/error"
 
 export interface RouteMeta {
   // Auth
@@ -74,11 +75,7 @@ router.beforeEach((to, from, next) => {
   if (meta.requireLogin && !isLoggedIn) return next(AUTH_ROUTES.LOGIN)
 
   // Barro usuários sem papel necessário pra acessar a rota
-
-  /**
-   * @TODO UNCOMMENT ME
-   */
-  // if (user && meta.requireRole && meta.requireRole !== user.role) return next(ERROR_ROUTES.FORBIDDEN)
+  if (user && meta.requireRole && meta.requireRole !== user.role) return next(ERROR_ROUTES.FORBIDDEN)
 
   return next()
 })

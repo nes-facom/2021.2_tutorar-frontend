@@ -1,5 +1,5 @@
 <script lang="ts">
-import fetchHabilidades, { CATEGORIAS, Habilidade } from "@/api/habilidades/get-all"
+import { CATEGORIAS, Habilidade, getAllHabilidadesService } from "@/api/habilidades/get-all"
 import { isTutor } from "@/store/modules/tutor-module"
 import { Component, Vue } from "vue-property-decorator"
 import { getModule } from "vuex-module-decorators"
@@ -128,7 +128,7 @@ export default class SelecaoHabilidades extends Vue {
   mounted() {
     this.isLoading = true
 
-    fetchHabilidades()
+    getAllHabilidadesService()
       .then(habilidades => {
         this.habilidades = habilidades
       })

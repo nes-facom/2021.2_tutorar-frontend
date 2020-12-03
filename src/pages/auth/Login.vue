@@ -1,4 +1,5 @@
 <script lang="ts">
+import { VForm } from "@/typings/vuetify"
 import AppBarCadastro from "@/components/auth/AppBarCadastro.vue"
 import { Component, Ref, Vue } from "vue-property-decorator"
 import { getHomeRoute } from "@/router/utils/get-home-route"
@@ -15,10 +16,15 @@ export default class PageLogin extends Vue {
   private authModule = getModule(Auth, this.$store)
 
   @Ref("loginForm")
-  _loginFormRef!: HTMLFormElement
+  _loginFormRef!: VForm
 
-  email = "sai_fora2s@hotmai.com"
-  password = "contafake3"
+  // professor de teste
+  // email = "sai_fora2s@hotmai.com"
+  // password = "contafake3"
+
+  // tutor de teste
+  email = "teste@teste.com"
+  password = "testeteste"
 
   showSenha = false
   isFormValid = false
@@ -51,13 +57,11 @@ export default class PageLogin extends Vue {
     this.loginAttempts++
     this.isWaitingResponse = true
 
-    const { email, password } = this
-
     this.emailErrorMessages = []
     this.passwordErrorMessages = []
 
     this.authModule
-      .login({ email, password })
+      .login({ email: this.email, password: this.password })
       .then(() => this.$router.push(getHomeRoute()))
       .catch((errorMessage: LOGIN_ERRORS) => {
         const estaExibindoErroPassword = this.passwordErrorMessages.indexOf(INVALID_PASSWORD) !== -1
@@ -97,9 +101,9 @@ export default class PageLogin extends Vue {
             <span class="green--text">A</span>
             <span class="blue--text">R</span>
           </h1>
-          <span class="subtitle-1 grey--text text--darken-1"
-            >Junte-se a nós e encontre ajuda para implementação de técnologias digitáis na usa prática pedagógica</span
-          >
+          <span class="subtitle-1 grey--text text--darken-1">
+            Junte-se a nós e encontre ajuda para implementação de técnologias digitáis na usa prática pedagógica
+          </span>
         </v-col>
 
         <v-col cols="4">
@@ -111,38 +115,6 @@ export default class PageLogin extends Vue {
             <h3 class="my-5 text-center">Realizar Login</h3>
 
             <v-divider class="my-5" />
-<!--            O que está comentado era para ser o Login com o Google -->
-<!--            <v-row align="center" class="mx-auto">-->
-<!--              <v-col>-->
-<!--                <h5>Fazer Login com:</h5>-->
-<!--              </v-col>-->
-<!--              <v-col>-->
-<!--                <v-btn-->
-<!--                  color="blue lighten-1"-->
-<!--                  outlined-->
-<!--                  class="white&#45;&#45;text px-4 elevation-2"-->
-<!--                  style="text-transform: none"-->
-<!--                  block-->
-<!--                  x-large-->
-<!--                >-->
-<!--                  <v-icon left dark color="red">-->
-<!--                    mdi-google-->
-<!--                  </v-icon>-->
-<!--                  Google-->
-<!--                </v-btn>-->
-<!--              </v-col>-->
-<!--            </v-row>-->
-
-<!--            <v-row>-->
-<!--              <v-col>-->
-<!--                <v-divider class="my-5" />-->
-<!--              </v-col>-->
-<!--              <div class="my-5" style="color: #34A853">ou</div>-->
-<!--              <v-col>-->
-<!--                <v-divider class="my-5" />-->
-<!--              </v-col>-->
-<!--            </v-row>-->
-<!--            Fim comentário login com o google -->
 
             <v-form v-model="isFormValid" ref="loginForm">
               <!-- 

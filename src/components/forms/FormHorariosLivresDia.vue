@@ -25,7 +25,7 @@ export default class FormHorariosLivresDia extends Vue {
       const iniNumber = Number(horarioInicio.replace(/\D/g, ""))
 
       // Se ambos existem verifico se o horario de fim é maior que o de inicio
-      if (iniNumber < fimNumber) errorMessages[index] = "Horário de início deve ser anterior ao horário de termino"
+      if (iniNumber > fimNumber) errorMessages[index] = "Horário de início deve ser anterior ao horário de termino"
     })
 
     return errorMessages
