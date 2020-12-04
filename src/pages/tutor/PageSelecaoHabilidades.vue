@@ -1,9 +1,11 @@
 <script lang="ts">
-import { CATEGORIAS, Habilidade, getAllHabilidadesService } from "@/api/habilidades/get-all"
-import { isTutor } from "@/store/modules/tutor-module"
+import HabilidadesModule, { CATEGORIAS_HABILIDADES, Habilidade } from "@/store/modules/habilidades-module"
+import { affirmIsTutorAndReturn, isTutor } from "@/store/modules/tutor-module"
 import { Component, Vue } from "vue-property-decorator"
+import { Tutor } from "@/store/modules/auth-types"
 import { getModule } from "vuex-module-decorators"
 import Auth from "@/store/modules/auth"
+import { cloneDeep } from "lodash"
 
 interface Categoria {
   cor: string
@@ -12,15 +14,12 @@ interface Categoria {
   habilidades: Habilidade[]
 }
 
-const { GOOGLE, EDUCACAO, COMUNICACAO, ORGANIZACAO, PROGRAMACAO, EDICAO_DE_VIDEO, CRIACAO_CONTEUDO } = CATEGORIAS
-
 @Component({
   name: "SelecaoHabilidades"
 })
 export default class SelecaoHabilidades extends Vue {
+  habilidadesModule = getModule(HabilidadesModule, this.$store)
   authModule = getModule(Auth, this.$store)
-
-  habilidades: Habilidade[] = []
 
   currentTab = 0
 
@@ -29,46 +28,43 @@ export default class SelecaoHabilidades extends Vue {
   failedToLoad = false
 
   props: { [x: string]: { cor: string; icon: string } } = {
-    [GOOGLE]: {
+    [CATEGORIAS_HABILIDADES.GOOGLE]: {
       cor: "blue",
       icon: "mdi-google"
     },
-    [EDUCACAO]: {
+    [CATEGORIAS_HABILIDADES.EDUCACAO]: {
       cor: "green",
       icon: "mdi-school"
     },
-    [COMUNICACAO]: {
+    [CATEGORIAS_HABILIDADES.COMUNICACAO]: {
       cor: "orange",
       icon: "mdi-account-voice"
     },
-    [ORGANIZACAO]: {
+    [CATEGORIAS_HABILIDADES.ORGANIZACAO]: {
       cor: "deep-orange",
       icon: "mdi-clipboard-check-outline"
     },
-    [PROGRAMACAO]: {
+    [CATEGORIAS_HABILIDADES.PROGRAMACAO]: {
       cor: "deep-purple",
       icon: "mdi-desktop-tower-monitor"
     },
-    [EDICAO_DE_VIDEO]: {
+    [CATEGORIAS_HABILIDADES.EDICAO_DE_VIDEO]: {
       cor: "blue",
       icon: "mdi-video-outline"
     },
-    [CRIACAO_CONTEUDO]: {
+    [CATEGORIAS_HABILIDADES.CRIACAO_CONTEUDO]: {
       cor: "green",
       icon: "mdi-trello"
     }
   }
 
-  /**
-   * Habilidades que o usuário selecionou
-   */
   get habilidadesUsuario(): Habilidade[] {
     const { user } = this.authModule
     if (!user || !isTutor(user)) return []
 
     const habilidadesUsuario: Habilidade[] = []
 
-    this.categorias.map(categoria => {
+    this.categoriasHabilidades.map(categoria => {
       categoria.habilidades.map(habilidade => {
         const userHasHabilidade = user.habilidades.findIndex(h => h === habilidade._id) !== -1
         if (userHasHabilidade) habilidadesUsuario.push(habilidade)
@@ -80,45 +76,47 @@ export default class SelecaoHabilidades extends Vue {
 
   /**
    * Formata array de habilidades retornado pela api em um array
-   * de categorias com suas respectivas habilidades para exibição
+   * de CATEGORIAS_HABILIDADES com suas respectivas habilidades para exibição
    */
-  get categorias(): Categoria[] {
+  get categoriasHabilidades(): Categoria[] {
     const val: Categoria[] = []
 
-    const categorias: CATEGORIAS[] = [...new Set(this.habilidades.map(item => item.categoria))]
+    const categorias: CATEGORIAS_HABILIDADES[] = [
+      ...new Set(this.habilidadesModule.asArray.map(item => item.categoria))
+    ]
 
     categorias.map(categoria => {
       const { cor, icon } = this.props[categoria]
-      const habilidades = this.habilidades.filter(h => h.categoria === categoria)
+      const habilidades = this.habilidadesModule.asArray.filter(h => h.categoria === categoria)
       val.push({ cor, icon, nome: categoria, habilidades })
     })
 
     return val
   }
 
+  get usuarioTutor(): Tutor {
+    return affirmIsTutorAndReturn(this.authModule.user)
+  }
+
   addHabilidade(habilidade: Habilidade) {
-    const { user } = this.authModule
+    if (this.usuarioTutor.habilidades.length >= 5) return
 
-    if (!user || !isTutor(user) || user.habilidades.length >= 5) return
+    const dadosUpdate = cloneDeep(this.usuarioTutor)
 
-    const tutor = { ...user }
+    dadosUpdate.habilidades.push(habilidade._id)
 
-    tutor.habilidades.push(habilidade._id)
-
-    this.authModule.updateUser({ id: user._id, user: tutor })
+    this.authModule.updateUser({ id: this.usuarioTutor._id, user: dadosUpdate })
   }
 
   removeHabilidade(habilidade: Habilidade) {
-    const { user } = this.authModule
+    if (this.usuarioTutor.habilidades.length === 0) return
 
-    if (!user || !isTutor(user) || user.habilidades.length === 0) return
+    const dadosUpdate = cloneDeep(this.usuarioTutor)
 
-    const tutor = { ...user }
+    const idx = dadosUpdate.habilidades.indexOf(habilidade._id)
+    dadosUpdate.habilidades.splice(idx, 1)
 
-    const idx = tutor.habilidades.indexOf(habilidade._id)
-    tutor.habilidades.splice(idx, 1)
-
-    this.authModule.updateUser({ id: user._id, user: tutor })
+    this.authModule.updateUser({ id: this.usuarioTutor._id, user: dadosUpdate })
   }
 
   isSelected(habilidade: Habilidade): boolean {
@@ -126,12 +124,11 @@ export default class SelecaoHabilidades extends Vue {
   }
 
   mounted() {
-    this.isLoading = true
+    if (this.habilidadesModule.meta.allFetched) return
 
-    getAllHabilidadesService()
-      .then(habilidades => {
-        this.habilidades = habilidades
-      })
+    this.isLoading = true
+    this.habilidadesModule
+      .fetchAll()
       .catch(() => {
         this.failedToLoad = true
       })
@@ -140,10 +137,6 @@ export default class SelecaoHabilidades extends Vue {
       })
   }
 }
-/*Todo Adicionar rota para após o registro de tutor.
-    Caso selecione habilidades : ir para configuração da agenda.
-    Caso não queira fazer isso agora : ir para configuração da agenda.
-*/
 </script>
 
 <template>
@@ -154,7 +147,6 @@ export default class SelecaoHabilidades extends Vue {
           <v-icon left>mdi-account-details</v-icon>
           Minhas Habilidades
         </v-card-title>
-
         <v-divider class="my-2" />
 
         <div class="pa-4">
@@ -182,7 +174,7 @@ export default class SelecaoHabilidades extends Vue {
 
         <template v-else>
           <v-chip-group column multiple class="px-4 mb-4">
-            <div class="my-auto  mr-6">
+            <div class="my-auto mr-6">
               <span class="subtitle grey--text text--darken-2 mr-3">Habilidades Selecionadas:</span>
               <span
                 :class="[
@@ -209,17 +201,15 @@ export default class SelecaoHabilidades extends Vue {
 
           <v-divider />
 
-          <!-- TABS HEADERS -->
           <v-tabs v-model="currentTab" :color="Object.values(props)[currentTab].cor" centered icons-and-text fixed-tabs>
-            <v-tab v-for="categoria in categorias" :key="categoria.nome">
+            <v-tab v-for="categoria in categoriasHabilidades" :key="categoria.nome">
               <span v-text="categoria.nome" />
               <v-icon v-text="categoria.icon" />
             </v-tab>
           </v-tabs>
 
-          <!-- TABS CONTENT -->
           <v-tabs-items v-model="currentTab">
-            <v-tab-item v-for="(categoria, i) in categorias" :key="i" class="pa-4">
+            <v-tab-item v-for="(categoria, i) in categoriasHabilidades" :key="i" class="pa-4">
               <v-chip
                 class="ma-2"
                 active-class="primary--text"

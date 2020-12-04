@@ -10,12 +10,28 @@ interface Identifiable {
   [x: string]: any
 }
 
+export interface CrudModuleMeta {
+  /**
+   * Indica se todos os registros ja foram buscados da api
+   */
+  allFetched: boolean
+}
+
 export default class CrudModule<Item extends Identifiable> extends VuexModule {
   ids: (string | number)[] = []
   byId: { [x: string]: Item } = {}
 
+  meta: CrudModuleMeta = {
+    allFetched: false
+  }
+
   get asArray() {
     return Object.values(this.byId)
+  }
+
+  @Mutation
+  UPDATE_META(newMetaData: CrudModuleMeta) {
+    this.meta = { ...this.meta, ...newMetaData }
   }
 
   @Mutation

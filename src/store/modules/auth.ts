@@ -34,9 +34,6 @@ export default class Auth extends VuexModule {
     this.token = token
   }
 
-  /**
-   * Atualiza o usuário e o seu JWT
-   */
   @Mutation
   AUTH_UPDATE(payload: { user: User; token?: JWT }) {
     const { user, token } = payload
@@ -50,7 +47,7 @@ export default class Auth extends VuexModule {
   }
 
   /**
-   * Chamado quando o usuário realiza logout:
+   * Chamado quando o usuário realiza logout
    */
   @Mutation
   AUTH_LOGOUT() {
@@ -80,7 +77,6 @@ export default class Auth extends VuexModule {
   logout(payload?: LogoutPayload) {
     const options = { ...{ clearState: true }, ...payload }
 
-    // Importante, isso deve ocorrer primeiro
     this.AUTH_LOGOUT()
 
     if (options?.clearState) this.context.dispatch("RESET_VUEX_STATE", null, { root: true })
@@ -99,8 +95,8 @@ export default class Auth extends VuexModule {
           options: { updateRecord: false }
         })
         .then(updatedTutor => {
-          const updatedUser = { ...updatedTutor, isAdmin: user.isAdmin, isMonitor: user.isMonitor }
-          this.AUTH_UPDATE({ user: updatedUser })
+          const updatedUser = { ...updatedTutor, isAdmin: user.isAdmin }
+          this.AUTH_UPDATE({ user: { ...updatedUser, isMonitor: false } })
         })
     }
 

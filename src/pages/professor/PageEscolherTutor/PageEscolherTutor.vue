@@ -1,9 +1,11 @@
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator"
-import { getModule } from "vuex-module-decorators"
-import Auth from "@/store/modules/auth"
 import TutorModule from "@/store/modules/tutor-module"
+import { getModule } from "vuex-module-decorators"
 import { Tutor } from "@/store/modules/auth-types"
+import Auth from "@/store/modules/auth"
+import { TUTOR_ROUTES } from "@/router/rotas/tutor"
+import HabilidadesModule from "@/store/modules/habilidades-module"
 
 const CardResumoTutor = () => import("@/pages/professor/PageEscolherTutor/CardResumoTutor.vue")
 
@@ -14,6 +16,7 @@ const CardResumoTutor = () => import("@/pages/professor/PageEscolherTutor/CardRe
 export default class PageHome extends Vue {
   authModule = getModule(Auth, this.$store)
   tutorModule = getModule(TutorModule, this.$store)
+  habilidadesModule = getModule(HabilidadesModule, this.$store)
 
   data = ""
   showMenuCalendario = false
@@ -28,14 +31,12 @@ export default class PageHome extends Vue {
     return this.tutorModule.asArray
   }
 
-  irPerfilTutor(tutor: Tutor) {
-    //TODO Colocar Pagina do tutor selecionado
-    this.$router.push({ path: "/tutor/perfil" })
-    console.log(tutor)
-  }
-
   mounted() {
     this.tutorModule.getAllTutores()
+    if (this.habilidadesModule.meta.allFetched) return
+
+    // TODO error handling
+    this.habilidadesModule.fetchAll().catch(() => null)
   }
 }
 </script>

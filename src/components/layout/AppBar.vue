@@ -16,16 +16,16 @@ interface Clock {
 
 @Component({
   name: "AppBar",
-  components: { AppBarUserMenu, AppBarNotificationMenu, AppBarMessageMenu }
+  components: {
+    AppBarUserMenu,
+    AppBarMessageMenu,
+    AppBarNotificationMenu
+  }
 })
 export default class AppBar extends Vue {
   private themeModule = getModule(Theme, this.$store)
 
-  clock: Clock = {
-    data: "",
-    hora: "",
-    timerId: null
-  }
+  clock: Clock = { data: "", hora: "", timerId: null }
 
   get appBar() {
     return this.themeModule.isAppBarVisible
@@ -49,6 +49,8 @@ export default class AppBar extends Vue {
       ? this.$route.name
           .replace(/-/g, " ")
           .split("_")
+          // Se começa com ":" é um parametro de rota e deve ser ignorado
+          .filter(x => !x.startsWith(":"))
           .map(v => ({ link: false, text: v }))
       : []
   }
@@ -86,20 +88,13 @@ export default class AppBar extends Vue {
     flat
     app
   >
-<!--    <v-icon-->
-<!--      @click="navigationDrawer = !navigationDrawer"-->
-<!--      v-text="navigationDrawer ? 'mdi-menu-open' : 'mdi-menu'"-->
-<!--      color="grey"-->
-<!--    />-->
-    <a href="/login">
-      <v-img src="@/assets/logos/tutorar_com_titulo.svg" max-height="130" max-width="130" contain />
-    </a>
-<!--    Todo Criar rotas para tutor, professor e coordenador (igual ao mock-up).
-          Caso o tutor não esteja na home (perfil), disponiblizar um botão indicando o "Painel de Controle".
-          Caso o professor não esteja na home (busca de tutoria), disponibilizar um botão indicando "Buscar Tutoria".
-          Caso o coordenador não esteja na home (listagem de usuários), disponibilizar um botão indicando "Lista de Usuários".
-          Caso o coordenador esteja na home (listagem de usuários), disponiblizar um botão indicando "Relatórios".
--->
+    <v-img
+      src="@/assets/logos/tutorar_com_titulo.svg"
+      max-height="130"
+      max-width="130"
+      contain
+      @click="$router.push('/home')"
+    />
     <v-breadcrumbs :items="routeSections" divider="/" class="hidden-sm-and-down" large />
 
     <v-spacer />

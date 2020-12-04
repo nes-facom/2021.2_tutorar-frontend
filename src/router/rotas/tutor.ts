@@ -1,16 +1,16 @@
 import { RouteConfig, RouteMeta } from "@/router"
 
 export enum TUTOR_ROUTES {
-  PERFIL = "/tutor/meu-perfil",
-  PERFIL_RESUMIDO = "/tutor/perfil",
   AGENDA = "/tutor/minha-agenda",
+  PERFIL_PROPRIO = "/tutor/meu-perfil",
   HABILIDADES = "/tutor/minhas-habilidades"
 }
 
 const rotas: RouteConfig[] = [
   {
-    path: TUTOR_ROUTES.PERFIL,
-    component: () => import(/* webpackChunkName: "PagePerfilTutor" */ "@/pages/tutor/perfil/PagePerfilTutor.vue"),
+    path: TUTOR_ROUTES.PERFIL_PROPRIO,
+    component: () =>
+      import(/* webpackChunkName: "PagePerfilUsuarioTutor" */ "@/pages/tutor/perfil/PagePerfilUsuarioTutor.vue"),
     meta: {
       requireLogin: true,
       requireRole: "tutor"
@@ -21,10 +21,10 @@ const rotas: RouteConfig[] = [
     component: () => import(/* webpackChunkName: "PageSelecaoHabilidades" */ "@/pages/tutor/PageSelecaoHabilidades.vue")
   },
   {
-    path: TUTOR_ROUTES.PERFIL_RESUMIDO,
-    component: () =>
-      import(/* webpackChunkName: "CardPerfilResumidoTutor" */ "@/pages/tutor/perfil/CardPerfilResumidoTutor.vue"),
+    path: "/tutor/:id/perfil",
+    component: () => import(/* webpackChunkName: "PagePerfilTutor" */ "@/pages/tutor/perfil/PagePerfilTutor.vue"),
     meta: {
+      requireRole: false,
       requireLogin: true
     }
   },
@@ -42,7 +42,7 @@ rotas.map(route => {
     requireRole: "tutor"
   }
 
-  route.meta = { ...route.meta, ...defaultMeta }
+  route.meta = { ...defaultMeta, ...route.meta }
 })
 
 export default rotas

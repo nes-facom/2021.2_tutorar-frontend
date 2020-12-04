@@ -1,15 +1,15 @@
 import { cadastroProfessorService, DadosCadastroProfessor } from "@/api/professor/cadastro-professor"
-import { Professor, Tutor, User } from "@/store/modules/auth-types"
+import { Monitor, Professor, Tutor, User } from "@/store/modules/auth-types"
 import { Action, Module } from "vuex-module-decorators"
 import CrudModule from "../utils/crud-module"
 import { RawProfessor } from "./users-types"
 
-export function isProfessor(user?: User | Tutor | Professor | null): user is Professor {
+export function isProfessor(user?: User | Tutor | Professor | Monitor | null): user is Professor {
   if (!user) return false
   return (user as Professor).nivelLecionamento !== undefined && user.role === "professor"
 }
 
-export function affirmIsProfessor(user?: User | Tutor | Professor | null): Professor {
+export function affirmIsProfessor(user?: User | Tutor | Professor | Monitor | null): Professor {
   if (isProfessor(user)) return user
   throw new Error("Could affirm user role as professor")
 }

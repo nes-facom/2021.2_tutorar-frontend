@@ -7,6 +7,7 @@ import theme from "@/store/modules/theme"
 import users from "@/store/modules/users-module"
 import tutores from "@/store/modules/tutor-module"
 import professores from "@/store/modules/professor-module"
+import habilidades from "@/store/modules/habilidades-module"
 
 interface ResetStateOptions {
   clearLocalStorage?: boolean
@@ -14,7 +15,7 @@ interface ResetStateOptions {
 
 Vue.use(Vuex)
 
-const modules = { auth, theme, tutores, users, professores }
+const modules = { auth, theme, tutores, users, professores, habilidades }
 
 type vuexModules = typeof modules
 export type vuexModuleName = keyof vuexModules

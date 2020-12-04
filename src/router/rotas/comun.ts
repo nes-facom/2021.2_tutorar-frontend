@@ -31,7 +31,7 @@ const rotas: RouteConfig[] = [
     redirect: () => {
       const { user } = getModule(Auth, store)
 
-      if (isTutor(user)) return TUTOR_ROUTES.PERFIL
+      if (isTutor(user)) return TUTOR_ROUTES.PERFIL_PROPRIO
       if (isProfessor(user)) return PROFESSOR_ROUTES.ESCOLHER_TUTOR
 
       return AUTH_ROUTES.LOGIN
@@ -67,7 +67,7 @@ const rotas: RouteConfig[] = [
       const { user } = getModule(Auth, store)
       if (!user) return ERROR_ROUTES.FORBIDDEN
 
-      if (isTutor(user)) return TUTOR_ROUTES.PERFIL
+      if (isTutor(user)) return TUTOR_ROUTES.PERFIL_PROPRIO
       if (isProfessor(user)) return PROFESSOR_ROUTES.PERFIL
 
       return "/home"

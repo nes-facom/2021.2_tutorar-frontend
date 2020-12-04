@@ -4,27 +4,26 @@ Todo Adicionar rota para após a seleção de habilidades, após cadastro de tut
 Caso configure sua agenda : continuar na página atual.
 Caso não queira fazer isso agora : ir para home.
 
-=============================================
+Todo Criar rotas para tutor, professor e coordenador (igual ao mock-up).
+Caso o tutor não esteja na home (perfil), disponiblizar um botão indicando o "Painel de Controle".
+Caso o professor não esteja na home (busca de tutoria), disponibilizar um botão indicando "Buscar Tutoria".
+Caso o coordenador não esteja na home (listagem de usuários), disponibilizar um botão indicando "Lista de Usuários".
+Caso o coordenador esteja na home (listagem de usuários), disponiblizar um botão indicando "Relatórios".
 
-1- Normalizar dado de tempo de lecionamento para data
-3- Arruma data do padrão ISO para dd/mm/yyyy na pagina de exibição e listagem de usuario
-4- arrumar link para a pagina de perfil ao clicar em row da tabela de listagem de usuario
-7- Utilizar instancia do mongo proprio no pra cada MS
+=============== VITOR ===============
 
-================================= FUTURO =================================
+0- ARRUMAR HOME ROUTE, E MALDITA TIPAGEM DO MONITOR
 
-1- VERIFICAR AGENDA
+1- Normalizar dado de tempo de lecionamento para data na pagina de perfil do professor
+2- Arruma data do padrão ISO para dd/mm/yyyy na pagina de exibição e listagem de usuario
+3- arrumar link para a pagina de perfil ao clicar em row da tabela de listagem de usuario
+4- Utilizar instancia do mongo proprio no pra cada MS
 
-2- TESTAR AGENDA
+5- INTEGRAR AGENDA COM PEDIDOS DE TUTORIA
 
-================================= Melhorias =================================
-
-1- Verificar se tutor tem ao menos uma habilidade, se não tem sugerir que ele escolha
-
+===============
 
 cd ~
 mv .zsh_history .zsh_history_bad
 strings .zsh_history_bad > .zsh_history
 fc -R .zsh_history
-
-dv-006

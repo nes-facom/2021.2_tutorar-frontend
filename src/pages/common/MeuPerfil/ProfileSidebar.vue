@@ -1,9 +1,10 @@
 <script lang="ts">
-import { Habilidade, getAllHabilidadesService } from "@/api/habilidades/get-all"
+import { getAllHabilidadesService } from "@/api/habilidades/get-all"
 import Auth from "@/store/modules/auth"
 import { getModule } from "vuex-module-decorators"
 import { Vue, Component } from "vue-property-decorator"
 import { isTutor } from "@/store/modules/tutor-module"
+import { Habilidade } from "@/store/modules/habilidades-module"
 
 @Component({
   name: "ProfileSidebar"

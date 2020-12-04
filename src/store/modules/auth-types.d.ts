@@ -8,7 +8,7 @@ interface LogoutPayload {
 
 interface UpdateUserPayload {
   id: string
-  user: User
+  user: Professor | Tutor | Monitor
   foto?: File
 }
 
@@ -23,6 +23,7 @@ interface Pessoa {
   genero: "M" | "F"
   isAdmin: boolean
   celular: string
+  fotoPerfil?: string
 }
 
 export interface Professor extends Pessoa {

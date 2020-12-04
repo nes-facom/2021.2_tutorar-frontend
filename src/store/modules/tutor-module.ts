@@ -1,17 +1,17 @@
 import { Action, Module } from "vuex-module-decorators"
-import { Professor, Tutor, User } from "@/store/modules/auth-types"
+import { Monitor, Professor, Tutor, User } from "@/store/modules/auth-types"
 import CrudModule from "../utils/crud-module"
 import { updateTutorService } from "@/api/tutor/update-tutor"
 import { RawTutor } from "./users-types"
 import { DadosCadastroTutor, cadastroTutorService } from "@/api/tutor/cadastro-tutor"
 import { findAllTutoresService } from "@/api/tutor/find-all-tutores"
 
-export function isTutor(user?: User | Tutor | Professor | null): user is Tutor {
+export function isTutor(user?: User | Tutor | Professor | Monitor | null): user is Tutor {
   if (!user) return false
   return (user as Tutor).habilidades !== undefined && user.role === "tutor"
 }
 
-export function affirmIsTutorAndReturn(user?: User | Tutor | Professor | null): Tutor {
+export function affirmIsTutorAndReturn(user?: User | Tutor | Professor | Monitor | null): Tutor {
   if (isTutor(user)) return user
   throw new Error("Could affirm user role as tutor")
 }
