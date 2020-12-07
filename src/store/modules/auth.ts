@@ -34,6 +34,9 @@ export default class Auth extends VuexModule {
     this.token = token
   }
 
+  /**
+   * Chamado quando o usuário é att
+   */
   @Mutation
   AUTH_UPDATE(payload: { user: User; token?: JWT }) {
     const { user, token } = payload
@@ -82,6 +85,9 @@ export default class Auth extends VuexModule {
     if (options?.clearState) this.context.dispatch("RESET_VUEX_STATE", null, { root: true })
   }
 
+  /**
+   * Atualiza o usuário, chamando a função de atualização de acordo com seu tipo
+   */
   @Action({ rawError: true })
   updateUser(payload: UpdateUserPayload) {
     const { user, id, foto } = payload
@@ -98,6 +104,8 @@ export default class Auth extends VuexModule {
           const updatedUser = { ...updatedTutor, isAdmin: user.isAdmin }
           this.AUTH_UPDATE({ user: { ...updatedUser, isMonitor: false } })
         })
+
+      return
     }
 
     // TODO

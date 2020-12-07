@@ -4,8 +4,8 @@ import { getModule } from "vuex-module-decorators"
 
 import { PROFESSOR_ROUTES } from "@/router/rotas/professor"
 import { TUTOR_ROUTES } from "@/router/rotas/tutor"
+import { getPerfilRoute } from "@/router/utils"
 import Auth from "@/store/modules/auth"
-import { getPerfilRoute } from "@/router/utils/get-home-route"
 
 interface UserMenuItem {
   to: string

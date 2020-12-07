@@ -1,8 +1,12 @@
 import { RouteConfig, RouteMeta } from "@/router"
 
+export enum MONITOR_ROUTES {
+  LISTAGEM_USUARIOS = "/monitor/listagem-usuarios"
+}
+
 const rotas: RouteConfig[] = [
   {
-    path: "/monitor/listagem-usuarios",
+    path: MONITOR_ROUTES.LISTAGEM_USUARIOS,
     component: () => import(/* webpackChunkName: "PageListagemUsuarios" */ "@/pages/monitor/ListagemUsuarios.vue"),
     meta: {
       requireRole: false,
@@ -14,12 +18,9 @@ const rotas: RouteConfig[] = [
 rotas.map(route => {
   if (!route.meta) route.meta = {}
 
-  const defaultMeta: RouteMeta = {
-    requireLogin: true,
-    requireRole: "monitor"
-  }
+  const defaultMeta: RouteMeta = { requireLogin: true, requireRole: "monitor" }
 
-  route.meta = { ...route.meta, ...defaultMeta }
+  route.meta = { ...defaultMeta, ...route.meta }
 })
 
 export default rotas

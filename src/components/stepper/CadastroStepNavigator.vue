@@ -24,18 +24,16 @@ export default class FormStepNavigator extends Vue {
   /**
    * Numero do ultimo passo
    */
-  get lastStepIndex() {
-    return Object.keys(this.stepsValidity)
-      .sort((a: string, b: string) => Number(a) - Number(b))
-      .reverse()[0]
+  get lastStepIndex(): number {
+    return Number(
+      Object.keys(this.stepsValidity)
+        .sort((a: string, b: string) => Number(a) - Number(b))
+        .reverse()[0]
+    )
   }
 
   get currentStepIsValid(): boolean {
     return this.stepsValidity[this.currentStep]
-  }
-
-  gotoNextStep() {
-    this.currentStep === Number(this.lastStepIndex) ? this.$emit("cadastro-concluido") : this.currentStep++
   }
 }
 </script>
@@ -43,11 +41,11 @@ export default class FormStepNavigator extends Vue {
 <template>
   <v-card-actions class="mb-2 mt-5">
     <v-spacer />
-
+    <!-- :disabled="!stepsValidity[currentStep]" -->
     <v-btn
       color="green"
       class="white--text pl-4"
-      @click="$emit('passo-concluido')"
+      @click="currentStep === lastStepIndex ? $emit('cadastro-concluido') : $emit('passo-concluido')"
       :disabled="!stepsValidity[currentStep]"
     >
       <span v-text="currentStep === lastStepIndex ? 'Finalizar' : 'Próximo'" />

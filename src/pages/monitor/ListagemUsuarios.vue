@@ -69,7 +69,7 @@ export default class PageListagemUsuarios extends Vue {
   <v-row no-gutters align="center">
     <v-col cols="12" class="mx-auto">
       <v-card>
-        <v-card-title class="font-weight-bold pb-2">
+        <v-card-title class="font-weight-bold pb-2 grey--text text--darken-1">
           Lista de Usuários
         </v-card-title>
 
@@ -85,9 +85,11 @@ export default class PageListagemUsuarios extends Vue {
             />
           </div>
           <v-spacer />
+
           <div class="col-2">
             <v-select :items="opcoes.perfil" v-model="filtro.perfil" placeholder="Perfil" hide-details outlined dense />
           </div>
+
           <div class="col-2">
             <v-select :items="opcoes.status" v-model="filtro.status" placeholder="Status" hide-details outlined dense />
           </div>
@@ -115,8 +117,12 @@ export default class PageListagemUsuarios extends Vue {
           </template>
 
           <template #item.isActive="{ item }">
-            <v-chip :color="item.isActive ? '#448FF2' : '#89DCF6'" text-color="white" dense>
-              {{ item.isActive ? "ativo" : "inativo" }}
+            <v-chip
+              v-text="item.isActive ? 'ativo' : 'inativo'"
+              :color="item.isActive ? '#448FF2' : '#89DCF6'"
+              text-color="white"
+              dense
+            >
             </v-chip>
           </template>
         </v-data-table>

@@ -1,6 +1,6 @@
 <script>
 export default {
-  name: "PagePerfil",
+  name: "CardPerfilResumidoProfessor",
 
   components: {},
 

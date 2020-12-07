@@ -6,7 +6,9 @@ import { ERROR_ROUTES } from "./error"
 import { isTutor } from "@/store/modules/tutor-module"
 import { TUTOR_ROUTES } from "./tutor"
 import { PROFESSOR_ROUTES } from "./professor"
+import { MONITOR_ROUTES } from "./monitor"
 import { isProfessor } from "@/store/modules/professor-module"
+import { isMonitor } from "@/store/modules/users-module"
 
 export enum AUTH_ROUTES {
   LOGIN = "/login",
@@ -32,6 +34,7 @@ const rotas: RouteConfig[] = [
       const { user } = getModule(Auth, store)
 
       if (isTutor(user)) return TUTOR_ROUTES.PERFIL_PROPRIO
+      if (isMonitor(user)) return MONITOR_ROUTES.LISTAGEM_USUARIOS
       if (isProfessor(user)) return PROFESSOR_ROUTES.ESCOLHER_TUTOR
 
       return AUTH_ROUTES.LOGIN
