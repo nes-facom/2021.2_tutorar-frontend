@@ -2,153 +2,144 @@
 import { getModule } from "vuex-module-decorators"
 import { Vue, Component } from "vue-property-decorator"
 
-import Auth from "@/store/modules/auth"
 import TutorModule, { isTutor } from "@/store/modules/tutor-module"
+import HabilidadesModule from "@/store/modules/habilidades-module"
 import { Tutor } from "@/store/modules/auth-types"
+import Auth from "@/store/modules/auth"
 
 const ModalAgendarTutoria = () => import("@/components/modals/ModalAgendarTutoria.vue")
+const ListaExibicaoHorarios = () => import("@/pages/tutor/perfil/ListaExibicaoHorarios.vue")
 
 @Component({
-  name: "PagePerfilUsuarioTutor",
-  components: { ModalAgendarTutoria }
+  name: "PagePerfilTutor",
+  components: { ModalAgendarTutoria, ListaExibicaoHorarios }
 })
-export default class PagePerfilUsuarioTutor extends Vue {
+export default class PagePerfilTutor extends Vue {
   authModule = getModule(Auth, this.$store)
   tutorModule = getModule(TutorModule, this.$store)
+  habilidadesModule = getModule(HabilidadesModule, this.$store)
+
+  isCarregandoTutor = false
+  failedToLoadTutor = false
 
   showModalAgendarTutoria = false
 
-  /**
-   * O tutor em exibição na página
-   */
-  get tutor(): Tutor {
-    const idtutor = this.$route.params["id"]
-    const tutor = this.tutorModule.byId[idtutor]
+  habilidadesChipColors = ["red", "green", "purple", "orange", "indigo"]
 
-    // Se não existe um tutor valido com esse ID ou ele não foi carregado retorno um objeto vazio
-    if (!isTutor(tutor)) return {} as Tutor
+  tutor: Tutor | null = null
 
-    return tutor
-  }
-
-  diasSemanaTutor = [
-    { dia: "Segunda", diaExt: "Segunda-Feira", disponibilidade: "Noite", num: 1 },
-    { dia: "Terça", diaExt: "Terça-Feira", disponibilidade: "Manhã e Tarde", num: 2 },
-    { dia: "Quarta", diaExt: "Quarta-Feira", disponibilidade: "Tarde e Noite", num: 3 },
-    { dia: "Quinta", diaExt: "Quinta-Feira", disponibilidade: "Não possui horário", num: 4 },
-    { dia: "Sexta", diaExt: "Sexta-Feira", disponibilidade: "Manhã, tarde e noite", num: 5 }
-  ]
-
-  habilidadesTutor = [{ nome: "Google", cor: "blue" }]
-
-  // tutor = { nome: "Amanda", curso: "Biologia", universidade: "UFMS - Universidade Federal do Mato Grosso do Sul" }
-
-  escolherTutoria() {
-    this.showModalAgendarTutoria = true
+  get idTutorEmExibicao(): string {
+    return this.$route.params["id"]
   }
 
   mounted() {
-    /**
-     * TODO: A idéia aqui é dar fetch por id do tutor da rota, se ele ja não foi fetched
-     * e exibir um placeholder pra página enquanto carrega
-     */
-    console.log(this.tutorModule.byId)
+    this.habilidadesModule.fetchAll({ forceRefetch: false })
+
+    const tutorFoiCarregadoPreviamente = isTutor(this.tutorModule.byId[this.idTutorEmExibicao])
+
+    if (tutorFoiCarregadoPreviamente) {
+      this.tutor = this.tutorModule.byId[this.idTutorEmExibicao]
+      return
+    }
+
+    this.isCarregandoTutor = true
+
+    this.tutorModule
+      .getById(this.idTutorEmExibicao)
+      .then(() => {
+        this.isCarregandoTutor = true
+      })
+      .catch(() => {
+        this.failedToLoadTutor = true
+      })
+      .finally(() => {
+        this.isCarregandoTutor = false
+      })
   }
 }
 </script>
 
 <template>
   <v-row no-gutters align="center" justify="center">
-    <v-col cols="12" md="10">
-      <v-card>
-        <v-row>
-          <v-col cols="6">
-            <v-btn color="primary" text @click="$router.push({ path: '/home' })">
-              <v-icon>mdi-arrow-left</v-icon>
-            </v-btn>
-          </v-col>
-          <v-col cols="6" class="d-flex justify-end">
-            <v-btn color="green" small class="white--text mr-3" @click="escolherTutoria()">
-              <span>Agendar Tutoria</span>
-            </v-btn>
-          </v-col>
-        </v-row>
-        <v-divider />
-        <v-row align="center" justify="center" no-gutters>
-          <v-col cols="3">
-            <div>
-              <div class="d-flex align-center">
-                <v-avatar size="150px" class="mb-4 mx-auto">
-                  <v-img src="@/assets/taylor.jpg" />
-                </v-avatar>
-              </div>
+    <v-col cols="12" md="10" lg="8">
+      <v-row v-if="failedToLoadTutor">
+        <v-col cols="12">
+          <v-card-title class="display-2 grey--text mx-auto" style="max-width: 550px">
+            Erro ao carregar tutor.
+          </v-card-title>
+        </v-col>
+      </v-row>
 
-              <v-card-text class="text-center">
-                <h3 class="blue--text" v-text="tutor.nome" />
-              </v-card-text>
+      <v-progress-linear
+        v-else-if="isCarregandoTutor"
+        color="deep-purple accent-4"
+        class="mt-12"
+        indeterminate
+        rounded
+        height="6"
+      />
+
+      <v-card v-else-if="tutor">
+        <v-row no-gutters>
+          <v-col cols="3">
+            <div class="d-flex align-center">
+              <v-avatar size="150px" class="mt-8 mx-auto">
+                <v-img :src="tutor.fotoPerfil" lazy-src="@/assets/taylor.jpg" />
+              </v-avatar>
             </div>
+
+            <v-card-text class="text-center blue--text display-1" v-text="tutor.nome" />
             <v-divider />
-            <div>
-              <v-card-text>
-                <h3 class="grey--text">Curso</h3>
-                <h4 class="blue--text" v-text="tutor.curso" />
-              </v-card-text>
-              <v-card-text>
-                <h3 class="grey--text">Universidade</h3>
-                <h4 class="blue--text" v-text="tutor.universidade" />
-              </v-card-text>
-            </div>
+
+            <v-card-text class="pb-0">
+              <span class="grey--text subtitle d-block">Curso</span>
+              <span class="blue--text title" v-text="tutor.cursoLicensiatura" />
+            </v-card-text>
+
+            <v-card-text>
+              <span class="grey--text subtitle d-block">Universidade</span>
+              <span class="blue--text title" v-text="tutor.universidade" />
+            </v-card-text>
+
+            <v-card-actions>
+              <v-btn color="green" small class="white--text mx-auto mb-3" @click="showModalAgendarTutoria = true">
+                Agendar Tutoria
+              </v-btn>
+            </v-card-actions>
           </v-col>
 
           <v-col cols="9" style="border-left: 1px solid #e3e3e3; min-height: 300px">
-            <v-list two-line>
-              <v-list-item>
-                <v-list-item-icon>
-                  <v-icon color="primary">mdi-calendar</v-icon>
-                </v-list-item-icon>
+            <v-card-title class="pb-0">
+              <v-icon color="primary" left>mdi-calendar</v-icon>
+              <span class="grey--text text--darken-1">Disponiblidade do Tutor</span>
 
-                <v-list-item-content>
-                  <v-list-item-title>Disponiblidade do Tutor</v-list-item-title>
-                  <v-list-item-subtitle
-                    >O tutor possui disponiblidade nos seguintes dias da semana e períodos</v-list-item-subtitle
-                  >
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item v-for="dias in diasSemanaTutor" :key="dias.num">
-                <v-list-item-content>
-                  <v-list-item-title class="blue--text" v-text="dias.dia" />
-                  <v-list-item-subtitle v-text="dias.disponibilidade" />
-                </v-list-item-content>
-              </v-list-item>
-              <v-divider class="py-1" />
+              <v-spacer />
+              <v-btn color="primary" text @click="$router.push({ path: '/home' })">
+                <v-icon>mdi-arrow-left</v-icon>
+              </v-btn>
+            </v-card-title>
 
-              <v-list-item>
-                <v-list-item-icon>
-                  <v-icon color="primary">
-                    mdi-account-details
-                  </v-icon>
-                </v-list-item-icon>
+            <ListaExibicaoHorarios :agenda="tutor.agenda" />
 
-                <v-list-item-content>
-                  <v-list-item-title>Ferramentas</v-list-item-title>
-                  <v-list-item-subtitle>
-                    <v-chip-group>
-                      <v-chip
-                        v-for="(habilidades, index) in habilidadesTutor"
-                        v-text="habilidades.nome"
-                        :key="index"
-                        outlined
-                        :color="habilidades.cor"
-                      />
-                    </v-chip-group>
-                  </v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
+            <v-divider class="py-1" />
+
+            <v-card-title class="mb-0">
+              <v-icon color="primary" left>mdi-account-details</v-icon>
+              <span class="grey--text text--darken-1">Ferramentas</span>
+            </v-card-title>
+
+            <v-chip-group multiple class="mx-4 mb-4">
+              <v-chip
+                v-for="(habilidade, i) in tutorModule.habilidadesTutor(idTutorEmExibicao)"
+                v-text="habilidade.nome"
+                :key="habilidade._id"
+                :color="`${habilidadesChipColors[i]} white--text`"
+              />
+            </v-chip-group>
           </v-col>
         </v-row>
       </v-card>
     </v-col>
-    <ModalAgendarTutoria v-model="showModalAgendarTutoria" />
+    <ModalAgendarTutoria v-if="tutor" v-model="showModalAgendarTutoria" :tutor="tutor" />
   </v-row>
 </template>

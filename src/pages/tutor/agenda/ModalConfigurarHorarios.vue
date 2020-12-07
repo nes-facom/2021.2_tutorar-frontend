@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Vue, Component, Prop } from "vue-property-decorator"
-import { diasSemana } from "@/components/forms/FormHorariosLivresDia.vue"
+import { diasUteisSemana } from "@/components/forms/FormHorariosLivresDia.vue"
 import { AgendaHorarios } from "./agenda"
 import { cloneDeep } from "lodash"
 import { updateAgendaTutorService } from "@/api/tutor/update-agenda-tutor"
@@ -10,8 +10,7 @@ import { isTutor } from "@/store/modules/tutor-module"
 
 const FormHorariosLivresDia = () => import("@/components/forms/FormHorariosLivresDia.vue")
 
-// Ver necessidade
-const defaultFormValueFactory = (): AgendaHorarios => ({
+export const createAgendaVazia = (): AgendaHorarios => ({
   segunda: [],
   terca: [],
   quarta: [],
@@ -35,18 +34,18 @@ export default class ModalConfigurarHorarios extends Vue {
   /**
    * Os horários livres do tutor
    */
-  @Prop({ type: Object, required: false, default: defaultFormValueFactory })
+  @Prop({ type: Object, required: false, default: createAgendaVazia })
   horariosTutor!: AgendaHorarios
 
   /**
    * Cópia dos horários, para não alterar-los diretamente
    */
-  copiaHorarios: AgendaHorarios = defaultFormValueFactory()
+  copiaHorarios: AgendaHorarios = createAgendaVazia()
 
   /**
    * Dia da semana que o tutor esta setando os horários livres
    */
-  diaSelecionado: diasSemana = "segunda"
+  diaSelecionado: diasUteisSemana = "segunda"
 
   /**
    * Indica se o formulário é valido e a cfg pode ser salva

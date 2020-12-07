@@ -1,8 +1,8 @@
 <script lang="ts">
 import { Tutor } from "@/store/modules/auth-types"
-import HabilidadesModule, { Habilidade } from "@/store/modules/habilidades-module"
 import { Vue, Component, Prop } from "vue-property-decorator"
 import { getModule } from "vuex-module-decorators"
+import TutorModule from "@/store/modules/tutor-module"
 
 @Component({
   name: "CardResumoTutor"
@@ -11,13 +11,9 @@ export default class CardResumoTutor extends Vue {
   @Prop({ required: true, type: Object })
   tutor!: Tutor
 
-  habilidadesModule = getModule(HabilidadesModule, this.$store)
+  tutorModule = getModule(TutorModule, this.$store)
 
   habilidadesChipColors = ["red", "green", "purple", "orange", "indigo"]
-
-  get habilidadesTutor(): Habilidade[] {
-    return this.habilidadesModule.asArray.filter(habilidade => this.tutor.habilidades.indexOf(habilidade._id) !== -1)
-  }
 
   irPerfilTutor() {
     this.$router.push({ path: `/tutor/${this.tutor._id}/perfil` })
@@ -52,7 +48,7 @@ export default class CardResumoTutor extends Vue {
 
     <v-chip-group multiple class="mx-4">
       <v-chip
-        v-for="(habilidade, i) in habilidadesTutor"
+        v-for="(habilidade, i) in tutorModule.habilidadesTutor(tutor._id)"
         v-text="habilidade.nome"
         :key="habilidade._id"
         :color="`${habilidadesChipColors[i]} white--text`"
@@ -63,8 +59,8 @@ export default class CardResumoTutor extends Vue {
       <v-spacer />
 
       <v-btn color="green lighten-1" @click="irPerfilTutor" text>
-        <v-icon class="mr-3" color="green">mdi-calendar-clock</v-icon>
-        <span class="pb-0 subtitle green--text" @click="irPerfilTutor">Agendar Tutoria</span>
+        <v-icon class="mr-3" color="green">mdi-account</v-icon>
+        <span class="pb-0 subtitle green--text" @click="irPerfilTutor">Ver Perfil</span>
       </v-btn>
 
       <v-spacer />

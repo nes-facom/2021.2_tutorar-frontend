@@ -1,5 +1,4 @@
 import { RouteConfig } from "@/router"
-import { HOME_ROUTES } from "../utils/get-home-route"
 import store from "../../store/index"
 import { getModule } from "vuex-module-decorators"
 import Auth from "@/store/modules/auth"
@@ -16,18 +15,19 @@ export enum AUTH_ROUTES {
 }
 
 export enum COMMON_ROUTES {
+  HOME = "/home",
   MEU_PERFIL = "/meu-perfil",
-  RECUPERAR_SENHA = "/recuperar-senha",
-  NOVA_SENHA = "/nova-senha"
+  NOVA_SENHA = "/nova-senha",
+  RECUPERAR_SENHA = "/recuperar-senha"
 }
 
 const rotas: RouteConfig[] = [
   {
     path: "/",
-    redirect: HOME_ROUTES.DEFAULT
+    redirect: COMMON_ROUTES.HOME
   },
   {
-    path: HOME_ROUTES.DEFAULT,
+    path: COMMON_ROUTES.HOME,
     redirect: () => {
       const { user } = getModule(Auth, store)
 

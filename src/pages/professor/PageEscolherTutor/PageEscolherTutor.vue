@@ -20,6 +20,7 @@ export default class PageHome extends Vue {
 
   data = ""
   showMenuCalendario = false
+  isCarregandoTutores = false
 
   get dataFormatada() {
     if (!this.data) return ""
@@ -27,16 +28,14 @@ export default class PageHome extends Vue {
     return `${d[2]}/${d[1]}/${d[0].substring(2)}`
   }
 
-  get tutores() {
-    return this.tutorModule.asArray
-  }
-
   mounted() {
     this.tutorModule.getAllTutores()
-    if (this.habilidadesModule.meta.allFetched) return
 
-    // TODO error handling
-    this.habilidadesModule.fetchAll().catch(() => null)
+    this.isCarregandoTutores = true
+
+    this.habilidadesModule.fetchAll({ forceRefetch: false }).finally(() => {
+      this.isCarregandoTutores = false
+    })
   }
 }
 </script>
@@ -99,11 +98,18 @@ export default class PageHome extends Vue {
           </v-col>
         </v-row>
 
-        <v-row align="center" class="mt-4">
-          <v-col v-for="(tutor, index) in tutores" :key="index" cols="12" sm="6" md="4" class="mb-4">
-            <CardResumoTutor class="mx-2" :tutor="tutor" />
+        <template v-if="!isCarregandoTutores">
+          <v-row align="center" class="mt-4">
+            <v-col v-for="(tutor, index) in tutorModule.asArray" :key="index" cols="12" sm="6" md="4" class="mb-4">
+              <CardResumoTutor class="mx-2" :tutor="tutor" />
+            </v-col>
+          </v-row>
+        </template>
+        <template v-else>
+          <v-col cols="12" sm="11" md="9" lg="8" class="pt-2 row justify-center align-center">
+            <v-progress-linear color="deep-purple accent-4" class="mt-12" indeterminate rounded height="6" />
           </v-col>
-        </v-row>
+        </template>
       </v-col>
     </v-row>
   </v-container>

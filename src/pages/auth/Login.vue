@@ -1,11 +1,11 @@
 <script lang="ts">
-import { VForm } from "@/typings/vuetify"
 import AppBarCadastro from "@/components/auth/AppBarCadastro.vue"
 import { Component, Ref, Vue } from "vue-property-decorator"
-import { getHomeRoute } from "@/router/utils/get-home-route"
+import { COMMON_ROUTES } from "@/router/rotas/comun"
 import { getModule } from "vuex-module-decorators"
 import { StringFieldRules } from "@/utils/form"
 import { LOGIN_ERRORS } from "@/api/auth/login"
+import { VForm } from "@/typings/vuetify"
 import Auth from "@/store/modules/auth"
 
 @Component({
@@ -62,7 +62,7 @@ export default class PageLogin extends Vue {
 
     this.authModule
       .login({ email: this.email, password: this.password })
-      .then(() => this.$router.push(getHomeRoute()))
+      .then(() => this.$router.push(COMMON_ROUTES.HOME))
       .catch((errorMessage: LOGIN_ERRORS) => {
         const estaExibindoErroPassword = this.passwordErrorMessages.indexOf(INVALID_PASSWORD) !== -1
         const estaExibindoErroEmail = this.emailErrorMessages.indexOf(EMAIL_NAO_ENCONTRADO) !== -1

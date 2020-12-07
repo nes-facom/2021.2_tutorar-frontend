@@ -19,16 +19,23 @@ export enum CATEGORIAS_HABILIDADES {
   CRIACAO_CONTEUDO = "criação de conteudo"
 }
 
+interface FetchAllPayload {
+  /**
+   * Se as habilidades devem ser buscadas novamente,
+   * mesmo se ja foram anteriormente
+   */
+  forceRefetch: boolean
+}
+
 @Module({
   namespaced: true,
   name: "habilidades"
 })
 export default class HabilidadesModule extends CrudModule<Habilidade> {
-  /**
-   * Busca todas as habilidades e salva no estado
-   */
   @Action({ rawError: true })
-  async fetchAll(): Promise<void> {
+  async fetchAll(payload: FetchAllPayload = { forceRefetch: true }): Promise<void> {
+    if (!payload.forceRefetch && this.meta.allFetched) return
+
     return getAllHabilidadesService().then(habilidades => {
       this.SET_ITEMS(habilidades)
       this.UPDATE_META({ allFetched: true })

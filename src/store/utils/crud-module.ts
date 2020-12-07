@@ -50,10 +50,10 @@ export default class CrudModule<Item extends Identifiable> extends VuexModule {
   }
 
   @Mutation
-  ADD(payload: { id: number; item: Item; options: InsertOptions }) {
+  ADD_ITEM(payload: { id: number | string; item: Item; options?: InsertOptions }) {
     const { id, item, options } = payload
 
-    if (!options.updateExistingRecord && this.byId[id]) return
+    if (!options?.updateExistingRecord && this.byId[id]) return
 
     Vue.set(this.byId, id, { ...this.byId[id], ...item })
   }

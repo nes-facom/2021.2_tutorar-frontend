@@ -8,8 +8,7 @@ import { getModule } from "vuex-module-decorators"
 import Auth from "@/store/modules/auth"
 import { RouteConfigSingleView } from "vue-router/types/router"
 
-import { AUTH_ROUTES } from "./rotas/comun"
-import { getHomeRoute } from "./utils/get-home-route"
+import { AUTH_ROUTES, COMMON_ROUTES } from "./rotas/comun"
 import { ERROR_ROUTES } from "./rotas/error"
 
 export interface RouteMeta {
@@ -69,7 +68,7 @@ router.beforeEach((to, from, next) => {
   const { isLoggedIn, user } = getModule(Auth, store)
 
   // Barra usuários logados tentando acessar login para home
-  if (meta.requireLogoff && isLoggedIn) return next(getHomeRoute())
+  if (meta.requireLogoff && isLoggedIn) return next(COMMON_ROUTES.HOME)
 
   // Barra usuários deslogados se a rota requer login
   if (meta.requireLogin && !isLoggedIn) return next(AUTH_ROUTES.LOGIN)

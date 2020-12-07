@@ -8,5 +8,4 @@
  * ou só declarar o módulo para tipo any
  * ser interferido.
  */
-
 declare module "v-mask"

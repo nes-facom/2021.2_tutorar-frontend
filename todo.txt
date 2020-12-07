@@ -13,12 +13,10 @@ Caso o coordenador esteja na home (listagem de usuários), disponiblizar um bot�
 =============== VITOR ===============
 
 0- ARRUMAR HOME ROUTE, E MALDITA TIPAGEM DO MONITOR
-
 1- Normalizar dado de tempo de lecionamento para data na pagina de perfil do professor
 2- Arruma data do padrão ISO para dd/mm/yyyy na pagina de exibição e listagem de usuario
 3- arrumar link para a pagina de perfil ao clicar em row da tabela de listagem de usuario
 4- Utilizar instancia do mongo proprio no pra cada MS
-
 5- INTEGRAR AGENDA COM PEDIDOS DE TUTORIA
 
 ===============

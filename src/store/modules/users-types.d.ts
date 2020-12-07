@@ -1,3 +1,4 @@
+import { RawAgendaHorarios } from "@/pages/tutor/agenda/agenda"
 import { NIVEL_LECIONAMENTO } from "@/utils/constants/nivel-lecionamento"
 import { Pessoa } from "./auth-types"
 
@@ -6,6 +7,7 @@ interface DadosTutor {
   semestreAtual: number
   cursoLicensiatura: string
   habilidades: string[]
+  agenda?: RawAgendaHorarios
 }
 
 interface DadosProfessor {

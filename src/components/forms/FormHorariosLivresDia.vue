@@ -2,9 +2,11 @@
 import { Vue, Component, Prop } from "vue-property-decorator"
 import { HorarioLivre } from "@/pages/tutor/agenda/agenda"
 
-export type diasSemana = "segunda" | "terca" | "quarta" | "quinta" | "sexta"
+export type diasUteisSemana = "segunda" | "terca" | "quarta" | "quinta" | "sexta"
 
-@Component({ name: "FormHorariosLivresDia" })
+@Component({
+  name: "FormHorariosLivresDia"
+})
 export default class FormHorariosLivresDia extends Vue {
   @Prop({ type: Array, required: true })
   value!: HorarioLivre[]
