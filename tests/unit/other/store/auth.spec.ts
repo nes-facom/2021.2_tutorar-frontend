@@ -33,7 +33,7 @@ describe("Vuex Auth Module", () => {
     const { user, token }: LoginResponse = {
       user: {
         _id: "2",
-        __v: "1",
+        __v: 1,
 
         role: "professor",
 

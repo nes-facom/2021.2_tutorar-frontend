@@ -32,13 +32,6 @@ import ProfessorModule from "@/store/modules/professor-module"
   }
 })
 export default class CadastroProfessor extends Vue {
-  authModule = getModule(Auth, this.$store)
-  professorModule = getModule(ProfessorModule, this.$store)
-
-  currentStep = 0
-
-  validadePassos = { 0: false, 1: false, 2: false }
-
   @Watch("dataInicioLecionamentoNaoFormatada")
   handle(data: string) {
     // prettier-ignore
@@ -46,6 +39,15 @@ export default class CadastroProfessor extends Vue {
       ? ddmmyyyyStringToIso(data)
       : ""
   }
+
+  authModule = getModule(Auth, this.$store)
+  professorModule = getModule(ProfessorModule, this.$store)
+
+  currentStep = 0
+
+  validadePassos = { 0: false, 1: false, 2: false }
+
+  waitingApiResponse = false
 
   dataInicioLecionamentoNaoFormatada = ""
 
@@ -100,6 +102,8 @@ export default class CadastroProfessor extends Vue {
   }
 
   async submit() {
+    this.waitingApiResponse = true
+
     if (!this.fotoPerfil) return
 
     const foto64 = await fileToBase64(this.fotoPerfil)
@@ -107,19 +111,22 @@ export default class CadastroProfessor extends Vue {
     const dadosCadastro: DadosCadastroProfessor = {
       ...this.dadosPessoais,
       password: this.senha,
-      // Esse cast aqui é pra suprimir aviso de que strin <> enum, inofensivo,
-      // TODO fixme
       professor: this.dadosProfessor as DadosCadastroProfessor["professor"],
       fotoPerfil: foto64
     }
 
-    const professorCadastrado = await this.professorModule.cadastraTutor(dadosCadastro)
-    if (!professorCadastrado) return
-
-    // TODO Rota para cadastrar habilidades depois de estar logado.
-    this.authModule.login({ email: professorCadastrado.email, password: dadosCadastro.password }).then(() => {
-      this.$router.push(PROFESSOR_ROUTES.PERFIL)
-    })
+    this.professorModule
+      .cadastraTutor(dadosCadastro)
+      .then(professorCadastrado => {
+        this.authModule.login({ email: professorCadastrado.email, password: dadosCadastro.password })
+      })
+      .then(() => {
+        this.$router.push(PROFESSOR_ROUTES.PERFIL)
+      })
+      .catch(() => null)
+      .finally(() => {
+        this.waitingApiResponse = false
+      })
   }
 }
 </script>
@@ -194,16 +201,15 @@ export default class CadastroProfessor extends Vue {
 
             <v-spacer />
 
-            <div>
-              <LoginLink />
+            <LoginLink />
 
-              <CadastroStepNavigator
-                :steps-validity="validadePassos"
-                :current-step="currentStep"
-                @passo-concluido="currentStep++"
-                @cadastro-concluido="submit"
-              />
-            </div>
+            <CadastroStepNavigator
+              :steps-validity="validadePassos"
+              :current-step="currentStep"
+              :is-cadastrando="waitingApiResponse"
+              @passo-concluido="currentStep++"
+              @cadastro-concluido="submit"
+            />
           </v-card>
         </v-col>
       </v-row>

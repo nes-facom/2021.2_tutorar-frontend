@@ -1,12 +1,21 @@
+import { Action, Module, Mutation, VuexModule } from "vuex-module-decorators"
 import { getAllHabilidadesService } from "@/api/habilidades/get-all"
-import { Action, Module } from "vuex-module-decorators"
-import CrudModule from "../utils/crud-module"
+import { MongoDocument } from "@/store/utils/crud-module-utils"
+import {
+  addItems,
+  addNormalizedItems,
+  AddNormalizedItemsPayload,
+  CrudMeta,
+  CrudModule,
+  markAsFetched,
+  removeItemsById,
+  resetState,
+  updateMeta
+} from "@/store/utils/crud-module-utils"
 
-export interface Habilidade {
-  _id: string
+export interface Habilidade extends MongoDocument {
   nome: string
   categoria: CATEGORIAS_HABILIDADES
-  __v: number
 }
 
 export enum CATEGORIAS_HABILIDADES {
@@ -31,13 +40,56 @@ interface FetchAllPayload {
   namespaced: true,
   name: "habilidades"
 })
-export default class HabilidadesModule extends CrudModule<Habilidade> {
+export default class HabilidadesModule extends VuexModule implements CrudModule<Habilidade> {
+  byId: Record<string, Habilidade> = {}
+
+  meta: CrudMeta = { allFetched: false, lastFetchDate: null }
+
+  get asArray(): Habilidade[] {
+    return Object.values(this.byId)
+  }
+
+  @Mutation
+  CLEAR_ITEMS() {
+    this.byId = {}
+  }
+
+  @Mutation
+  MARK_AS_FETCHED() {
+    markAsFetched(this)
+  }
+
+  @Mutation
+  UPDATE_META(meta: Partial<CrudMeta>) {
+    updateMeta(this, meta)
+  }
+
+  @Mutation
+  RESET_STATE() {
+    resetState(this)
+  }
+
+  @Mutation
+  REMOVE_ITEMS_BY_ID(ids: string[] | string) {
+    removeItemsById(this, ids)
+  }
+
+  @Mutation
+  ADD_NORMALIZED_ITEMS(payload: AddNormalizedItemsPayload<Habilidade>) {
+    addNormalizedItems(this, payload)
+  }
+
+  @Mutation
+  ADD_ITEMS(payload: Habilidade[]) {
+    addItems(this, payload)
+  }
+
   @Action({ rawError: true })
   async fetchAll(payload: FetchAllPayload = { forceRefetch: true }): Promise<void> {
     if (!payload.forceRefetch && this.meta.allFetched) return
 
     return getAllHabilidadesService().then(habilidades => {
-      this.SET_ITEMS(habilidades)
+      this.ADD_ITEMS(habilidades)
       this.UPDATE_META({ allFetched: true })
     })
   }

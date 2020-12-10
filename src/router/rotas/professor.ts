@@ -10,7 +10,7 @@ const rotas: RouteConfig[] = [
   {
     path: PROFESSOR_ROUTES.ESCOLHER_TUTOR,
     component: () =>
-      import(/* webpackChunkName: "PageEscolherTutor" */ "@/pages/professor/PageEscolherTutor/PageEscolherTutor.vue"),
+      import(/* webpackChunkName: "escolher-tutor" */ "@/pages/professor/escolher-tutor/PageEscolherTutor.vue"),
     meta: {
       requireLogin: true,
       requireRole: "professor"
@@ -19,7 +19,9 @@ const rotas: RouteConfig[] = [
   {
     path: PROFESSOR_ROUTES.PERFIL,
     component: () =>
-      import(/* webpackChunkName: "PagePerfilProfessor" */ "@/pages/professor/perfil/PagePerfilProfessor.vue"),
+      import(
+        /* webpackChunkName: "PagePerfilUsuarioProfessor" */ "@/pages/professor/perfil/usuario/PagePerfilUsuarioProfessor.vue"
+      ),
     meta: {
       requireLogin: true,
       requireRole: "professor"
@@ -29,7 +31,7 @@ const rotas: RouteConfig[] = [
     path: PROFESSOR_ROUTES.PERFIL_RESUMIDO,
     component: () =>
       import(
-        /* webpackChunkName: "CardPerfilResumidoProfessor" */ "@/pages/professor/perfil/CardPerfilResumidoProfessor.vue"
+        /* webpackChunkName: "CardPerfilResumidoProfessor" */ "@/pages/professor/perfil/outro/CardPerfilResumidoProfessor.vue"
       ),
     meta: {
       requireRole: false,

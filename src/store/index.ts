@@ -17,19 +17,14 @@ Vue.use(Vuex)
 
 const modules = { auth, theme, tutores, users, professores, habilidades }
 
-type vuexModules = typeof modules
-export type vuexModuleName = keyof vuexModules
-
-const rootState = {}
-
-type RootState = typeof rootState
+export type vuexModuleName = keyof typeof modules
 
 const actions = {
   /**
    * Reseta TODO o estado da aplicação percorrendo os módulos
    * se o módulo tem uma função própria para resetar eu o chamo
    */
-  RESET_VUEX_STATE({ commit }: ActionContext<RootState, RootState>, payload?: ResetStateOptions) {
+  RESET_VUEX_STATE({ commit }: ActionContext<any, any>, payload?: ResetStateOptions) {
     Object.keys(modules).map(moduleName => {
       const module = modules[moduleName as vuexModuleName]
 
@@ -50,7 +45,6 @@ const persistedStateOptions: { key: string; paths: vuexModuleName[] } = {
 }
 
 export default new Vuex.Store({
-  state: rootState,
   modules,
   actions,
   plugins: [createPersistedState(persistedStateOptions)]

@@ -25,8 +25,8 @@ import { DadosCadastroTutor } from "@/api/tutor/cadastro-tutor"
     FotoDropZone,
     AppBarCadastro,
     FormularioSenha,
-    FormularioDadosPessoais,
-    CadastroStepNavigator
+    CadastroStepNavigator,
+    FormularioDadosPessoais
   }
 })
 export default class CadastroTutor extends Vue {
@@ -39,7 +39,9 @@ export default class CadastroTutor extends Vue {
 
   validadePassosFormulario = { 0: false, 1: false, 2: false }
 
-  rules: { [x: string]: StringFieldRules } = {
+  waitingApiResponse = false
+
+  rules: Record<string, StringFieldRules> = {
     campoObrigatorio: [v => !!v || "Campo Obrigatório"]
   }
 
@@ -71,6 +73,8 @@ export default class CadastroTutor extends Vue {
   fotoPerfil: null | File = null
 
   async submit() {
+    this.waitingApiResponse = true
+
     if (!this.fotoPerfil) return
 
     const foto64 = await fileToBase64(this.fotoPerfil)
@@ -82,17 +86,18 @@ export default class CadastroTutor extends Vue {
       fotoPerfil: foto64
     }
 
-    const tutorCadastrado = await this.tutorModule.cadastraTutor(dadosCadastro)
-    if (!tutorCadastrado) return
-
-    // TODO Rota para cadastrar habilidades depois de estar logado.
-    this.authModule.login({ email: tutorCadastrado.email, password: dadosCadastro.password }).then(() => {
-      this.$router.push(TUTOR_ROUTES.PERFIL_PROPRIO)
-    })
-  }
-
-  gotoNextStep() {
-    this.passoAtual === 2 ? this.submit() : this.passoAtual++
+    this.tutorModule
+      .cadastraTutor(dadosCadastro)
+      .then(tutorCadastrado => {
+        this.authModule.login({ email: tutorCadastrado.email, password: dadosCadastro.password })
+      })
+      .catch(() => null)
+      .then(() => {
+        this.$router.push(TUTOR_ROUTES.PERFIL_PROPRIO)
+      })
+      .finally(() => {
+        this.waitingApiResponse = false
+      })
   }
 }
 </script>
@@ -173,6 +178,7 @@ export default class CadastroTutor extends Vue {
             <CadastroStepNavigator
               :steps-validity="validadePassosFormulario"
               :current-step="passoAtual"
+              :is-cadastrando="waitingApiResponse"
               @passo-concluido="passoAtual++"
               @cadastro-concluido="submit"
             />

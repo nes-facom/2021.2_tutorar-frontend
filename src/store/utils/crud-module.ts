@@ -4,10 +4,9 @@ interface InsertOptions {
   updateExistingRecord: boolean
 }
 
-interface Identifiable {
+interface MongoDocument {
   _id: string | number
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [x: string]: any
+  [x: string]: unknown
 }
 
 export interface CrudModuleMeta {
@@ -17,7 +16,7 @@ export interface CrudModuleMeta {
   allFetched: boolean
 }
 
-export default class CrudModule<Item extends Identifiable> extends VuexModule {
+export default class CrudModule<Item extends MongoDocument> extends VuexModule {
   ids: (string | number)[] = []
   byId: { [x: string]: Item } = {}
 

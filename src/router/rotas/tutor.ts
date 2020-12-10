@@ -10,7 +10,9 @@ const rotas: RouteConfig[] = [
   {
     path: TUTOR_ROUTES.PERFIL_PROPRIO,
     component: () =>
-      import(/* webpackChunkName: "PagePerfilUsuarioTutor" */ "@/pages/tutor/perfil/PagePerfilUsuarioTutor.vue"),
+      import(
+        /* webpackChunkName: "PagePerfilUsuarioTutor" */ "@/pages/tutor/perfil/usuario/PagePerfilUsuarioTutor.vue"
+      ),
     meta: {
       requireLogin: true,
       requireRole: "tutor"
@@ -22,7 +24,7 @@ const rotas: RouteConfig[] = [
   },
   {
     path: "/tutor/:id/perfil",
-    component: () => import(/* webpackChunkName: "PagePerfilTutor" */ "@/pages/tutor/perfil/PagePerfilTutor.vue"),
+    component: () => import(/* webpackChunkName: "PagePerfilTutor" */ "@/pages/tutor/perfil/outro/PagePerfilTutor.vue"),
     meta: {
       requireRole: false,
       requireLogin: true

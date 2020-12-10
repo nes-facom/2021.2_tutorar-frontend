@@ -1,8 +1,18 @@
 import { cadastroProfessorService, DadosCadastroProfessor } from "@/api/professor/cadastro-professor"
 import { Monitor, Professor, Tutor, User } from "@/store/modules/auth-types"
-import { Action, Module } from "vuex-module-decorators"
-import CrudModule from "../utils/crud-module"
+import { Action, Module, Mutation, VuexModule } from "vuex-module-decorators"
 import { RawProfessor } from "./users-types"
+import {
+  addItems,
+  addNormalizedItems,
+  AddNormalizedItemsPayload,
+  CrudMeta,
+  CrudModule,
+  markAsFetched,
+  removeItemsById,
+  resetState,
+  updateMeta
+} from "../utils/crud-module-utils"
 
 export function isProfessor(user?: User | Tutor | Professor | Monitor | null): user is Professor {
   if (!user) return false
@@ -24,7 +34,50 @@ function normalizaProfessor(raw: RawProfessor): Professor {
   namespaced: true,
   name: "professores"
 })
-export default class ProfessorModule extends CrudModule<Professor> {
+export default class ProfessorModule extends VuexModule implements CrudModule<Professor> {
+  byId: Record<string, Professor> = {}
+
+  meta: CrudMeta = { allFetched: false, lastFetchDate: null }
+
+  get asArray(): Professor[] {
+    return Object.values(this.byId)
+  }
+
+  @Mutation
+  CLEAR_ITEMS() {
+    this.byId = {}
+  }
+
+  @Mutation
+  MARK_AS_FETCHED() {
+    markAsFetched(this)
+  }
+
+  @Mutation
+  UPDATE_META(meta: Partial<CrudMeta>) {
+    updateMeta(this, meta)
+  }
+
+  @Mutation
+  RESET_STATE() {
+    resetState(this)
+  }
+
+  @Mutation
+  REMOVE_ITEMS_BY_ID(ids: string[] | string) {
+    removeItemsById(this, ids)
+  }
+
+  @Mutation
+  ADD_NORMALIZED_ITEMS(payload: AddNormalizedItemsPayload<Professor>) {
+    addNormalizedItems(this, payload)
+  }
+
+  @Mutation
+  ADD_ITEMS(payload: Professor[]) {
+    addItems(this, payload)
+  }
+
   @Action({ rawError: true })
   async cadastraTutor(payload: DadosCadastroProfessor): Promise<Professor> {
     const professorCadastrado = await cadastroProfessorService(payload)

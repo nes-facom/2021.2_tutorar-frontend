@@ -3,31 +3,24 @@ import Auth from "@/store/modules/auth"
 import { getModule } from "vuex-module-decorators"
 import { Vue, Component } from "vue-property-decorator"
 
-import DadosUsuario from "@/pages/common/MeuPerfil/DadosUsuario.vue"
-import DadosPessoais from "@/pages/common/MeuPerfil/DadosPessoais.vue"
-import ProfileSidebar from "@/pages/common/MeuPerfil/ProfileSidebar.vue"
-import GraduacaoProfessor from "@/pages/common/MeuPerfil/GraduacaoProfessor.vue"
+import Tutorias from "@/pages/tutor/perfil/usuario/Tutorias.vue"
+import ProfileSidebar from "@/pages/tutor/perfil/usuario/ProfileSidebar.vue"
+import TabDadosUsuarioTutor from "@/pages/tutor/perfil/usuario/TabDadosUsuarioTutor.vue"
+import SolicitacoesTutoria from "@/pages/tutor/perfil/usuario/SolicitacoesTutoria.vue"
 
 @Component({
-  name: "PagePerfilProfessor",
-  components: { GraduacaoProfessor, DadosPessoais, ProfileSidebar, DadosUsuario }
+  name: "PagePerfilUsuarioTutor",
+  components: { ProfileSidebar, SolicitacoesTutoria, Tutorias, TabDadosUsuarioTutor }
 })
-export default class MeuPerfil extends Vue {
+export default class PagePerfilUsuarioTutor extends Vue {
   private authModule = getModule(Auth, this.$store)
 
   tab = 0
 
   isEditing = false
 
-  userCopy = { ...this.authModule.user }
-
-  get user() {
-    return this.isEditing ? this.userCopy : this.authModule.user
-  }
-
-  toggleEditMode() {
-    this.userCopy = { ...this.authModule.user }
-    this.isEditing = !this.isEditing
+  get canEditUser() {
+    return Number(this.tab) === 2
   }
 }
 </script>
@@ -41,31 +34,37 @@ export default class MeuPerfil extends Vue {
             <ProfileSidebar />
           </v-col>
 
-          <v-col cols="9" align-self="start" style="border-left: 1px solid #e3e3e3; min-height: 320px">
+          <v-col cols="9" align-self="start" style="border-left: 1px solid #e3e3e3; min-height: 380px">
             <v-tabs v-model="tab">
-              <v-tab>Dados Pessoais</v-tab>
-              <v-tab>Graduação</v-tab>
-              <v-tab>Minha Conta</v-tab>
+              <v-tab :disabled="isEditing">Solicitações Tutoria</v-tab>
+              <v-tab :disabled="isEditing">Tutorias Realizadas</v-tab>
+              <v-tab>Meu Usuário</v-tab>
 
               <v-spacer />
 
-              <v-btn :color="isEditing ? 'red' : 'grey'" @click="toggleEditMode" x-large text>
-                <span v-text="isEditing ? 'Cancelar Edição' : 'Editar'" />
+              <v-btn
+                :disabled="!canEditUser"
+                :color="isEditing ? 'red' : 'grey'"
+                x-large
+                text
+                @click="isEditing = !isEditing"
+              >
+                <span v-text="isEditing ? 'Cancelar' : 'Editar'" />
                 <v-icon class="ml-3" v-text="isEditing ? 'mdi-pencil-off-outline' : 'mdi-pencil'" />
               </v-btn>
             </v-tabs>
 
             <v-tabs-items v-model="tab">
               <v-tab-item>
-                <DadosPessoais :isEditing="isEditing" :user="user" />
+                <SolicitacoesTutoria />
               </v-tab-item>
 
               <v-tab-item>
-                <GraduacaoProfessor :isEditing="isEditing" :user="user" />
+                <Tutorias />
               </v-tab-item>
 
               <v-tab-item>
-                <DadosUsuario :isEditing="isEditing" :user="user" />
+                <TabDadosUsuarioTutor :isEditing="isEditing" @finished-editing="isEditing = false" />
               </v-tab-item>
             </v-tabs-items>
           </v-col>

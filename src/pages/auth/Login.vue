@@ -23,12 +23,12 @@ export default class PageLogin extends Vue {
   // password = "professorprofessor"
 
   // tutor de teste
-  // email = "tutor@tutor.com"
-  // password = "tutortutor"
+  email = "tutor@tutor.com"
+  password = "tutortutor"
 
   // monitor de teste
-  email = "monitor@monitor.com"
-  password = "monitormonitor"
+  // email = "monitor@monitor.com"
+  // password = "monitormonitor"
 
   showSenha = false
   isFormValid = false
