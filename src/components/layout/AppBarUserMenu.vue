@@ -6,6 +6,7 @@ import { PROFESSOR_ROUTES } from "@/router/rotas/professor"
 import { TUTOR_ROUTES } from "@/router/rotas/tutor"
 import { getPerfilRoute } from "@/router/utils"
 import Auth from "@/store/modules/auth"
+import { AUTH_ROUTES } from "@/router/rotas/comun"
 
 interface UserMenuItem {
   to: string
@@ -71,8 +72,7 @@ export default class AppBarUserMenu extends Vue {
   }
 
   logout() {
-    this.authModule.logout()
-    this.$router.push({ path: "/login" })
+    this.authModule.logout({ redirectTo: AUTH_ROUTES.LOGIN })
   }
 }
 </script>

@@ -3,8 +3,6 @@ import { getModule } from "vuex-module-decorators"
 import { Vue, Component } from "vue-property-decorator"
 
 import AppBarUserMenu from "@/components/layout/AppBarUserMenu.vue"
-import AppBarMessageMenu from "@/components/layout/AppBarMessageMenu.vue"
-import AppBarNotificationMenu from "@/components/layout/AppBarNotificationMenu.vue"
 
 import Theme from "@/store/modules/theme"
 
@@ -17,9 +15,7 @@ interface Clock {
 @Component({
   name: "AppBar",
   components: {
-    AppBarUserMenu,
-    AppBarMessageMenu,
-    AppBarNotificationMenu
+    AppBarUserMenu
   }
 })
 export default class AppBar extends Vue {
@@ -33,14 +29,6 @@ export default class AppBar extends Vue {
 
   set appBar(value: boolean) {
     this.themeModule.SET_APP_BAR(value)
-  }
-
-  get navigationDrawer() {
-    return this.themeModule.isNavigationDrawerVisible
-  }
-
-  set navigationDrawer(value: boolean) {
-    this.themeModule.SET_DRAWER(value)
   }
 
   // Se a rota tem um nome que não é o '*' de fallback 404
@@ -104,10 +92,6 @@ export default class AppBar extends Vue {
       <span class="mr-2" v-text="clock.data" />
       <span v-text="clock.hora" />
     </div>
-
-    <AppBarMessageMenu />
-
-    <AppBarNotificationMenu />
 
     <v-divider vertical />
 

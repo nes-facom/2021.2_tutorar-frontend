@@ -1,7 +1,7 @@
 <script lang="ts">
-import { createAgendaVazia } from "../agenda/ModalConfigurarHorarios.vue"
+import { createAgendaVazia } from "../../agenda/ModalConfigurarHorarios.vue"
 import { Vue, Component, Prop } from "vue-property-decorator"
-import { AgendaHorarios, HorarioLivre } from "../agenda/agenda"
+import { AgendaHorarios, HorarioLivre } from "../../agenda/agenda"
 import { cloneDeep } from "lodash"
 
 interface AgendaFormatada extends AgendaHorarios {

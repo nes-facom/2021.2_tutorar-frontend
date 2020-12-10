@@ -34,7 +34,7 @@ export default class SolicitacoesTutoria extends Vue {
     },
     {
       text: "Ação",
-      value: "acao",
+      value: "acao"
     }
   ]
 

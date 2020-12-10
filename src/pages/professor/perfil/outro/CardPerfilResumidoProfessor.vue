@@ -29,9 +29,7 @@ export default {
               </div>
 
               <v-card-text class="text-center">
-                <h4 class="display font-weight-light grey--text mb-3">
-                  Leonardo
-                </h4>
+                <h4 class="display font-weight-light grey--text mb-3">Leonardo</h4>
                 <h4 class="display font-weight-bold">
                   <span class="green--text">P</span>
                   <span class="blue--text">R</span>

@@ -1,18 +1,23 @@
 import { Module, VuexModule, Mutation, Action, getModule } from "vuex-module-decorators"
 import { LogoutPayload, UpdateUserPayload, User } from "./auth-types"
 import { LoginResponse, JWT, loginService } from "@/api/auth/login"
+import { deleteUserService } from "@/api/users/delete"
 import TutorModule, { isTutor } from "./tutor-module"
+import { AUTH_ROUTES } from "@/router/rotas/comun"
 import { isProfessor } from "./professor-module"
 import store from ".."
+import router from "@/router"
 
 @Module({
-  namespaced: true,
-  name: "auth"
+  name: "auth",
+  namespaced: true
 })
 export default class Auth extends VuexModule {
   token: JWT | null = null
 
   user: User | null = null
+
+  isLoggingOut = false
 
   get isLoggedIn() {
     return !!this.token
@@ -34,9 +39,6 @@ export default class Auth extends VuexModule {
     this.token = token
   }
 
-  /**
-   * Chamado quando o usuário é att
-   */
   @Mutation
   AUTH_UPDATE(payload: { user: User; token?: JWT }) {
     const { user, token } = payload
@@ -49,15 +51,18 @@ export default class Auth extends VuexModule {
     this.user = user
   }
 
-  /**
-   * Chamado quando o usuário realiza logout
-   */
   @Mutation
-  AUTH_LOGOUT() {
+  AUTH_LOGOUT(redirectTo?: string) {
+    this.isLoggingOut = true
+
     localStorage.removeItem("api_token")
 
     this.token = null
     this.user = null
+
+    if (redirectTo) router.push(redirectTo)
+
+    this.isLoggingOut = false
   }
 
   @Action({ rawError: true })
@@ -78,24 +83,28 @@ export default class Auth extends VuexModule {
    */
   @Action({ rawError: true })
   logout(payload?: LogoutPayload) {
-    const options = { ...{ clearState: true }, ...payload }
+    const defaultOptions = { clearState: true, redirectTo: AUTH_ROUTES.LOGIN }
 
-    this.AUTH_LOGOUT()
+    const options = { ...defaultOptions, ...payload }
+
+    this.AUTH_LOGOUT(options?.redirectTo)
 
     if (options?.clearState) this.context.dispatch("RESET_VUEX_STATE", null, { root: true })
   }
 
-  /**
-   * Atualiza o usuário, chamando a função de atualização de acordo com seu tipo
-   */
   @Action({ rawError: true })
-  updateUser(payload: UpdateUserPayload) {
+  async deleteUser(userId: string): Promise<boolean> {
+    return deleteUserService(userId).then(() => true)
+  }
+
+  @Action({ rawError: true })
+  async updateUser(payload: UpdateUserPayload): Promise<void> {
     const { user, id, foto } = payload
 
     if (isTutor(user)) {
       const tutorModule = getModule(TutorModule, store)
 
-      tutorModule
+      return tutorModule
         .updateTutor({
           data: { tutor: user, id, foto },
           options: { updateRecord: false }
@@ -103,9 +112,8 @@ export default class Auth extends VuexModule {
         .then(updatedTutor => {
           const updatedUser = { ...updatedTutor, isAdmin: user.isAdmin }
           this.AUTH_UPDATE({ user: { ...updatedUser, isMonitor: false } })
+          return
         })
-
-      return
     }
 
     // TODO

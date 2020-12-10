@@ -17,12 +17,4 @@ describe("Vuex Theme Module", () => {
     themeModule.SET_APP_BAR(true)
     expect(themeModule.isAppBarVisible).toBe(true)
   })
-
-  it("@Mutation SET_DRAWER: Should change the NavigationDrawer state", () => {
-    themeModule.SET_DRAWER(false)
-    expect(themeModule.isNavigationDrawerVisible).toBe(false)
-
-    themeModule.SET_DRAWER(true)
-    expect(themeModule.isNavigationDrawerVisible).toBe(true)
-  })
 })

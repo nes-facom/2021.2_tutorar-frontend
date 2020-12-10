@@ -7,10 +7,10 @@ import Auth from "@/store/modules/auth"
 import { TUTOR_ROUTES } from "@/router/rotas/tutor"
 import HabilidadesModule from "@/store/modules/habilidades-module"
 
-const CardResumoTutor = () => import("@/pages/professor/PageEscolherTutor/CardResumoTutor.vue")
+const CardResumoTutor = () => import("@/pages/professor/escolher-tutor/CardResumoTutor.vue")
 
 @Component({
-  name: "PageEscolherTutor",
+  name: "escolher-tutor",
   components: { CardResumoTutor }
 })
 export default class PageHome extends Vue {

@@ -1,6 +1,6 @@
 <script lang="ts">
 import Auth from "@/store/modules/auth"
-import { Vue, Component, Prop } from "vue-property-decorator"
+import { Vue, Component } from "vue-property-decorator"
 import { getModule } from "vuex-module-decorators"
 
 const ModalRegistrarTutoria = () => import("@/components/modals/ModalRegistrarTutoria.vue")
@@ -34,7 +34,7 @@ export default class Tutorias extends Vue {
     },
     {
       text: "Ação",
-      value: "acao",
+      value: "acao"
     }
   ]
 
@@ -72,6 +72,7 @@ export default class Tutorias extends Vue {
         </template>
       </v-data-table>
     </v-col>
-    <ModalRegistrarTutoria v-model="showModalRegitrarTutoria"/>
+
+    <ModalRegistrarTutoria v-model="showModalRegitrarTutoria" />
   </v-row>
 </template>

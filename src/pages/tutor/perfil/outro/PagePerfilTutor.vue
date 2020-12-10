@@ -7,8 +7,8 @@ import HabilidadesModule from "@/store/modules/habilidades-module"
 import { Tutor } from "@/store/modules/auth-types"
 import Auth from "@/store/modules/auth"
 
+const ListaExibicaoHorarios = () => import("@/pages/tutor/perfil/outro/ListaExibicaoHorarios.vue")
 const ModalAgendarTutoria = () => import("@/components/modals/ModalAgendarTutoria.vue")
-const ListaExibicaoHorarios = () => import("@/pages/tutor/perfil/ListaExibicaoHorarios.vue")
 
 @Component({
   name: "PagePerfilTutor",

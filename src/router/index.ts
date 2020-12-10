@@ -65,10 +65,10 @@ const router = new VueRouter({ mode: "history", base: "/", routes })
  */
 router.beforeEach((to, from, next) => {
   const meta: RouteMeta = to.meta || {}
-  const { isLoggedIn, user } = getModule(Auth, store)
+  const { isLoggedIn, user, isLoggingOut } = getModule(Auth, store)
 
   // Barra usuários logados tentando acessar login para home
-  if (meta.requireLogoff && isLoggedIn) return next(COMMON_ROUTES.HOME)
+  if (meta.requireLogoff && isLoggedIn && !isLoggingOut) return next(COMMON_ROUTES.HOME)
 
   // Barra usuários deslogados se a rota requer login
   if (meta.requireLogin && !isLoggedIn) return next(AUTH_ROUTES.LOGIN)
