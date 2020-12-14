@@ -1,6 +1,6 @@
 <script lang="ts">
 import { diasUteisSemana } from "../forms/FormHorariosLivresDia.vue"
-import { Vue, Component, Prop } from "vue-property-decorator"
+import { Vue, Component, Prop, Ref } from "vue-property-decorator"
 import { AgendaHorarios } from "@/pages/tutor/agenda/agenda"
 import TutorModule from "@/store/modules/tutor-module"
 import { getModule } from "vuex-module-decorators"
@@ -9,6 +9,7 @@ import { yyyymmddToddmm } from "@/utils"
 import isValidDdMmYyyy from "@/utils/form/is-valid-dd-mm-yyyy"
 import TutoriaModule from "@/store/modules/tutoria-module"
 import Auth from "@/store/modules/auth"
+import { VForm } from "@/typings/vuetify"
 
 export type diasSemana = diasUteisSemana | "sabado" | "domingo"
 
@@ -46,6 +47,8 @@ export default class ModalAgendarTutoria extends Vue {
   }
 
   get errorsHorario(): string[] {
+    if (!this.horaInicioTutoria && !this.horaFimTutoria) return []
+
     if (!this.horaInicioTutoria || !this.horaFimTutoria) return ["Informe o horário de início e fim"]
 
     const fimNumber = Number(this.horaFimTutoria.replace(/\D/g, ""))
@@ -142,7 +145,7 @@ export default class ModalAgendarTutoria extends Vue {
   <v-dialog :value="value" width="500" persistent>
     <v-card>
       <template v-if="!tutoriaSolicitada">
-        <v-form v-model="canSubmitTutoria">
+        <v-form ref="form" v-model="canSubmitTutoria">
           <v-card-title class="mb-2 px-6 grey--text text--darken-1">Agendar Tutoria</v-card-title>
 
           <template v-if="ferramentas.length > 0">

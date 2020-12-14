@@ -8,7 +8,6 @@ import FormularioSenha from "@/components/auth/FormularioSenha.vue"
 import CadastroStepNavigator from "@/components/stepper/CadastroStepNavigator.vue"
 import FormularioDadosPessoais, { DadosPessoais } from "@/components/auth/FormularioDadosPessoais.vue"
 
-import { StringFieldRules } from "@/utils/form"
 import { getModule } from "vuex-module-decorators"
 import TutorModule from "@/store/modules/tutor-module"
 import siglasUniversidades from "@/utils/autocomplete/siglas-universidades"
@@ -17,6 +16,7 @@ import Auth from "@/store/modules/auth"
 import { fileToBase64 } from "@/utils/index"
 import { TUTOR_ROUTES } from "@/router/rotas/tutor"
 import { DadosCadastroTutor } from "@/api/tutor/cadastro-tutor"
+import { StringFieldRule } from "@/utils/form"
 
 @Component({
   name: "CadastroTutor",
@@ -41,7 +41,7 @@ export default class CadastroTutor extends Vue {
 
   waitingApiResponse = false
 
-  rules: Record<string, StringFieldRules> = {
+  rules: Record<string, StringFieldRule[]> = {
     campoObrigatorio: [v => !!v || "Campo Obrigatório"]
   }
 

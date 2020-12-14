@@ -1,5 +1,5 @@
 <script lang="ts">
-import { StringFieldRules } from "@/utils/form"
+import { StringFieldRule } from "@/utils/form"
 import isValidCpf from "@/utils/form/is-valid-cpf"
 import isValidDMY from "@/utils/form/is-valid-dd-mm-yyyy"
 import { unmask } from "@/utils/inputs/mask"
@@ -7,7 +7,9 @@ import { unmask } from "@/utils/inputs/mask"
 import { Vue, Component, Watch } from "vue-property-decorator"
 
 import { findUserByCpfService } from "@/api/users/find-by-cpf"
+import { findByEmailService } from "@/api/users/find-by-email"
 import { ddmmyyyyStringToIso } from "@/utils"
+import { isValidEmail } from "@/utils/form/validation"
 
 export interface DadosPessoais {
   cpf: string
@@ -20,18 +22,17 @@ export interface DadosPessoais {
 
 @Component({ name: "FormularioDadosPessoais" })
 export default class FormularioDadosPessoais extends Vue {
-  dados: DadosPessoais = {
-    cpf: "",
-    nome: "",
-    email: "",
-    genero: "",
-    celular: "",
-    dataNascimento: ""
-  }
+  dados: DadosPessoais = { cpf: "", nome: "", email: "", genero: "", celular: "", dataNascimento: "" }
 
   maskedCpf = ""
+
   isCpfEmUso = false
   isCheckingCpf = false
+
+  isEmailEmUso = false
+  isCheckingEmail = false
+
+  emailTimerId: number | null = null
 
   maskedTelefone = ""
   dataNascimentoNaoFormatada = ""
@@ -43,47 +44,31 @@ export default class FormularioDadosPessoais extends Vue {
     ]
   }
 
-  getCelularMask(telefone?: string) {
-    if (!telefone) return "(##) ####-####"
-    return telefone.length <= 14 ? "(##) ####-####" : "(##) #####-####"
-  }
-
-  verificaCpf(cpf?: string): true | string {
-    if (!cpf) return "CPF é obrigatório"
-
-    if (!isValidCpf(cpf)) return "CPF inválido"
-
-    return this.isCpfEmUso ? "CPF em uso" : true
-  }
-
-  rules: { [x: string]: StringFieldRules } = {
-    nome: [
-      v => !!v || "Nome é obrigatório",
-      v => (!!v && v.length >= 6) || "Nome deve ter no minimo 6 caracteres",
-      v => (!!v && v.length <= 60) || "Nome deve ter no máximo 60 caracteres"
-    ],
-
-    email: [v => !!v || "E-mail é obrigatório", v => (!!v && /.+@.+/.test(v)) || "E-mail inválido"],
-
-    dataNascimento: [
-      v => !!v || "Data de nascimento é obrigatório",
-      v => {
-        // TODO Eca, refatorar depois
-        const maxYear = new Date().getFullYear() - 16
-        if (!v) return "Campo Obrigatório"
-        const error = isValidDMY(v, { maxYear })
-        return typeof error === "string" && error.includes("inferior") ? "Idade mínima de 16 anos" : error
-      }
-    ],
-
-    genero: [v => !!v || "Gênero é obrigatório"],
-
-    celular: [v => !!v || "Celular é obrigatório", v => (!!v && v.length >= 14) || "Número inválido"]
-  }
-
   @Watch("dados", { deep: true })
   onFormDataChange(dados: DadosPessoais) {
     this.$emit("input", dados)
+  }
+
+  @Watch("dados.email")
+  onEmailChange(email: string) {
+    console.log("email", email)
+    if (isValidEmail(email) !== true) return
+
+    if (this.emailTimerId) clearTimeout(this.emailTimerId)
+
+    // debounce de 300ms pra buscar na api
+    this.emailTimerId = setTimeout(() => {
+      findByEmailService(email)
+        .then(user => {
+          if (user) this.isEmailEmUso = true
+        })
+        .catch(err => {
+          if (err.statusCode === 404) this.isEmailEmUso = false
+        })
+        .finally(() => {
+          this.isCheckingEmail = false
+        })
+    }, 300)
   }
 
   @Watch("maskedTelefone")
@@ -120,6 +105,44 @@ export default class FormularioDadosPessoais extends Vue {
         this.isCheckingCpf = false
       })
   }
+
+  getCelularMask(telefone?: string) {
+    if (!telefone) return "(##) ####-####"
+    return telefone.length <= 14 ? "(##) ####-####" : "(##) #####-####"
+  }
+
+  verificaCpf(cpf?: string): true | string {
+    if (!cpf) return "CPF é obrigatório"
+
+    if (!isValidCpf(cpf)) return "CPF inválido"
+
+    return this.isCpfEmUso ? "CPF em uso" : true
+  }
+
+  rules: { [x: string]: StringFieldRule[] } = {
+    nome: [
+      v => !!v || "Nome é obrigatório",
+      v => (!!v && v.length >= 6) || "Nome deve ter no minimo 6 caracteres",
+      v => (!!v && v.length <= 60) || "Nome deve ter no máximo 60 caracteres"
+    ],
+
+    email: [v => !!v || "E-mail é obrigatório", v => (!!v && /.+@.+/.test(v)) || "E-mail inválido"],
+
+    dataNascimento: [
+      v => !!v || "Data de nascimento é obrigatório",
+      v => {
+        // TODO Eca, refatorar depois
+        const maxYear = new Date().getFullYear() - 16
+        if (!v) return "Campo Obrigatório"
+        const error = isValidDMY(v, { maxYear })
+        return typeof error === "string" && error.includes("inferior") ? "Idade mínima de 16 anos" : error
+      }
+    ],
+
+    genero: [v => !!v || "Gênero é obrigatório"],
+
+    celular: [v => !!v || "Celular é obrigatório", v => (!!v && v.length >= 14) || "Número inválido"]
+  }
 }
 </script>
 
@@ -131,7 +154,15 @@ export default class FormularioDadosPessoais extends Vue {
 
     <v-text-field v-model="dados.nome" :rules="rules.nome" placeholder="Nome" outlined />
 
-    <v-text-field v-model="dados.email" :rules="rules.email" placeholder="Email" outlined />
+    <v-text-field
+      v-model="dados.email"
+      :rules="rules.email"
+      :loading="isCheckingEmail"
+      :error="isEmailEmUso"
+      :error-messages="isEmailEmUso ? ['Email em uso'] : []"
+      placeholder="Email"
+      outlined
+    />
 
     <!-- 
       :error -> Se o cpf esta em uso coloco em estado de erro manualmente

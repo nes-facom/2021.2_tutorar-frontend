@@ -1,5 +1,5 @@
 <script lang="ts">
-import { StringFieldRules } from "@/utils/form"
+import { StringFieldRule } from "@/utils/form"
 import { Vue, Component, Watch } from "vue-property-decorator"
 
 @Component({ name: "FormularioSenha" })
@@ -9,7 +9,7 @@ export default class FormularioSenha extends Vue {
 
   showSenha = false
 
-  rules: StringFieldRules = [
+  rules: StringFieldRule[] = [
     v => !!v || "Campo Obrigatório",
     v => (!!v && v.length >= 6) || "Senha deve ter no minimo 6 caracteres",
     v => (!!v && v.length < 60) || "Senha deve ter no minimo 60 caracteres"

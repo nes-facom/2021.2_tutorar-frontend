@@ -2,10 +2,11 @@ import handleAxiosError from "@/api/axios-error-handler"
 import { api } from "@/api/axios-instance-creator"
 import { Tutoria } from "@/store/modules/tutoria-module"
 
-export function getTutoriasFromTutorService(idTutor: string): Promise<Tutoria[]> {
+export function updateTutoriaService(idTutoria: string, dadosTutoria: Tutoria): Promise<void> {
+  console.log('dadosTutoria', dadosTutoria)
   return new Promise((resolve, reject) => {
     api()
-      .get(`tutoring/find-pendent-tutoring-by-tutor/${idTutor}`)
+      .put(`tutoring/${idTutoria}`, dadosTutoria)
       .then(res => {
         resolve(res.data)
       })

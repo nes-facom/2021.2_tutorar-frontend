@@ -2,13 +2,11 @@ import handleAxiosError from "@/api/axios-error-handler"
 import { api } from "@/api/axios-instance-creator"
 import { Tutoria } from "@/store/modules/tutoria-module"
 
-export function getTutoriasFromTutorService(idTutor: string): Promise<Tutoria[]> {
+export function deleteTutoriaService(idTutoria: string): Promise<void> {
   return new Promise((resolve, reject) => {
     api()
-      .get(`tutoring/find-pendent-tutoring-by-tutor/${idTutor}`)
-      .then(res => {
-        resolve(res.data)
-      })
+      .delete(`tutoring/delete-tutoring/${idTutoria}`)
+      .then(() => resolve())
       .catch(error => {
         const apiError = handleAxiosError(error)
         reject(apiError)
