@@ -118,14 +118,14 @@ export default class CadastroProfessor extends Vue {
     this.professorModule
       .cadastraTutor(dadosCadastro)
       .then(professorCadastrado => {
-        this.authModule.login({ email: professorCadastrado.email, password: dadosCadastro.password })
+        this.waitingApiResponse = false
+        return this.authModule.login({ email: professorCadastrado.email, password: dadosCadastro.password })
+      })
+      .catch(() => {
+        this.waitingApiResponse = false
       })
       .then(() => {
         this.$router.push(PROFESSOR_ROUTES.PERFIL)
-      })
-      .catch(() => null)
-      .finally(() => {
-        this.waitingApiResponse = false
       })
   }
 }

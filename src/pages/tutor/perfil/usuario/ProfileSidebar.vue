@@ -39,7 +39,7 @@ export default class ProfileSidebar extends Vue {
 <template>
   <div class="py-6 px-4">
     <div class="d-flex align-center">
-      <v-avatar size="50%" class="mb-4 mx-auto" style="hight:18vh">
+      <v-avatar size="50%" class="mb-4 mx-auto">
         <v-img :src="user.fotoPerfil" lazy-src="@/assets/dog.jpg" />
       </v-avatar>
     </div>

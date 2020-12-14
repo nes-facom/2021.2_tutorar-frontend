@@ -7,6 +7,8 @@ import { getModule } from "vuex-module-decorators"
 import { Tutor } from "@/store/modules/auth-types"
 import { yyyymmddToddmm } from "@/utils"
 import isValidDdMmYyyy from "@/utils/form/is-valid-dd-mm-yyyy"
+import TutoriaModule from "@/store/modules/tutoria-module"
+import Auth from "@/store/modules/auth"
 
 export type diasSemana = diasUteisSemana | "sabado" | "domingo"
 
@@ -20,11 +22,13 @@ export default class ModalAgendarTutoria extends Vue {
   @Prop({ required: true, type: Object })
   tutor!: Tutor
 
+  tutoriaModule = getModule(TutoriaModule, this.$store)
   tutorModule = getModule(TutorModule, this.$store)
+  authModule = getModule(Auth, this.$store)
 
   canSubmitTutoria = false
 
-  solicitandoTutoria = false
+  tutoriaSolicitada = false
 
   ferramentaTutoria: string | null = null
 
@@ -34,10 +38,21 @@ export default class ModalAgendarTutoria extends Vue {
   dataTutoria = ""
   horaFimTutoria = ""
   horaInicioTutoria = ""
+  mensagemPedido = ""
 
   rules = {
     dataTutoria: [(v?: string) => !!v || "Campo Obrigatório", (v?: string) => !!v && isValidDdMmYyyy(v)],
     campoObrigatorio: [(v?: string) => !!v || "Campo Obrigatório"]
+  }
+
+  get errorsHorario(): string[] {
+    if (!this.horaInicioTutoria || !this.horaFimTutoria) return ["Informe o horário de início e fim"]
+
+    const fimNumber = Number(this.horaFimTutoria.replace(/\D/g, ""))
+    const iniNumber = Number(this.horaInicioTutoria.replace(/\D/g, ""))
+
+    // Se ambos existem verifico se o horario de fim é maior que o de inicio
+    return iniNumber < fimNumber ? [] : ["Horário de início deve ser anterior ao horário de termino"]
   }
 
   /**
@@ -89,8 +104,36 @@ export default class ModalAgendarTutoria extends Vue {
    * Função para validar dias permitidos para seleção da tutoria
    */
   filterDiasCalendario(data: string) {
+    // mano foda-se, se o tutor não informou nada na agenda libera ae
+    if (this.diasSemanaPermitidos.length === 0) return true
+
     const diaSemana = this.getDiaSemana(data)
     return this.diasSemanaPermitidos.indexOf(diaSemana) !== -1
+  }
+
+  /**
+   * envia o pedido a api
+   */
+  solicitarTutoria() {
+    if (!this.authModule.user) return
+
+    this.tutoriaModule
+      .solicitarTutoria({
+        tutorId: this.tutor._id,
+        professorId: this.authModule.user?._id,
+        tutoringDate: this.dataTutoria,
+        tutoringHour: this.horaInicioTutoria,
+        requestMessage: this.mensagemPedido
+      })
+      .then(() => {
+        this.$toasted.success("Solicitação registrada", {
+          theme: "toasted-primary",
+          position: "top-right",
+          duration: 5000
+        })
+
+        this.$emit("input", false)
+      })
   }
 }
 </script>
@@ -98,24 +141,22 @@ export default class ModalAgendarTutoria extends Vue {
 <template>
   <v-dialog :value="value" width="500" persistent>
     <v-card>
-      <template v-if="!solicitandoTutoria">
+      <template v-if="!tutoriaSolicitada">
         <v-form v-model="canSubmitTutoria">
           <v-card-title class="mb-2 px-6 grey--text text--darken-1">Agendar Tutoria</v-card-title>
 
-          <v-card-text class="pb-0 px-6">Ferramenta a utilizar</v-card-text>
-          <v-select
-            class="px-6 pt-1"
-            v-model="ferramentaTutoria"
-            :items="ferramentas"
-            item-text="nome"
-            item-value="_id"
-          />
+          <template v-if="ferramentas.length > 0">
+            <v-card-text class="pb-0 px-6">Ferramenta a utilizar</v-card-text>
+            <v-select
+              class="px-6 pt-1"
+              v-model="ferramentaTutoria"
+              :items="ferramentas"
+              item-text="nome"
+              item-value="_id"
+            />
+          </template>
 
-          <v-card-text class="pb-0 mt-4 px-6">Data e Hora</v-card-text>
           <div class="px-6 d-flex">
-            <!-- 
-            DATA
-           -->
             <v-menu v-model="isExibindoCalendarioSelecaoDia" transition="scale-transition" min-width="290px" offset-y>
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
@@ -123,7 +164,7 @@ export default class ModalAgendarTutoria extends Vue {
                   :rules="rules.dataTutoria"
                   prepend-inner-icon="mdi-calendar"
                   class="mr-6"
-                  placeholder="Dia"
+                  label="Dia"
                   readonly
                   v-bind="attrs"
                   v-on="on"
@@ -137,9 +178,6 @@ export default class ModalAgendarTutoria extends Vue {
               />
             </v-menu>
 
-            <!-- 
-            HORA INI
-            -->
             <v-menu
               :close-on-content-click="false"
               :nudge-right="40"
@@ -151,9 +189,9 @@ export default class ModalAgendarTutoria extends Vue {
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
                   v-model="horaInicioTutoria"
-                  :rules="rules.campoObrigatorio"
+                  :error-messages="errorsHorario"
                   class="mr-6"
-                  placeholder="Inicio"
+                  label="Inicio"
                   readonly
                   v-bind="attrs"
                   v-on="on"
@@ -174,25 +212,26 @@ export default class ModalAgendarTutoria extends Vue {
               min-width="290px"
             >
               <template v-slot:activator="{ on, attrs }">
-                <v-text-field
-                  v-model="horaFimTutoria"
-                  :rules="rules.campoObrigatorio"
-                  placeholder="Fim"
-                  readonly
-                  v-bind="attrs"
-                  v-on="on"
-                />
+                <v-text-field v-model="horaFimTutoria" label="Fim" readonly v-bind="attrs" v-on="on" />
               </template>
               <v-time-picker format="24hr" v-model="horaFimTutoria" />
             </v-menu>
           </div>
+          <v-textarea
+            v-model="mensagemPedido"
+            class="ma-6"
+            rows="2"
+            counter="500"
+            placeholder="Caso deseje enviar uma mensagem com o pedido digite aqui!"
+          >
+          </v-textarea>
 
           <v-divider class="mt-4" />
 
           <v-card-actions class="pa-3">
             <v-spacer />
             <v-btn class="mr-4" color="red" text @click="$emit('input', false)">Cancelar</v-btn>
-            <v-btn :disabled="!canSubmitTutoria" color="green" class="white--text" @click="$emit('agendamento-aceito')">
+            <v-btn :disabled="!canSubmitTutoria" color="green" class="white--text" @click="solicitarTutoria">
               Confirmar agendamento
             </v-btn>
           </v-card-actions>

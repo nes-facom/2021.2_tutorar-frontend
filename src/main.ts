@@ -4,8 +4,10 @@ import store from "@/store"
 import router from "@/router"
 import VueMask from "v-mask"
 import vuetify from "@/plugins/vuetify"
+import Toasted from "vue-toasted"
 import "./registerServiceWorker"
 
+Vue.use(Toasted)
 Vue.use(VueMask)
 
 Vue.config.productionTip = false

@@ -41,12 +41,10 @@ export default class Tutorias extends Vue {
   tutorias = [{ nome: "Miguel dos Santos", data: "07 de setembro de 2020", horario: "07:00 pm", temRegistro: false }]
 
   registrarTutoria(tutoria: any) {
-    console.log(tutoria)
     this.showModalRegitrarTutoria = true
   }
 
   editarTutoria(tutoria: any) {
-    console.log(tutoria)
     this.showModalRegitrarTutoria = true
   }
 }

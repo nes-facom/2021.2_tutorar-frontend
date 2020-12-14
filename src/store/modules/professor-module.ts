@@ -13,6 +13,8 @@ import {
   resetState,
   updateMeta
 } from "../utils/crud-module-utils"
+import { updateProfessorService } from "@/api/professor/update-professor"
+import { getProfessorByIdService } from "@/api/professor/get-professor-by-id"
 
 export function isProfessor(user?: User | Tutor | Professor | Monitor | null): user is Professor {
   if (!user) return false
@@ -28,6 +30,21 @@ function normalizaProfessor(raw: RawProfessor): Professor {
   const { professor: dadosProfessor, ...dadosPessoa } = raw
   const professor: Professor = { ...dadosProfessor, ...dadosPessoa, role: "professor" }
   return professor
+}
+
+export interface UpdateProfessorPayload {
+  data: {
+    id: string
+    professor: Professor
+    foto?: File
+  }
+  options?: {
+    /**
+     * Se o registro do tutor deve ser atualizado na store
+     * caso a chamada de certo (default: true)
+     */
+    updateRecord?: boolean
+  }
 }
 
 @Module({
@@ -79,27 +96,36 @@ export default class ProfessorModule extends VuexModule implements CrudModule<Pr
   }
 
   @Action({ rawError: true })
+  async fetchProfessorById(id: string): Promise<Professor> {
+    return getProfessorByIdService(id).then(rawProfessor => {
+      const professor = normalizaProfessor(rawProfessor)
+      this.ADD_ITEMS([professor])
+      return professor
+    })
+  }
+
+  @Action({ rawError: true })
   async cadastraTutor(payload: DadosCadastroProfessor): Promise<Professor> {
     const professorCadastrado = await cadastroProfessorService(payload)
     return normalizaProfessor(professorCadastrado)
   }
 
-  // @Action({ rawError: true })
-  // async updateTutor(payload: UpdateTutorPayload): Promise<Tutor> {
-  //   const { id, tutor } = payload.data
+  @Action({ rawError: true })
+  async updateProfessor(payload: UpdateProfessorPayload): Promise<Professor> {
+    const { id, professor } = payload.data
 
-  //   const options = { ...{ updateRecord: true }, ...payload.options }
+    const options = { ...{ updateRecord: true }, ...payload.options }
 
-  //   return new Promise((resolve, reject) => {
-  //     updateTutorService(id, tutor)
-  //       .then(raw => {
-  //         const tutor = normalizaTutor(raw)
-  //         if (options.updateRecord) this.UPDATE({ id: tutor._id, item: tutor })
-  //         resolve(tutor)
-  //       })
-  //       .catch(apiError => {
-  //         reject(apiError)
-  //       })
-  //   })
-  // }
+    return new Promise((resolve, reject) => {
+      updateProfessorService(id, professor)
+        .then(raw => {
+          const professor = normalizaProfessor(raw)
+          if (options.updateRecord) this.ADD_ITEMS([professor])
+          resolve(professor)
+        })
+        .catch(apiError => {
+          reject(apiError)
+        })
+    })
+  }
 }

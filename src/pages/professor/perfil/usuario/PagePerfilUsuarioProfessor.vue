@@ -7,6 +7,7 @@ import DadosUsuario from "@/pages/professor/perfil/usuario/DadosUsuario.vue"
 import DadosPessoais from "@/pages/professor/perfil/usuario/DadosPessoais.vue"
 import ProfileSidebar from "@/pages/professor/perfil/usuario/ProfileSidebar.vue"
 import GraduacaoProfessor from "@/pages/professor/perfil/usuario/GraduacaoProfessor.vue"
+import { User } from "@/store/modules/auth-types"
 
 const DialogDesativacaoConta = () => import("@/components/dialogs/DialogDesativacaoConta.vue")
 const DialogAlterarSenha = () => import("@/components/dialogs/DialogAlterarSenha.vue")
@@ -32,17 +33,38 @@ export default class PagePerfilUsuarioProfessor extends Vue {
   dialogAlterarSenha = false
   dialogDesativacaoConta = false
 
-  userCopy = { ...this.authModule.user }
+  userCopy: User = { ...this.authModule.user } as User
 
   canSubmit = false
 
+  isSavingUsuario = false
+
   get user() {
-    return this.isEditing ? this.userCopy : this.authModule.user
+    return this.isEditing ? this.userCopy : (this.authModule.user as User)
   }
 
   toggleEditMode() {
-    this.userCopy = { ...this.authModule.user }
+    this.userCopy = { ...this.authModule.user } as User
     this.isEditing = !this.isEditing
+  }
+
+  updateUsuario() {
+    this.isSavingUsuario = true
+
+    this.authModule
+      .updateUser({ id: this.user._id, user: this.user })
+      .then(() => {
+        this.$emit("finished-editing")
+        this.$toasted.success("Dados atualizados", {
+          theme: "toasted-primary",
+          position: "top-left",
+          duration: 3000
+        })
+      })
+      .finally(() => {
+        this.isSavingUsuario = false
+        this.isEditing = false
+      })
   }
 }
 </script>
@@ -104,7 +126,14 @@ export default class PagePerfilUsuarioProfessor extends Vue {
 
               <v-spacer />
 
-              <v-btn v-if="isEditing" color="success" class="mr-0">
+              <v-btn
+                v-if="isEditing"
+                :disabled="!canSubmit || isSavingUsuario"
+                :loading="isSavingUsuario"
+                color="success"
+                class="mr-0"
+                @click="updateUsuario"
+              >
                 <span>Concluir Edição</span>
               </v-btn>
             </v-card-actions>

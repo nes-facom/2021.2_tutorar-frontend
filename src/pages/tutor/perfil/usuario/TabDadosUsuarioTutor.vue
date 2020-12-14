@@ -25,6 +25,8 @@ export default class TabDadosUsuarioTutor extends Vue {
 
   authModule = getModule(Auth, this.$store)
 
+  canSubmit = true
+
   tab = 0
 
   siglasUniversidades = siglasUniversidades
@@ -93,16 +95,22 @@ export default class TabDadosUsuarioTutor extends Vue {
       .updateUser({ id: this.user._id, user: this.user })
       .then(() => {
         this.$emit("finished-editing")
+        this.$toasted.success("Dados atualizados", {
+          theme: "toasted-primary",
+          position: "top-left",
+          duration: 3000
+        })
       })
       .finally(() => {
         this.isSavingUsuario = false
+        this.isEditing = false
       })
   }
 }
 </script>
 
 <template>
-  <v-form class="px-6 pb-6 pt-2">
+  <v-form v-model="canSubmit" class="px-6 pb-6 pt-2">
     <v-card-title class="pa-0 grey--text text--darken-1">Dados Pessoais</v-card-title>
     <v-row>
       <v-col cols="12" md="3">
@@ -142,7 +150,7 @@ export default class TabDadosUsuarioTutor extends Vue {
 
       <v-col cols="12" md="3">
         <v-text-field
-          v-model="user.semestreAtual"
+          v-model.number="user.semestreAtual"
           :rules="rules.semestreAtual"
           :disabled="!isEditing"
           label="Semestre Atual"
@@ -176,7 +184,13 @@ export default class TabDadosUsuarioTutor extends Vue {
 
       <v-spacer />
 
-      <v-btn v-if="isEditing" :loading="isSavingUsuario" color="success" @click="updateUsuario">
+      <v-btn
+        v-if="isEditing"
+        :disabled="!canSubmit || isSavingUsuario"
+        :loading="isSavingUsuario"
+        color="success"
+        @click="updateUsuario"
+      >
         <span>Concluir Edição</span>
       </v-btn>
     </v-card-actions>

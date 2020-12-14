@@ -22,7 +22,7 @@ export default class DialogAlterarSenha extends Vue {
 
   async buscarPorSenha() {
     findUserByCredentialsService(this.user.email, this.currentPassword).then(() => {
-      console.log("wew")
+      console.log("todo")
     })
   }
 }

@@ -32,7 +32,8 @@ export default class DialogDesativacaoConta extends Vue {
 </script>
 
 <template>
-  <v-dialog v-if="user" v-model="value" width="500" @click:outside="$emit('input', false)">
+  <v-dialog v-if="user
+  " v-model="value" width="500" @click:outside="$emit('input', false)">
     <v-card>
       <v-img class="mx-auto" width="276" src="@/assets/imagens/Usuário_Desativar.svg" />
 

@@ -1,7 +1,7 @@
+import { RawProfessor, DadosProfessor } from "@/store/modules/users-types"
 import handleAxiosError from "@/api/axios-error-handler"
+import { Professor } from "@/store/modules/auth-types"
 import { api } from "@/api/axios-instance-creator"
-import { Tutor } from "@/store/modules/auth-types"
-import { DadosTutor, RawTutor } from "@/store/modules/users-types"
 
 interface RequestBody {
   cpf?: string
@@ -15,18 +15,19 @@ interface RequestBody {
   fotoPerfil?: string
   dataNascimento?: string
 
-  tutor?: Partial<DadosTutor>
+  professor?: Partial<DadosProfessor>
 }
 
-export function updateTutorService(id: string, tutor: Tutor): Promise<RawTutor> {
-  const { universidade, cursoLicensiatura, semestreAtual, habilidades, ...copiaTutor } = tutor
-  const body: RequestBody = { ...copiaTutor, tutor: { universidade, cursoLicensiatura, semestreAtual, habilidades } }
-
-  console.log(body)
+export function updateProfessorService(id: string, professor: Professor): Promise<RawProfessor> {
+  const { formacaoAcademica, nivelLecionamento, inicioLecionamento, ...copiaProfessor } = professor
+  const body: RequestBody = {
+    ...copiaProfessor,
+    professor: { formacaoAcademica, nivelLecionamento, inicioLecionamento }
+  }
 
   return new Promise((resolve, reject) => {
     api()
-      .put(`users/tutores/${id}`, body)
+      .put(`users/professores/${id}`, body)
       .then(res => {
         resolve(res.data)
       })
