@@ -1,6 +1,5 @@
 <script lang="ts">
 import { DadosCadastroProfessor } from "@/api/professor/cadastro-professor"
-import { StringFieldRules } from "@/utils/form"
 import { Vue, Component, Watch } from "vue-property-decorator"
 
 import FormularioDadosPessoais, { DadosPessoais } from "@/components/auth/FormularioDadosPessoais.vue"
@@ -19,6 +18,7 @@ import { getModule } from "vuex-module-decorators"
 import Auth from "@/store/modules/auth"
 import { ddmmyyyyStringToIso, fileToBase64 } from "@/utils"
 import ProfessorModule from "@/store/modules/professor-module"
+import { StringFieldRule } from "@/utils/form"
 
 @Component({
   name: "CadastroProfessor",
@@ -93,7 +93,7 @@ export default class CadastroProfessor extends Vue {
     ]
   }
 
-  rules: { [x: string]: StringFieldRules } = {
+  rules: { [x: string]: StringFieldRule[] } = {
     campoObrigatorio: [v => !!v || "Campo Obrigatório"],
     inicioLecionamento: [
       v => !!v || "Campo Obrigatório",

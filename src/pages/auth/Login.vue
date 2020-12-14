@@ -3,10 +3,10 @@ import AppBarCadastro from "@/components/auth/AppBarCadastro.vue"
 import { Component, Ref, Vue } from "vue-property-decorator"
 import { COMMON_ROUTES } from "@/router/rotas/comun"
 import { getModule } from "vuex-module-decorators"
-import { StringFieldRules } from "@/utils/form"
 import { LOGIN_ERRORS } from "@/api/auth/login"
 import { VForm } from "@/typings/vuetify"
 import Auth from "@/store/modules/auth"
+import { StringFieldRule } from "@/utils/form"
 
 @Component({
   name: "PageLogin",
@@ -31,9 +31,9 @@ export default class PageLogin extends Vue {
 
   isWaitingResponse = false
 
-  emailRules: StringFieldRules = [v => !!v || "E-mail é obrigatório", v => /.+@.+/.test(v || "") || "E-mail inválido"]
+  emailRules: StringFieldRule[] = [v => !!v || "E-mail é obrigatório", v => /.+@.+/.test(v || "") || "E-mail inválido"]
 
-  passwordRules: StringFieldRules = [
+  passwordRules: StringFieldRule[] = [
     v => !!v || "Senha é obrigatória",
     v => (!!v && v.length >= 6) || "Senha deve ter no mínimo 6 caracteres"
   ]

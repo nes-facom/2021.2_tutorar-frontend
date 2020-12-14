@@ -1,5 +1,3 @@
-import { Monitor, Professor, Tutor, User } from "@/store/modules/auth-types"
-import { findAllUsersService } from "@/api/users/get-all"
 import { Action, Module, Mutation, VuexModule } from "vuex-module-decorators"
 import {
   addItems,
@@ -15,13 +13,15 @@ import {
 } from "../utils/crud-module-utils"
 import { DadosSolicitacaoTutoria, solicitarTutoriaService } from "@/api/tutoria/solicitar-tutoria"
 import { getTutoriasFromTutorService } from "@/api/tutoria/get-tutorias-from-tutor"
+import { deleteTutoriaService } from "@/api/tutoria/delete-tutoria"
+import { updateTutoriaService } from "@/api/tutoria/update-tutoria"
 
 export interface Tutoria extends MongoDocument {
   tutorId: string
 
   professorId: string
 
-  tutoringDate: Date
+  tutoringDate: string
 
   tutoringHour: string
 
@@ -86,11 +86,24 @@ export default class TutoriaModule extends VuexModule implements CrudModule<Tuto
     })
   }
 
-  @Action
+  @Action({ rawError: true })
   async getTutoriasPendentesFromTutor(idTutor: string): Promise<Tutoria[]> {
     return getTutoriasFromTutorService(idTutor).then(tutorias => {
       this.ADD_ITEMS(tutorias)
       return tutorias
     })
+  }
+
+  @Action({ rawError: true })
+  async deleteTutoria(idTutoria: string): Promise<void> {
+    return deleteTutoriaService(idTutoria).then(() => {
+      this.REMOVE_ITEMS_BY_ID(idTutoria)
+    })
+  }
+
+  @Action({ rawError: true })
+  async updateTutoria(payload: { idTutoria: string, dados: Tutoria}): Promise<void> {
+    // TODO a terminar, MS de tutorias não esta retornando os dados att
+    return updateTutoriaService(payload.idTutoria, payload.dados)
   }
 }

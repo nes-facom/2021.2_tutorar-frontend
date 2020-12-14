@@ -1,14 +1,23 @@
 <script lang="ts">
+import { TutoriaFormatada } from "@/pages/tutor/perfil/usuario/SolicitacoesTutoria.vue"
+import { Professor } from "@/store/modules/auth-types"
+import ProfessorModule from "@/store/modules/professor-module"
 import { getApropriateTelefoneMask } from "@/utils/inputs/mask"
 import { Vue, Component, Prop } from "vue-property-decorator"
+import { getModule } from "vuex-module-decorators"
 
 @Component({ name: "ModalAceitarTutoria" })
 export default class ModalAceitarTutoria extends Vue {
   @Prop({ required: true })
   value!: boolean
 
+  @Prop({ required: true, type: Object })
+  tutoria!: TutoriaFormatada
+
   @Prop({ type: String, default: "6798801996" })
   telefone!: string
+
+  professorModule = getModule(ProfessorModule, this.$store)
 
   openTutorWhatsAppLink() {
     window.open(`https://wa.me/55${this.telefone}`)
@@ -16,6 +25,10 @@ export default class ModalAceitarTutoria extends Vue {
 
   get mascaraTelefone(): string {
     return getApropriateTelefoneMask(this.telefone)
+  }
+
+  get professor(): Professor {
+    return this.professorModule.byId[this.tutoria.professorId]
   }
 }
 </script>
@@ -25,12 +38,12 @@ export default class ModalAceitarTutoria extends Vue {
     <v-card>
       <v-card-title>
         <v-avatar size="100">
-          <v-img src="@/assets/dog.jpg" />
+          <v-img :src="tutoria.fotoProfessor" lazy-src="@/assets/dog.jpg" />
         </v-avatar>
         <p class="ml-3">
           <span class="grey--text text--darken-1">Nova solicitação de tutoria !</span>
           <br />
-          <span>Ciclano da Silva</span>
+          <span v-text="tutoria.nomeProfessor" />
         </p>
       </v-card-title>
 
@@ -40,9 +53,9 @@ export default class ModalAceitarTutoria extends Vue {
 
       <div class="pl-6">
         <v-icon left>mdi-calendar</v-icon>
-        <span>10/10</span>
+        <span v-text="tutoria.dataFormatada" />
         <v-icon left class="ml-8">mdi-clock</v-icon>
-        <span>18:30</span>
+        <span v-text="tutoria.tutoringHour" />
       </div>
 
       <v-row class="px-6 pb-6 " no-gutters>
@@ -50,15 +63,15 @@ export default class ModalAceitarTutoria extends Vue {
           <v-card-subtitle class="pl-0 pb-2">
             <span>Telefone</span>
           </v-card-subtitle>
-          <a v-if="telefone.length" @click="openTutorWhatsAppLink">
-            {{ telefone | VMask(mascaraTelefone) }}
+          <a v-if="telefone.length > 0" @click="openTutorWhatsAppLink">
+            {{ professor.celular | VMask(mascaraTelefone) }}
           </a>
         </v-col>
         <v-col cols="6">
           <v-card-subtitle class="pl-0 pb-2">
             <span>Email</span>
           </v-card-subtitle>
-          <span>prof_cliclano@gmail.com</span>
+          <span v-text="professor.email" />
         </v-col>
       </v-row>
 
