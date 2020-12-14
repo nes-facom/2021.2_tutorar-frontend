@@ -89,14 +89,14 @@ export default class CadastroTutor extends Vue {
     this.tutorModule
       .cadastraTutor(dadosCadastro)
       .then(tutorCadastrado => {
-        this.authModule.login({ email: tutorCadastrado.email, password: dadosCadastro.password })
+        this.waitingApiResponse = false
+        return this.authModule.login({ email: tutorCadastrado.email, password: dadosCadastro.password })
       })
-      .catch(() => null)
+      .catch(() => {
+        this.waitingApiResponse = false
+      })
       .then(() => {
         this.$router.push(TUTOR_ROUTES.PERFIL_PROPRIO)
-      })
-      .finally(() => {
-        this.waitingApiResponse = false
       })
   }
 }
@@ -105,6 +105,7 @@ export default class CadastroTutor extends Vue {
 <template>
   <div class="page-container">
     <AppBarCadastro />
+
     <v-container fill-height>
       <v-row align="center" justify="end">
         <v-col cols="4">

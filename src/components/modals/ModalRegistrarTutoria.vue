@@ -30,21 +30,21 @@ export default class ModalRegistrarTutoria extends Vue {
         <v-row>
           <v-col cols="3">
             <v-menu
-                v-model="dataMenu"
-                :close-on-content-click="false"
-                :nudge-right="40"
-                transition="scale-transition"
-                offset-y
-                min-width="290px"
+              v-model="dataMenu"
+              :close-on-content-click="false"
+              :nudge-right="40"
+              transition="scale-transition"
+              offset-y
+              min-width="290px"
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
-                    v-model="dataInput"
-                    label="Data"
-                    prepend-icon="mdi-calendar"
-                    readonly
-                    v-bind="attrs"
-                    v-on="on"
+                  v-model="dataInput"
+                  label="Data"
+                  prepend-icon="mdi-calendar"
+                  readonly
+                  v-bind="attrs"
+                  v-on="on"
                 ></v-text-field>
               </template>
               <v-date-picker v-model="dataInput" @input="menu = false"></v-date-picker>
@@ -52,57 +52,57 @@ export default class ModalRegistrarTutoria extends Vue {
           </v-col>
           <v-col cols="3">
             <v-menu
-                ref="primMenu"
-                :close-on-content-click="false"
-                :nudge-right="40"
-                transition="scale-transition"
-                offset-y
-                max-width="290px"
-                min-width="290px"
+              ref="primMenu"
+              :close-on-content-click="false"
+              :nudge-right="40"
+              transition="scale-transition"
+              offset-y
+              max-width="290px"
+              min-width="290px"
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
-                    v-model="primHorarioInput"
-                    label="Inicio"
-                    prepend-icon="mdi-clock-time-four-outline"
-                    readonly
-                    v-bind="attrs"
-                    v-on="on"
+                  v-model="primHorarioInput"
+                  label="Inicio"
+                  prepend-icon="mdi-clock-time-four-outline"
+                  readonly
+                  v-bind="attrs"
+                  v-on="on"
                 ></v-text-field>
               </template>
               <v-time-picker
-                  format="24hr"
-                  v-model="primHorarioInput"
-                  @click:minute="$refs.primMenu.save(primHorarioInput)"
+                format="24hr"
+                v-model="primHorarioInput"
+                @click:minute="$refs.primMenu.save(primHorarioInput)"
               ></v-time-picker>
             </v-menu>
           </v-col>
           <v-col cols="3">
             <v-menu
-                ref="segMenu"
-                :close-on-content-click="false"
-                :nudge-right="40"
-                :return-value.sync="segHorarioInput"
-                transition="scale-transition"
-                offset-y
-                max-width="290px"
-                min-width="290px"
+              ref="segMenu"
+              :close-on-content-click="false"
+              :nudge-right="40"
+              :return-value.sync="segHorarioInput"
+              transition="scale-transition"
+              offset-y
+              max-width="290px"
+              min-width="290px"
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
-                    :disabled="diaTodo"
-                    v-model="segHorarioInput"
-                    label="Fim"
-                    prepend-icon="mdi-clock-time-four-outline"
-                    readonly
-                    v-bind="attrs"
-                    v-on="on"
+                  :disabled="diaTodo"
+                  v-model="segHorarioInput"
+                  label="Fim"
+                  prepend-icon="mdi-clock-time-four-outline"
+                  readonly
+                  v-bind="attrs"
+                  v-on="on"
                 ></v-text-field>
               </template>
               <v-time-picker
-                  format="24hr"
-                  v-model="segHorarioInput"
-                  @click:minute="$refs.segMenu.save(segHorarioInput)"
+                format="24hr"
+                v-model="segHorarioInput"
+                @click:minute="$refs.segMenu.save(segHorarioInput)"
               ></v-time-picker>
             </v-menu>
           </v-col>
@@ -123,11 +123,7 @@ export default class ModalRegistrarTutoria extends Vue {
           </v-col>
         </v-row>
         <h4 class="blue--text">Descrição</h4>
-        <v-textarea
-            label="Descrição"
-            counter
-            maxlength="1000"
-        ></v-textarea>
+        <v-textarea label="Descrição" counter maxlength="1000"></v-textarea>
       </v-card-text>
 
       <v-divider />

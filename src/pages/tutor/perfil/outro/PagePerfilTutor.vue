@@ -12,12 +12,15 @@ const ModalAgendarTutoria = () => import("@/components/modals/ModalAgendarTutori
 
 @Component({
   name: "PagePerfilTutor",
-  components: { ModalAgendarTutoria, ListaExibicaoHorarios }
+  components: {
+    ModalAgendarTutoria,
+    ListaExibicaoHorarios
+  }
 })
 export default class PagePerfilTutor extends Vue {
-  authModule = getModule(Auth, this.$store)
-  tutorModule = getModule(TutorModule, this.$store)
   habilidadesModule = getModule(HabilidadesModule, this.$store)
+  tutorModule = getModule(TutorModule, this.$store)
+  authModule = getModule(Auth, this.$store)
 
   isCarregandoTutor = false
   failedToLoadTutor = false
@@ -26,7 +29,9 @@ export default class PagePerfilTutor extends Vue {
 
   habilidadesChipColors = ["red", "green", "purple", "orange", "indigo"]
 
-  tutor: Tutor | null = null
+  get tutor(): Tutor | null {
+    return this.tutorModule.byId[this.idTutorEmExibicao]
+  }
 
   get idTutorEmExibicao(): string {
     return this.$route.params["id"]
@@ -37,24 +42,15 @@ export default class PagePerfilTutor extends Vue {
 
     const tutorFoiCarregadoPreviamente = isTutor(this.tutorModule.byId[this.idTutorEmExibicao])
 
-    if (tutorFoiCarregadoPreviamente) {
-      this.tutor = this.tutorModule.byId[this.idTutorEmExibicao]
-      return
-    }
+    if (tutorFoiCarregadoPreviamente) return
 
     this.isCarregandoTutor = true
 
     this.tutorModule
       .getById(this.idTutorEmExibicao)
-      .then(() => {
-        this.isCarregandoTutor = true
-      })
-      .catch(() => {
-        this.failedToLoadTutor = true
-      })
-      .finally(() => {
-        this.isCarregandoTutor = false
-      })
+      .then(() => (this.isCarregandoTutor = true))
+      .catch(() => (this.failedToLoadTutor = true))
+      .finally(() => (this.isCarregandoTutor = false))
   }
 }
 </script>
@@ -101,8 +97,8 @@ export default class PagePerfilTutor extends Vue {
               <span class="blue--text title" v-text="tutor.universidade" />
             </v-card-text>
 
-            <v-card-actions>
-              <v-btn color="green" small class="white--text mx-auto mb-3" @click="showModalAgendarTutoria = true">
+            <v-card-actions v-if="authModule.user && !authModule.user.isMonitor">
+              <v-btn color="green" class="white--text mx-auto mb-3" @click="showModalAgendarTutoria = true" small>
                 Agendar Tutoria
               </v-btn>
             </v-card-actions>

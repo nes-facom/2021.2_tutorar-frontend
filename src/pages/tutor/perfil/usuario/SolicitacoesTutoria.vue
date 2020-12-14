@@ -1,6 +1,8 @@
 <script lang="ts">
 import Auth from "@/store/modules/auth"
-import { Vue, Component, Prop } from "vue-property-decorator"
+import ProfessorModule from "@/store/modules/professor-module"
+import TutoriaModule, { Tutoria } from "@/store/modules/tutoria-module"
+import { Vue, Component } from "vue-property-decorator"
 import { getModule } from "vuex-module-decorators"
 
 const ModalAceitarTutoria = () => import("@/components/modals/ModalAceitarTutoria.vue")
@@ -10,37 +12,27 @@ const ModalAceitarTutoria = () => import("@/components/modals/ModalAceitarTutori
   components: { ModalAceitarTutoria }
 })
 export default class SolicitacoesTutoria extends Vue {
+  professorModule = getModule(ProfessorModule, this.$store)
+  tutoriaModule = getModule(TutoriaModule, this.$store)
   authModule = getModule(Auth, this.$store)
 
   showModalAceitarTutoria = false
 
   headers = [
-    {
-      text: "Avatar",
-      value: "avatar",
-      align: "start"
-    },
-    {
-      text: "Nome",
-      value: "nome"
-    },
-    {
-      text: "Data",
-      value: "data"
-    },
-    {
-      text: "Horário",
-      value: "horario"
-    },
-    {
-      text: "Ação",
-      value: "acao"
-    }
+    { text: "Avatar", value: "avatar", align: "start" },
+    { text: "Nome", value: "nome" },
+    { text: "Data", value: "data" },
+    { text: "Horário", value: "horario" },
+    { text: "Ação", value: "acao" }
   ]
 
   solicitacoes = [{ nome: "Leonarda Kauan Pereira", data: "07 de setembro de 2020", horario: "07:00 pm" }]
 
-  escolherTutoria(tutoria: any) {
+  get tutoriasProfessor() {
+    return this.tutoriaModule.asArray
+  }
+
+  escolherTutoria(tutoria: Tutoria) {
     console.log(tutoria)
     this.showModalAceitarTutoria = true
   }
@@ -50,7 +42,18 @@ export default class SolicitacoesTutoria extends Vue {
   }
 
   aceitarTutoria() {
-    console.log("wew !")
+    //
+  }
+
+  mounted() {
+    const userId = this.authModule.user?._id
+    if (!userId) return
+    this.tutoriaModule.getTutoriasPendentesFromTutor(userId).then(tutorias => {
+      tutorias.map(tutoria => {
+        console.log("fetching", tutoria.professorId)
+        this.professorModule.fetchProfessorById(tutoria.professorId)
+      })
+    })
   }
 }
 </script>
@@ -58,10 +61,10 @@ export default class SolicitacoesTutoria extends Vue {
 <template>
   <v-row no-gutters class="mt-6">
     <v-col cols="12">
-      <v-data-table :headers="headers" :items="solicitacoes" hide-default-footer>
-        <template #item.avatar>
+      <v-data-table :headers="headers" :items="tutoriasProfessor" hide-default-footer>
+        <template #item.avatar="{item}">
           <v-avatar size="36px">
-            <v-img src="@/assets/dog.jpg" />
+            <v-img lazy-src="@/assets/dog.jpg" :src="item.fotoPerfil" />
           </v-avatar>
         </template>
 

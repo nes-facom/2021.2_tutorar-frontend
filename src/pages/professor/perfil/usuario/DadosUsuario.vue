@@ -27,15 +27,13 @@ export default class DadosUsuario extends Vue {
 </script>
 
 <template>
-  <v-form class="pa-6">
-    <v-row>
-      <v-col cols="12" md="3">
-        <v-text-field v-model="user.email" :disabled="!isEditing" label="E-mail" />
-      </v-col>
+  <v-row class="pa-6">
+    <v-col cols="12" md="3">
+      <v-text-field v-model="user.email" :disabled="!isEditing" label="E-mail" />
+    </v-col>
 
-      <v-col cols="12" md="3">
-        <v-text-field v-model="user.celular" :disabled="!isEditing" label="Celular" />
-      </v-col>
-    </v-row>
-  </v-form>
+    <v-col cols="12" md="3">
+      <v-text-field v-model="user.celular" :disabled="!isEditing" label="Celular" />
+    </v-col>
+  </v-row>
 </template>

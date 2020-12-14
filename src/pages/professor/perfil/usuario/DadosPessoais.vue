@@ -47,30 +47,28 @@ export default class DadosPessoais extends Vue {
 </script>
 
 <template>
-  <v-form class="pa-6">
-    <v-row>
-      <v-col cols="12" md="3">
-        <v-text-field v-model="user.nome" :rules="rules.nome" :disabled="!isEditing" label="Nome Completo" />
-      </v-col>
+  <v-row class="pa-6">
+    <v-col cols="12" md="3">
+      <v-text-field v-model="user.nome" :rules="rules.nome" :disabled="!isEditing" label="Nome Completo" />
+    </v-col>
 
-      <v-col cols="12" md="3">
-        <v-text-field
-          v-model="dataNascimentoNaoFormatada"
-          v-mask="'##/##/####'"
-          :rules="rules.dataNascimento"
-          :disabled="!isEditing"
-          label="Data de Nascimento"
-          append-icon="mdi-calendar"
-        />
-      </v-col>
+    <v-col cols="12" md="3">
+      <v-text-field
+        v-model="dataNascimentoNaoFormatada"
+        v-mask="'##/##/####'"
+        :rules="rules.dataNascimento"
+        :disabled="!isEditing"
+        label="Data de Nascimento"
+        append-icon="mdi-calendar"
+      />
+    </v-col>
 
-      <v-col cols="12" md="3">
-        <v-select v-model="user.genero" :rules="rules.genero" :items="genero" :disabled="!isEditing" label="Gênero" />
-      </v-col>
+    <v-col cols="12" md="3">
+      <v-select v-model="user.genero" :rules="rules.genero" :items="genero" :disabled="!isEditing" label="Gênero" />
+    </v-col>
 
-      <v-col cols="12" md="3">
-        <v-text-field v-model="user.cpf" label="CPF" disabled />
-      </v-col>
-    </v-row>
-  </v-form>
+    <v-col cols="12" md="3">
+      <v-text-field v-model="user.cpf" label="CPF" disabled />
+    </v-col>
+  </v-row>
 </template>

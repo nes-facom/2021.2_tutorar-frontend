@@ -18,17 +18,8 @@ export default class PageLogin extends Vue {
   @Ref("loginForm")
   _loginFormRef!: VForm
 
-  // professor de teste
-  // email = "professor@professor.com"
-  // password = "professorprofessor"
-
-  // tutor de teste
-  email = "tutor@tutor.com"
-  password = "tutortutor"
-
-  // monitor de teste
-  // email = "monitor@monitor.com"
-  // password = "monitormonitor"
+  email = ""
+  password = ""
 
   showSenha = false
   isFormValid = false

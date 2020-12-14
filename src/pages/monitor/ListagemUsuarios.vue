@@ -1,5 +1,6 @@
 <script lang="ts">
 import { User } from "@/store/modules/auth-types"
+import { isTutor } from "@/store/modules/tutor-module"
 import UsersModule from "@/store/modules/users-module"
 import { Vue, Component } from "vue-property-decorator"
 import { getModule } from "vuex-module-decorators"
@@ -34,14 +35,15 @@ export default class PageListagemUsuarios extends Vue {
     }
   ]
 
-  footer = {
-    itemsPerPageAllText: "Todas",
-    itemsPerPageText: "Linhas por página"
-  }
+  footer = { itemsPerPageAllText: "Todas", itemsPerPageText: "Linhas por página" }
 
   opcoes = {
     perfil: ["Indiferente", "professor", "tutor"],
     status: ["Indiferente", "Ativo", "Inativo"]
+  }
+
+  get users(): User[] {
+    return this.userModule.asArray
   }
 
   getAgeFromYYYYMMDD(date: string): number {
@@ -55,8 +57,10 @@ export default class PageListagemUsuarios extends Vue {
     return idade
   }
 
-  get users(): User[] {
-    return this.userModule.asArray
+  gotoUserPage(selectedUser: User) {
+    if (isTutor(selectedUser)) return this.$router.push(`/tutor/${selectedUser._id}/perfil`)
+    // if (isProfessor(selectedUser)) return this.$router.push(`/professor/${selectedUser._id}/perfil`)
+    return
   }
 
   mounted() {
@@ -106,9 +110,9 @@ export default class PageListagemUsuarios extends Vue {
           no-data-text="Nenhum registro encontrado"
           no-results-text="Nenhum registro encontrado com esses filtros"
         >
-          <template #item.avatar>
-            <v-avatar size="50" class="my-2 avatar-usuario" @click="$router.push({ path: '/perfil' })">
-              <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
+          <template #item.avatar="{ item }">
+            <v-avatar size="50" class="my-2 avatar-usuario" @click="gotoUserPage(item)">
+              <img :src="item.fotoPerfil" layz-src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
             </v-avatar>
           </template>
 

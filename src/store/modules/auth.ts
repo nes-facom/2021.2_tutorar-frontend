@@ -4,7 +4,7 @@ import { LoginResponse, JWT, loginService } from "@/api/auth/login"
 import { deleteUserService } from "@/api/users/delete"
 import TutorModule, { isTutor } from "./tutor-module"
 import { AUTH_ROUTES } from "@/router/rotas/comun"
-import { isProfessor } from "./professor-module"
+import ProfessorModule, { isProfessor } from "./professor-module"
 import store from ".."
 import router from "@/router"
 
@@ -112,11 +112,21 @@ export default class Auth extends VuexModule {
         .then(updatedTutor => {
           const updatedUser = { ...updatedTutor, isAdmin: user.isAdmin }
           this.AUTH_UPDATE({ user: { ...updatedUser, isMonitor: false } })
-          return
         })
     }
 
-    // TODO
-    if (isProfessor(user)) console.log("A implementar update de usuario professor")
+    if (isProfessor(user)) {
+      const professorModule = getModule(ProfessorModule, store)
+
+      return professorModule
+        .updateProfessor({
+          data: { professor: user, id, foto },
+          options: { updateRecord: false }
+        })
+        .then(updatedProfessor => {
+          const updated = { ...updatedProfessor, isAdmin: user.isAdmin }
+          this.AUTH_UPDATE({ user: { ...updated, isMonitor: false } })
+        })
+    }
   }
 }

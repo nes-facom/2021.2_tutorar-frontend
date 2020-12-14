@@ -88,7 +88,7 @@ export default class AppBarUserMenu extends Vue {
       <v-list>
         <v-list-item @click="goToRoute(getPerfilRoute())">
           <v-list-item-avatar>
-            <v-img src="@/assets/dog.jpg" alt="Usuário" />
+            <v-img :src="user.fotoPerfil" lazy-src="@/assets/dog.jpg" alt="Usuário" />
           </v-list-item-avatar>
 
           <v-list-item-content>

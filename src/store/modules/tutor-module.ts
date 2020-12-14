@@ -125,30 +125,20 @@ export default class TutorModule extends VuexModule implements CrudModule<Tutor>
     return rawTutor
   }
 
-  /**
-   * Retorna todos os tutores cadastrados na plataforma
-   */
   @Action({ rawError: true })
   async getAllTutores(saveInState = true): Promise<Tutor[]> {
     const tutoresCru = await findAllTutoresService()
-    // todo remover slice, ver match com vitor
-    const tutores = tutoresCru.slice(0, 20).map(tutor => normalizaTutor(tutor))
+    const tutores = tutoresCru.map(tutor => normalizaTutor(tutor))
     if (saveInState) this.ADD_ITEMS(tutores)
     return tutores
   }
 
-  /**
-   * Cadastra um tutor na plataforma
-   */
   @Action({ rawError: true })
   async cadastraTutor(payload: DadosCadastroTutor): Promise<Tutor> {
     const tutorCadastrado = await cadastroTutorService(payload)
     return normalizaTutor(tutorCadastrado)
   }
 
-  /**
-   * Atualiza um tutor
-   */
   @Action({ rawError: true })
   async updateTutor(payload: UpdateTutorPayload): Promise<Tutor> {
     const { id, tutor } = payload.data

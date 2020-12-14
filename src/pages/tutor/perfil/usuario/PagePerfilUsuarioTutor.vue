@@ -10,10 +10,15 @@ import SolicitacoesTutoria from "@/pages/tutor/perfil/usuario/SolicitacoesTutori
 
 @Component({
   name: "PagePerfilUsuarioTutor",
-  components: { ProfileSidebar, SolicitacoesTutoria, Tutorias, TabDadosUsuarioTutor }
+  components: {
+    Tutorias,
+    ProfileSidebar,
+    SolicitacoesTutoria,
+    TabDadosUsuarioTutor
+  }
 })
 export default class PagePerfilUsuarioTutor extends Vue {
-  private authModule = getModule(Auth, this.$store)
+  authModule = getModule(Auth, this.$store)
 
   tab = 0
 

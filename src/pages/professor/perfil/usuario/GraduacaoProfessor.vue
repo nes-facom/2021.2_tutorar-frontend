@@ -52,38 +52,37 @@ export default class GraduacaoProfessor extends Vue {
 </script>
 
 <template>
-  <v-form class="pa-6">
-    <v-row>
-      <v-col cols="12" md="4">
-        <v-text-field
-          v-model="dataNaoFormatada"
-          v-mask="'##/##/####'"
-          :rules="rules.inicioLecionamento"
-          label="Quando começou a lecionar ?"
-          append-icon="mdi-calendar"
-          hint="Não precisamos de uma data exata, uma estimativa basta !"
-        />
-      </v-col>
+  <v-row class="pa-6">
+    <v-col cols="12" md="4">
+      <v-text-field
+        v-model="dataNaoFormatada"
+        v-mask="'##/##/####'"
+        :rules="rules.inicioLecionamento"
+        :disabled="!isEditing"
+        label="Quando começou a lecionar ?"
+        append-icon="mdi-calendar"
+        hint="Não precisamos de uma data exata, uma estimativa basta !"
+      />
+    </v-col>
 
-      <v-col cols="12" md="4">
-        <v-select
-          v-model="user.formacaoAcademica"
-          :items="opcoes.formacaoAcademica"
-          :rules="rules.campoObrigatorio"
-          :disabled="!isEditing"
-          label="Formação Acadêmica"
-        />
-      </v-col>
+    <v-col cols="12" md="4">
+      <v-select
+        v-model="user.formacaoAcademica"
+        :items="opcoes.formacaoAcademica"
+        :rules="rules.campoObrigatorio"
+        :disabled="!isEditing"
+        label="Formação Acadêmica"
+      />
+    </v-col>
 
-      <v-col cols="12" md="4">
-        <v-select
-          v-model="user.nivelLecionamento"
-          :items="opcoes.nivelLecionamento"
-          :rules="rules.campoObrigatorio"
-          :disabled="!isEditing"
-          label="Nível Lecionamento"
-        />
-      </v-col>
-    </v-row>
-  </v-form>
+    <v-col cols="12" md="4">
+      <v-select
+        v-model="user.nivelLecionamento"
+        :items="opcoes.nivelLecionamento"
+        :rules="rules.campoObrigatorio"
+        :disabled="!isEditing"
+        label="Nível Lecionamento"
+      />
+    </v-col>
+  </v-row>
 </template>
