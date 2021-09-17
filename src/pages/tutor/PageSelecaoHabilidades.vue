@@ -99,7 +99,7 @@ export default class SelecaoHabilidades extends Vue {
   }
 
   addHabilidade(habilidade: Habilidade) {
-    if (this.usuarioTutor.habilidades.length >= 5) return
+    // if (this.usuarioTutor.habilidades.length >= 5) return
 
     const dadosUpdate = cloneDeep(this.usuarioTutor)
 
@@ -122,6 +122,15 @@ export default class SelecaoHabilidades extends Vue {
   isSelected(habilidade: Habilidade): boolean {
     return this.habilidadesUsuario.indexOf(habilidade) !== -1
   }
+
+  getHabilidadesLength(): number {
+    let totalHabilidades = 0
+    for (let i = 0; i<7; i++){
+      totalHabilidades += this.categoriasHabilidades[i].habilidades.length
+    }
+    return totalHabilidades
+  }
+
 
   mounted() {
     if (this.habilidadesModule.meta.allFetched) return
@@ -151,7 +160,7 @@ export default class SelecaoHabilidades extends Vue {
 
         <div class="pa-4">
           <span class="grey--text text--darken-1 subtitle-1">
-            Suas habilidades são utilizadas para que professores te encontrem com mais facilidade, selecione as 5 que
+            Suas habilidades são utilizadas para que professores te encontrem com mais facilidade, selecione as que
             você mais possui afinidade
           </span>
         </div>
@@ -179,13 +188,12 @@ export default class SelecaoHabilidades extends Vue {
               <span
                 :class="[
                   'subtitle',
-                  'font-weight-bold',
-                  habilidadesUsuario.length === 5 ? 'green--text' : 'grey--text'
+                  'font-weight-bold'
                 ]"
                 v-text="habilidadesUsuario.length"
               />
               <span> de </span>
-              <span class="subtitle font-weight-bold">5</span>
+              <span class="subtitle font-weight-bold">{{ getHabilidadesLength() }}</span>
             </div>
 
             <v-chip
