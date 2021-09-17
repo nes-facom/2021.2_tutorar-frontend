@@ -125,8 +125,13 @@ export default class SelecaoHabilidades extends Vue {
 
   getHabilidadesLength(): number {
     let totalHabilidades = 0
+    let categoriaAtual = null
     for (let i = 0; i<7; i++){
-      totalHabilidades += this.categoriasHabilidades[i].habilidades.length
+      categoriaAtual = this.categoriasHabilidades[i]
+      console.log(categoriaAtual)
+      if (categoriaAtual != null) {
+      totalHabilidades += categoriaAtual.habilidades.length
+      }
     }
     return totalHabilidades
   }
