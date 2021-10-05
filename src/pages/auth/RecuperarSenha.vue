@@ -1,7 +1,7 @@
 <script lang="ts">
 import AppBarCadastro from "@/components/auth/AppBarCadastro.vue"
 import { Component, Vue } from "vue-property-decorator"
-import axios from "axios"
+import { emailService } from "@/api/auth/send-email"
 
 @Component({
   name: "RecuperarSenha",
@@ -15,22 +15,15 @@ export default class RecuperarSenha extends Vue {
   sendRecuperarRequest(email: string) {
     this.continuarRecuperar = true
 
-    axios
-      .post("https://tutorar-api.herokuapp.com/users/auth/send-recover-email", { email })
+    if (!emailService(email)) {
+      console.log("Não foi possível fazer a requisição")
+      this.continuarRecuperar = false
+    }
 
-      .then(res => {
-        if (res.status == 200 || res.status == 201 || res.status == 204) {
-          console.log(res.data)
-        } else {
-          console.log("Não foi possível fazer a requisição")
-          this.continuarRecuperar = false
-
-          const options = {
-            body: `Não foi possível encontrar o email`
-          }
-          new Notification("Notificação", options)
-        }
-      })
+    const options = {
+      body: `Não foi possível encontrar o email`
+    }
+    new Notification("Notificação", options)
   }
 }
 </script>
