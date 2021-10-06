@@ -2,11 +2,11 @@ import { api } from "@/api/axios-instance-creator"
 import handleAxiosError from "@/api/axios-error-handler"
 import { AxiosError } from "axios"
 
-export function resetPasswordService(token: string, password: string, newPassword: string) {
+export function resetPasswordService(token: string, password: string, passwordConfirmation: string) {
   return new Promise((reject) => {
 
   api()
-    .patch("users/auth/reset-password/" + `${token}`, { token, password, newPassword })
+    .patch("users/auth/reset-password/" + `${token}`, { password, passwordConfirmation })
     .then(response => {
       if (response.status == 200 || response.status == 201 || response.status == 204) {
         console.log(response.data)

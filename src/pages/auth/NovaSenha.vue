@@ -12,9 +12,10 @@ export default class NovaSenha extends Vue {
 
   canSubmit = false
 
-  updatePassword() {
-    const password = document.getElementById("nova-senha")?.innerHTML
-    const newPassword = document.getElementById("confirma-senha")?.innerHTML
+  novasenha = document.getElementById("novasenha")
+  confirmasenha = document.getElementById("confirmasenha")
+
+  updatePassword(password: string, newPassword: string) {
   
     const token = this.$route.query.token
     console.log(token)
@@ -41,9 +42,9 @@ export default class NovaSenha extends Vue {
           <v-card-subtitle class="grey--text text--darken-2 px-0"> informe sua nova senha </v-card-subtitle>
 
           <v-form v-model="canSubmit">
-            <v-text-field id="nova-senha" placeholder="Nova senha" type="password" />
+            <v-text-field id="novasenha" v-model="novasenha" placeholder="Nova senha" type="password"/>
 
-            <v-text-field id="confirma-senha" outlined placeholder="Confirmação" type="password" ref="conf-password"/>
+            <v-text-field id="confirmasenha" v-model="confirmasenha" outlined placeholder="Confirmação" type="password" ref="conf-password"/>
           </v-form>
 
           <v-card-actions class="pa-0 mx-0 mt-0 justify-center">
@@ -51,7 +52,7 @@ export default class NovaSenha extends Vue {
               :disabled="!canSubmit"
               color="blue lighten-1"
               class="white--text px-4 elevation-2"
-              @click="updatePassword()"
+              @click="updatePassword(novasenha, confirmasenha)"
             >
               <span>Alterar Senha</span>
             </v-btn>
