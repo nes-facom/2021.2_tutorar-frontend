@@ -8,10 +8,10 @@ app.use(history({
     // verbose: true
 }));
 
-app.use(serveStatic(path.join(__dirname, 'dist')))
+app.use(express.static(path.join(__dirname, 'dist')))
 
 // var port = process.env.PORT || 3000
-app.set('port',  (process.env.PORT || 3000))
+app.set('port',  (process.env.PORT || 8080))
 
 app.listen(app.get('port'), () => {
     console.log('Servidor express web iniciado na porta ' + port)
