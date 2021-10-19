@@ -7,6 +7,9 @@ import Tutorias from "@/pages/tutor/perfil/usuario/Tutorias.vue"
 import ProfileSidebar from "@/pages/tutor/perfil/usuario/ProfileSidebar.vue"
 import TabDadosUsuarioTutor from "@/pages/tutor/perfil/usuario/TabDadosUsuarioTutor.vue"
 import SolicitacoesTutoria from "@/pages/tutor/perfil/usuario/SolicitacoesTutoria.vue"
+//import AgendaProfessor from "@/pages/tutor/agenda/PageAgenda.vue"
+
+const AgendaTutor = () => import("@/pages/tutor/agenda/PageAgenda.vue")
 
 @Component({
   name: "PagePerfilUsuarioTutor",
@@ -14,7 +17,8 @@ import SolicitacoesTutoria from "@/pages/tutor/perfil/usuario/SolicitacoesTutori
     Tutorias,
     ProfileSidebar,
     SolicitacoesTutoria,
-    TabDadosUsuarioTutor
+    TabDadosUsuarioTutor,
+    AgendaTutor
   }
 })
 export default class PagePerfilUsuarioTutor extends Vue {
@@ -29,37 +33,19 @@ export default class PagePerfilUsuarioTutor extends Vue {
   }
 }
 </script>
-
 <template>
-  <v-row align="center" justify="center" no-gutters>
-    <v-col cols="12" md="10">
-      <v-card class="pa-0">
-        <v-row align="center" justify="center" no-gutters>
-          <v-col cols="3" class="pa-0">
-            <ProfileSidebar />
-          </v-col>
+  <div class="tableContainer">
+      <v-tabs v-model="tab" class="tabBar">
+          <v-tab>Minha agenda</v-tab>
+          <v-tab>Solicitações de tutorias</v-tab>
+          <v-tab>Tutorias realizadas</v-tab>
+      </v-tabs>
 
-          <v-col cols="9" align-self="start" style="border-left: 1px solid #e3e3e3; min-height: 380px">
-            <v-tabs v-model="tab">
-              <v-tab :disabled="isEditing">Solicitações Tutoria</v-tab>
-              <v-tab :disabled="isEditing">Tutorias Realizadas</v-tab>
-              <v-tab>Meu Usuário</v-tab>
+      <v-tabs-items v-model="tab">
+              <v-tab-item>
+                <AgendaTutor/>
+              </v-tab-item>
 
-              <v-spacer />
-
-              <v-btn
-                :disabled="!canEditUser"
-                :color="isEditing ? 'red' : 'grey'"
-                x-large
-                text
-                @click="isEditing = !isEditing"
-              >
-                <span v-text="isEditing ? 'Cancelar' : 'Editar'" />
-                <v-icon class="ml-3" v-text="isEditing ? 'mdi-pencil-off-outline' : 'mdi-pencil'" />
-              </v-btn>
-            </v-tabs>
-
-            <v-tabs-items v-model="tab">
               <v-tab-item>
                 <SolicitacoesTutoria />
               </v-tab-item>
@@ -67,9 +53,35 @@ export default class PagePerfilUsuarioTutor extends Vue {
               <v-tab-item>
                 <Tutorias />
               </v-tab-item>
+            </v-tabs-items>
+  </div>
+</template>
+<!--
+<template>
+  <v-row align="center" justify="center" no-gutters>
+    <v-col cols="12" md="10">
+      <v-card class="pa-0">
+        <v-row align="center" justify="center" no-gutters>
+
+
+          <v-col cols="9" align-self="start" style="border-left: 1px solid #e3e3e3; min-height: 380px">
+            <v-tabs v-model="tab">
+              <v-tab>Minha agenda</v-tab>
+              <v-tab>Solicitações de tutorias</v-tab>
+              <v-tab>Tutorias realizadas</v-tab>
+            </v-tabs>
+
+            <v-tabs-items v-model="tab">
+              <v-tab-item>
+                <PageAgenda/>
+              </v-tab-item>
 
               <v-tab-item>
-                <TabDadosUsuarioTutor :isEditing="isEditing" @finished-editing="isEditing = false" />
+                <SolicitacoesTutoria />
+              </v-tab-item>
+
+              <v-tab-item>
+                <Tutorias />
               </v-tab-item>
             </v-tabs-items>
           </v-col>
@@ -78,6 +90,7 @@ export default class PagePerfilUsuarioTutor extends Vue {
     </v-col>
   </v-row>
 </template>
+-->
 
 <style scoped>
 ::v-deep .v-tabs-slider-wrapper {
@@ -102,5 +115,15 @@ export default class PagePerfilUsuarioTutor extends Vue {
 
 v-text-field {
   border-style: none;
+}
+.tableContainer{
+  display: flex;
+  margin-left: 80px;
+  margin-right: 80px;
+  justify-content: center;
+  flex-direction: column;
+}
+.tabBar{
+  margin-bottom: 24px;
 }
 </style>
