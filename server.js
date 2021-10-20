@@ -1,20 +1,23 @@
 const express = require('express');
 const path = require('path');
-const bodyParser = require('body-parser');
-const logger = require('morgan');
 const history = require('connect-history-api-fallback');
 
 const app = express();
 
-app.use(logger('dev'));
-app.use(bodyParser.json());
+const staticFileMiddleware = express.static(path.join(__dirname + '/dist'));
 
-app.get('/api', (req, res) => res.send('Hello World!'));
+app.use(staticFileMiddleware);
 app.use(history({
+  disableDotRule: true,
   verbose: true
 }));
-app.use('/', express.static(path.join(__dirname, 'dist')));
+app.use(staticFileMiddleware);
 
-var port = process.env.PORT || 8080;
-app.listen(port);
-console.log('server started '+ port);
+app.get('/', function (req, res) {
+  res.render(path.join(__dirname + '/dist/index.html'));
+});
+
+var server = app.listen(process.env.PORT || 8080, function () {
+  var port = server.address().port;
+  console.log("App now running on port", port);
+});
