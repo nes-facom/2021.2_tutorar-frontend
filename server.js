@@ -1,6 +1,20 @@
 const express = require('express');
-const history = require('connect-history-api-fallback');const app = express();
-app.use(history());
-app.use(express.static('src'));app.get('/', (req, res) => {
-  res.sendFile('src/index.html');
-});app.listen(3000, () => console.log('server started'));
+const path = require('path');
+const bodyParser = require('body-parser');
+const logger = require('morgan');
+const history = require('connect-history-api-fallback');
+
+const app = express();
+
+app.use(logger('dev'));
+app.use(bodyParser.json());
+
+app.get('/api', (req, res) => res.send('Hello World!'));
+app.use(history({
+  verbose: true
+}));
+app.use('/', express.static(path.join(__dirname, 'dist')));
+
+var port = process.env.PORT || 8080;
+app.listen(port);
+console.log('server started '+ port);
