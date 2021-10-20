@@ -28,6 +28,10 @@ export default class PageHome extends Vue {
     return `${d[2]}/${d[1]}/${d[0].substring(2)}`
   }
 
+  carregaHabilidade() {
+    console.log('Olá Mundo!')
+  }
+
   mounted() {
     this.tutorModule.getAllTutores()
 
@@ -61,10 +65,11 @@ export default class PageHome extends Vue {
           <v-col cols="9">
             <v-text-field
               class="mr-4"
-              label="O que você quer aprender?"
-              append-icon="mdi-book-open-page-variant"
+              placeholder="Google slides"
+              append-icon="mdi-magnify"
               outlined
               hide-details
+              v-on:keyup.enter="carregaHabilidade"
             />
           </v-col>
 
@@ -82,7 +87,7 @@ export default class PageHome extends Vue {
                   v-model="dataFormatada"
                   v-bind="attrs"
                   v-on="on"
-                  label="Qual dia?"
+                  placeholder= "dd/mm/aa"
                   append-icon="mdi-calendar"
                   hide-details
                   outlined
