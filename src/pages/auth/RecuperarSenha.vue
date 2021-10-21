@@ -9,21 +9,18 @@ import { emailService } from "@/api/auth/send-email"
 })
 export default class RecuperarSenha extends Vue {
   continuarRecuperar = true
-
+  errorMessage = ''
+  sheet = false
+  
   email = document.getElementById("email")
 
-  sendRecuperarRequest(email: string) {
-    this.continuarRecuperar = true
-
-    if (!emailService(email)) {
-      console.log("Não foi possível fazer a requisição")
+  async sendRecuperarRequest(email: string) {
+    await emailService(email).then(() => { 
       this.continuarRecuperar = false
-    }
-
-    const options = {
-      body: `Não foi possível encontrar o email`
-    }
-    new Notification("Notificação", options)
+    }).catch((message) => { 
+        this.errorMessage = message
+        this.sheet = true
+    });
   }
 }
 </script>
@@ -49,7 +46,6 @@ export default class RecuperarSenha extends Vue {
                 id="email"
               />
             </v-form>
-
             <v-card-actions class="pa-0 mx-0 mt-0 justify-center">
               <v-btn class="ml-auto" color="blue" text @click="$router.push({ path: '/login' })">
                 <v-icon class="mr-3">mdi-arrow-left</v-icon>
@@ -68,18 +64,19 @@ export default class RecuperarSenha extends Vue {
             </v-card-actions>
           </v-card>
         </v-col>
-
         <v-col cols="4" v-else>
-          <v-card width="300" class="elevation-6 mx-auto">
+          <v-card width="400" class="elevation-6 mx-auto">
             <v-card-title> E-mail enviado com sucesso </v-card-title>
             <v-card-subtitle> Um email com instruções de recuperação de senha foi enviado </v-card-subtitle>
 
-            <v-card-actions class="pa-4">
-              <v-spacer />
+            <v-card-actions class="pa-4 justify-center"
+            >
               <v-btn
                 :disabled="false"
                 :loading="false"
                 color="blue lighten-1"
+                align="center"
+                text-aling="center"
                 class="white--text px-4 elevation-2"
                 @click="$router.push({ path: '/login' })"
               >
@@ -90,6 +87,27 @@ export default class RecuperarSenha extends Vue {
         </v-col>
       </v-row>
     </v-container>
+    <!-- NOTIFICAÇÃO QUANDO UM ERRO ACONTECE -->
+    <div class="text-center">
+      <v-bottom-sheet v-model="sheet">
+        <v-sheet
+          class="text-center"
+          height="200px"
+        >
+          <v-btn
+            class="mt-6"
+            text
+            color="blue"
+            @click="sheet = !sheet"
+          >
+            fechar
+          </v-btn>
+          <div class="py-3">
+            {{ errorMessage }}
+          </div>
+        </v-sheet>
+      </v-bottom-sheet>
+    </div>
   </div>
 </template>
 
