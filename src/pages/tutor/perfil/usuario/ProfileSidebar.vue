@@ -1,3 +1,4 @@
+<!--
 <script lang="ts">
 import { getAllHabilidadesService } from "@/api/habilidades/get-all"
 import Auth from "@/store/modules/auth"
@@ -47,7 +48,7 @@ export default class ProfileSidebar extends Vue {
     <v-card-text class="text-center">
       <h4 class="font-weight-light grey--text mb-3" v-text="userRole" />
 
-      <h2 class="font-weight-light blue--text mb-3" v-text="user.nome" />
+      <h2 class="font-weight-light blue--text mb-3" v-text="user.nome" />S
 
       <p class="font-weight-light grey--text" v-text="user.descricao" />
 
@@ -61,3 +62,4 @@ export default class ProfileSidebar extends Vue {
     </v-card-text>
   </div>
 </template>
+-->
