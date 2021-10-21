@@ -1,3 +1,4 @@
+<!--
 <script lang="ts">
 import { TutoriaFormatada } from "@/pages/tutor/perfil/usuario/SolicitacoesTutoria.vue"
 import { Professor } from "@/store/modules/auth-types"
@@ -89,3 +90,4 @@ export default class ModalAceitarTutoria extends Vue {
     </v-card>
   </v-dialog>
 </template>
+-->
