@@ -6,11 +6,10 @@ import store from "@/store"
 import Auth from "@/store/modules/auth"
 
 import AppBar from "@/components/layout/AppBar.vue"
-import AppFooter from "@/components/layout/AppFooter.vue"
 
 @Component({
   name: "App",
-  components: { AppBar, AppFooter }
+  components: { AppBar }
 })
 export default class App extends Vue {
   authModule = getModule(Auth, store)
@@ -23,10 +22,6 @@ export default class App extends Vue {
     if (this.$route.meta.fullpage) return "main-container"
 
     return this.$route.meta.centered ? "px-auto" : "pa-0 pa-md-4 pa-lg-8 ma-0"
-  }
-
-  get hideFooter() {
-    return !this.isLoggedIn || !!this.$route.meta.hideFooter
   }
 
   get hideHeader() {
@@ -47,7 +42,6 @@ export default class App extends Vue {
       </v-container>
     </v-main>
 
-    <app-footer v-if="!hideFooter" />
   </v-app>
 </template>
 

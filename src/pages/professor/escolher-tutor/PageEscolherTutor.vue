@@ -1,5 +1,5 @@
 <script lang="ts">
-import { Vue, Component, Prop } from "vue-property-decorator"
+import { Vue, Component } from "vue-property-decorator"
 import TutorModule from "@/store/modules/tutor-module"
 import { getModule } from "vuex-module-decorators"
 import { Tutor } from "@/store/modules/auth-types"
@@ -28,27 +28,17 @@ export default class PageHome extends Vue {
     return `${d[2]}/${d[1]}/${d[0].substring(2)}`
   }
 
-  // criado para iterar
-  search = ''
-  searchItems: Tutor[] = []
+  carregaHabilidade() {
+    console.log('Olá Mundo!')
+  }
 
   mounted() {
     this.tutorModule.getAllTutores()
-
-    // criado para iterar
-    this.searchItems = this.tutorModule.asArray
-    console.log(this.searchItems)
 
     this.isCarregandoTutores = true
 
     this.habilidadesModule.fetchAll({ forceRefetch: false }).finally(() => {
       this.isCarregandoTutores = false
-    })
-  }
-
-  filteredItems() {
-    return this.searchItems.filter((item: any) =>{
-         return item.title.toLowerCase().match(this.search)
     })
   }
 }
@@ -75,12 +65,11 @@ export default class PageHome extends Vue {
           <v-col cols="9">
             <v-text-field
               class="mr-4"
-              label="O que você quer aprender?"
-              append-icon="mdi-book-open-page-variant"
+              placeholder="Google slides"
+              append-icon="mdi-magnify"
               outlined
               hide-details
-              v-model="search"
-              @change="filteredItems"
+              v-on:keyup.enter="carregaHabilidade"
             />
           </v-col>
 
@@ -98,7 +87,7 @@ export default class PageHome extends Vue {
                   v-model="dataFormatada"
                   v-bind="attrs"
                   v-on="on"
-                  label="Qual dia?"
+                  placeholder= "dd/mm/aa"
                   append-icon="mdi-calendar"
                   hide-details
                   outlined
@@ -116,7 +105,7 @@ export default class PageHome extends Vue {
 
         <template v-if="!isCarregandoTutores">
           <v-row align="center" class="mt-4">
-            <v-col v-for="(tutor, index) in searchItems" :key="index" cols="12" sm="6" md="4" class="mb-4">
+            <v-col v-for="(tutor, index) in tutorModule.asArray" :key="index" cols="12" sm="6" md="4" class="mb-4">
               <CardResumoTutor class="mx-2" :tutor="tutor" />
             </v-col>
           </v-row>

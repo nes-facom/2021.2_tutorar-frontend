@@ -87,12 +87,6 @@ export default class AppBar extends Vue {
 
     <v-spacer />
 
-    <div class="hidden-sm-and-down mr-10">
-      <v-icon left>mdi-calendar-clock</v-icon>
-      <span class="mr-2" v-text="clock.data" />
-      <span v-text="clock.hora" />
-    </div>
-
     <v-divider vertical />
 
     <AppBarUserMenu />
