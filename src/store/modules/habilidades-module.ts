@@ -88,7 +88,7 @@ export default class HabilidadesModule extends VuexModule implements CrudModule<
   async fetchAll(payload: FetchAllPayload = { forceRefetch: true }): Promise<void> {
     if (!payload.forceRefetch && this.meta.allFetched) return
 
-    return getAllHabilidadesService().then(habilidades => {
+    return await getAllHabilidadesService().then(habilidades => {
       this.ADD_ITEMS(habilidades)
       this.UPDATE_META({ allFetched: true })
     })
