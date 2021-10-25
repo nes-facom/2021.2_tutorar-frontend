@@ -131,13 +131,14 @@ export default class PageLogin extends Vue {
 
               <v-text-field
                 outlined
-                append-icon="mdi-lock"
+                :append-icon="showSenha ? 'mdi-eye' : 'mdi-eye-off'"
+                :type="showSenha ? 'text' : 'password'"
                 placeholder="Senha"
-                type="password"
                 v-model="password"
                 :rules="passwordRules"
                 :error-messages="passwordErrorMessages"
                 @input="passwordErrorMessages = []"
+                @click:append="showSenha = !showSenha"
               />
             </v-form>
 
