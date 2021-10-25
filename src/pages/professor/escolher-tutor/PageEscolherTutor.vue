@@ -1,11 +1,12 @@
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator"
+import { Vue, Component, Prop } from "vue-property-decorator"
 import TutorModule from "@/store/modules/tutor-module"
 import { getModule } from "vuex-module-decorators"
 import { Tutor } from "@/store/modules/auth-types"
 import Auth from "@/store/modules/auth"
 import { TUTOR_ROUTES } from "@/router/rotas/tutor"
 import HabilidadesModule from "@/store/modules/habilidades-module"
+import { lowerCase } from "lodash"
 
 const CardResumoTutor = () => import("@/pages/professor/escolher-tutor/CardResumoTutor.vue")
 
@@ -28,9 +29,9 @@ export default class PageHome extends Vue {
     return `${d[2]}/${d[1]}/${d[0].substring(2)}`
   }
 
-  carregaHabilidade() {
-    console.log('Olá Mundo!')
-  }
+  // criado para iterar
+  search = ''
+  searchItems: Tutor[] = []
 
   mounted() {
     this.tutorModule.getAllTutores()
@@ -39,7 +40,46 @@ export default class PageHome extends Vue {
 
     this.habilidadesModule.fetchAll({ forceRefetch: false }).finally(() => {
       this.isCarregandoTutores = false
+      this.searchItems = this.tutorModule.asArray
     })
+  }
+
+  /* 
+   * @param searchHabilidade: string
+
+   * Esse método é utilizado para filtrar os tutores de acordo com suas habilidades.
+   * O usuário busca a habilidade desejada inserindo uma string na barra de navegação
+   * <v-text-field>. Essa string serve como parâmetro para esse método, o qual itera por
+   * todos os tutores e, a cada tutor, compara se sua(s) habilidade(s) possui(em) uma substrig
+   * que combina com a habilidade buscada pelo usuário. Um array auxiliar é gerado para armazenar
+   * todos os tutores filtrados. Por fim o array auxiliar sobrescreve o array responsável por conter
+   * os tutores que serão carregados e exiidos pela página.
+   
+   * Caso a string de busca seja inválida o array responsável pro conter os tutores que serão carregados
+   * e exibidos é povoada por todos os tutores existentes, retornados pela api. 
+  */
+  habilidadesFilter(searchHabilidade: string) {
+    const sanitizedSearchString = searchHabilidade.toLowerCase().trimStart().trimEnd()
+    
+    if(sanitizedSearchString) {
+      const searchAuxArray: Tutor[] = []
+      this.tutorModule.asArray.forEach((tutor) => {
+        const habilidadesTutorAtual = this.tutorModule.habilidadesTutor(tutor._id)
+        if(habilidadesTutorAtual.length > 0){
+          habilidadesTutorAtual.forEach( (habilidade) => {
+            if(habilidade.nome.toLowerCase().includes(sanitizedSearchString)){
+              // verifica se ja existe um tutor no array antes de inserir
+              // se o index for negativo, logo pode inserir, pois não esse tutor ainda não foi inserido
+              const index = searchAuxArray.findIndex(x => x.name==tutor.name)
+              if (index === -1) searchAuxArray.push(tutor)
+            }
+          })
+        }
+      })
+      this.searchItems = searchAuxArray
+    } else {
+      this.searchItems = this.tutorModule.asArray
+    }
   }
 }
 </script>
@@ -65,11 +105,12 @@ export default class PageHome extends Vue {
           <v-col cols="9">
             <v-text-field
               class="mr-4"
-              placeholder="Google slides"
-              append-icon="mdi-magnify"
+              label="O que você quer aprender?"
+              append-icon="mdi-book-open-page-variant"
               outlined
               hide-details
-              v-on:keyup.enter="carregaHabilidade"
+              v-model="search"
+              @input="habilidadesFilter"
             />
           </v-col>
 
@@ -87,7 +128,7 @@ export default class PageHome extends Vue {
                   v-model="dataFormatada"
                   v-bind="attrs"
                   v-on="on"
-                  placeholder= "dd/mm/aa"
+                  label="Qual dia?"
                   append-icon="mdi-calendar"
                   hide-details
                   outlined
@@ -105,7 +146,7 @@ export default class PageHome extends Vue {
 
         <template v-if="!isCarregandoTutores">
           <v-row align="center" class="mt-4">
-            <v-col v-for="(tutor, index) in tutorModule.asArray" :key="index" cols="12" sm="6" md="4" class="mb-4">
+            <v-col v-for="(tutor, index) in searchItems" :key="index" cols="12" sm="6" md="4" class="mb-4">
               <CardResumoTutor class="mx-2" :tutor="tutor" />
             </v-col>
           </v-row>
