@@ -121,7 +121,9 @@ v-text-field {
   margin-left: 80px;
   margin-right: 80px;
   justify-content: center;
+  align-content: center;
   flex-direction: column;
+  
 }
 .tabBar{
   margin-bottom: 24px;

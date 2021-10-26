@@ -115,7 +115,7 @@ export default {
       <td :colspan="headers.length">
         <div class="expandedCellContainer">
           <div class="descriptionContainer">
-            More info about {{ item.name }}
+            <p class="description">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. More info about {{ item.name }}</p>
             <div class="contactInformationContainer">
               <p>Aqui vai o email</p>
               <p>Aqui vai o celular</p>
@@ -147,6 +147,11 @@ export default {
 .descriptionContainer {
   display: flex;
   flex-direction: row;
+  margin-top: 8pt;
+  margin-bottom: 16pt;
+}
+.description{
+  max-width: 410pt;
 }
 
 .expandedCellContainer {
