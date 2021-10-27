@@ -61,7 +61,7 @@ export default class NovaSenha extends Vue {
 
         <template v-else>
           <v-card-title class="grey--text text--darken-1 px-0 pt-0 mx-auto justify-center">
-            Senha redefinida com sucesso !
+            Senha redefinida com sucesso!
           </v-card-title>
 
           <v-card-actions class="pa-0 justify-center">

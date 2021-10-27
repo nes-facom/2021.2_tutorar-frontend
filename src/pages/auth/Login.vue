@@ -97,7 +97,7 @@ export default class PageLogin extends Vue {
             <span class="blue--text">R</span>
           </h1>
           <span class="subtitle-1 grey--text text--darken-1">
-            Junte-se a nós e encontre ajuda para implementação de técnologias digitáis na usa prática pedagógica
+            Junte-se a nós e encontre ajuda para implementação de técnologias digitais na sua prática pedagógica.
           </span>
         </v-col>
 
@@ -155,7 +155,7 @@ export default class PageLogin extends Vue {
             </v-card-actions>
 
             <div class="text-center mt-5" @click="$router.push({ path: '/recuperar-senha' })">
-              <span class="link">Esqueceu sua senha ?</span>
+              <span class="link">Esqueceu sua senha?</span>
             </div>
           </v-card>
         </v-col>

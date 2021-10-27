@@ -59,9 +59,9 @@ export default class GraduacaoProfessor extends Vue {
         v-mask="'##/##/####'"
         :rules="rules.inicioLecionamento"
         :disabled="!isEditing"
-        label="Quando começou a lecionar ?"
+        label="Quando começou a lecionar?"
         append-icon="mdi-calendar"
-        hint="Não precisamos de uma data exata, uma estimativa basta !"
+        hint="Não precisamos de uma data exata, uma estimativa basta!"
       />
     </v-col>
 
