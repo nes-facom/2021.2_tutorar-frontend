@@ -1,6 +1,15 @@
 <script>
 const foto = () => import("@/assets/dog.jpg")
-export default {
+const ModalCancelarTutoria = () => import("@/components/modals/ModalCancelarTutoria.vue")
+import {Component} from "vue-property-decorator"
+
+
+@Component({
+  name: "Tutorias",
+  components: { ModalCancelarTutoria }
+})
+export default class {
+  dialog = false
   data() {
     return {
       expanded: [],
@@ -115,14 +124,18 @@ export default {
       <td :colspan="headers.length">
         <div class="expandedCellContainer">
           <div class="descriptionContainer">
-            <p class="description">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. More info about {{ item.name }}</p>
+            <p class="description">
+              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
+              industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
+              scrambled it to make a type specimen book. More info about {{ item.name }}
+            </p>
             <div class="contactInformationContainer">
               <p>Aqui vai o email</p>
               <p>Aqui vai o celular</p>
             </div>
           </div>
           <div class="buttonsContainer">
-            <v-btn class="ma-2" outlined color="#106CE5"> Rejeitar tutoria </v-btn>
+            <ModalCancelarTutoria/>
             <v-btn class="ma-2 btnTextWhite" color="#106CE5"> Aceitar tutoria </v-btn>
           </div>
         </div>
@@ -150,7 +163,7 @@ export default {
   margin-top: 8pt;
   margin-bottom: 16pt;
 }
-.description{
+.description {
   max-width: 410pt;
 }
 
