@@ -3,6 +3,7 @@ import { Vue, Component, Prop } from "vue-property-decorator"
 
 @Component({ name: "ModalCancelarTutoria" })
 export default class ModalCancelarTutoria extends Vue {
+  dialog = false
   @Prop({ required: true })
   value!: boolean
 
@@ -14,24 +15,34 @@ export default class ModalCancelarTutoria extends Vue {
 </script>
 
 <template>
-  <v-dialog :value="value" persistent width="500">
-    <v-card>
-      <v-img class="mx-auto" width="276" src="@/assets/imagens/Tutoria_Cancelada.svg" />
-      <v-card-title class="font-weight-bold headline justify-center">
-        Cancelar a tutoria ?
-      </v-card-title>
+  <v-dialog :value="value" v-model="dialog" max-width="500">
+    <template v-slot:activator="{ on, attrs }">
+      <v-btn class="ma-2" outlined color="#106CE5" v-bind="attrs" v-on="on"> Rejeitar tutoria </v-btn>
+    </template>
+    <v-card class="modal">
+      
+      <v-card-title class="cardTitle"> Deseja mesmo rejeitar a tutoria? </v-card-title>
 
-      <v-card-text class="text-center">
-        O professor Fulano irá receber um aviso sobre o cancelamento, porém tente evita-los.
-      </v-card-text>
-
-      <v-card-actions class="px-4 pb-4">
-        <v-btn color="grey darken-1" @click="$emit('input', false)" text>Voltar</v-btn>
-        <v-spacer />
-        <v-btn color="primary" class="white--text" @click="cancelarTutoria">
-          Cancelar
-        </v-btn>
+      <v-card-text class="text-center"> O professor Fulano irá receber um aviso sobre o cancelamento. </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="#106CE5" outlined @click="dialog = false"> Cancelar </v-btn>
+        <v-btn class="btnTextWhite" color="#106CE5" @click="dialog = false"> Rejeitar </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
+
+<style lang = "scss" >
+.modal{
+display: flex;
+flex-direction: column;
+justify-content: space-between;
+align-items: flex-end;
+height: 200px;
+}
+.cardTitle{
+width: 100%;
+justify-content: start;
+}
+</style>
