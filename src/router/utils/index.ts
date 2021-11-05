@@ -19,7 +19,11 @@ export function getPerfilRoute(): string {
   const { user } = authModule
 
   if (isProfessor(user)) return PROFESSOR_ROUTES.PERFIL
-  if (isTutor(user)) return TUTOR_ROUTES.PERFIL_PROPRIO
+  if (isTutor(user)) {
+    return TUTOR_ROUTES.PERFIL_PROPRIO
+  }
 
+  console.log(COMMON_ROUTES.HOME)
+  
   return COMMON_ROUTES.HOME
 }

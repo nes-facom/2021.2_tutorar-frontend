@@ -3,22 +3,18 @@ import Auth from "@/store/modules/auth"
 import { getModule } from "vuex-module-decorators"
 import { Vue, Component } from "vue-property-decorator"
 
-import Tutorias from "@/pages/tutor/perfil/usuario/Tutorias.vue"
-import ProfileSidebar from "@/pages/tutor/perfil/usuario/ProfileSidebar.vue"
+
 import TabDadosUsuarioTutor from "@/pages/tutor/perfil/usuario/TabDadosUsuarioTutor.vue"
-import SolicitacoesTutoria from "@/pages/tutor/perfil/usuario/SolicitacoesTutoria.vue"
+import TabSelecaoHabilidades from "@/pages/tutor/perfil/usuario/TabSelecaoHabilidades.vue"
 //import AgendaProfessor from "@/pages/tutor/agenda/PageAgenda.vue"
 
-const AgendaTutor = () => import("@/pages/tutor/agenda/PageAgenda.vue")
+
 
 @Component({
   name: "PagePerfilUsuarioTutor",
   components: {
-    Tutorias,
-    ProfileSidebar,
-    SolicitacoesTutoria,
     TabDadosUsuarioTutor,
-    AgendaTutor
+    TabSelecaoHabilidades,
   }
 })
 export default class PagePerfilUsuarioTutor extends Vue {
@@ -36,61 +32,22 @@ export default class PagePerfilUsuarioTutor extends Vue {
 <template>
   <div class="tableContainer">
       <v-tabs v-model="tab" class="tabBar">
-          <v-tab>Minha agenda</v-tab>
-          <v-tab>Solicitações de tutorias</v-tab>
-          <v-tab>Tutorias realizadas</v-tab>
+          <v-tab>Meu Perfil</v-tab>
+          <v-tab>Habilidades</v-tab>
       </v-tabs>
 
       <v-tabs-items v-model="tab">
               <v-tab-item>
-                <AgendaTutor/>
+                <TabDadosUsuarioTutor :isEditing="isEditing"/>
               </v-tab-item>
 
               <v-tab-item>
-                <SolicitacoesTutoria />
+                <TabSelecaoHabilidades />
               </v-tab-item>
 
-              <v-tab-item>
-                <Tutorias />
-              </v-tab-item>
             </v-tabs-items>
   </div>
 </template>
-<!--
-<template>
-  <v-row align="center" justify="center" no-gutters>
-    <v-col cols="12" md="10">
-      <v-card class="pa-0">
-        <v-row align="center" justify="center" no-gutters>
-
-
-          <v-col cols="9" align-self="start" style="border-left: 1px solid #e3e3e3; min-height: 380px">
-            <v-tabs v-model="tab">
-              <v-tab>Minha agenda</v-tab>
-              <v-tab>Solicitações de tutorias</v-tab>
-              <v-tab>Tutorias realizadas</v-tab>
-            </v-tabs>
-
-            <v-tabs-items v-model="tab">
-              <v-tab-item>
-                <PageAgenda/>
-              </v-tab-item>
-
-              <v-tab-item>
-                <SolicitacoesTutoria />
-              </v-tab-item>
-
-              <v-tab-item>
-                <Tutorias />
-              </v-tab-item>
-            </v-tabs-items>
-          </v-col>
-        </v-row>
-      </v-card>
-    </v-col>
-  </v-row>
-</template>
--->
 
 <style scoped>
 ::v-deep .v-tabs-slider-wrapper {

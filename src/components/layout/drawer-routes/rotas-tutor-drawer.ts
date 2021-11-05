@@ -16,7 +16,7 @@ const rotas: DrawerRoute[] = [
   {
     title: "Minhas Habilidades",
     icon: "mdi-account-details",
-    to: TUTOR_ROUTES.HABILIDADES
+    to: TUTOR_ROUTES.PERFIL_PROPRIO
   },
   {
     title: "Dev",
