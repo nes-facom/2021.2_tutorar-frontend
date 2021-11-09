@@ -9,7 +9,7 @@ export default {
 <template>
   <div class="text-center" @click="$router.push(loginroute)">
     <span class="link">
-      Já possui uma conta ? Faça login.
+      Já possui uma conta? Faça login.
     </span>
   </div>
 </template>

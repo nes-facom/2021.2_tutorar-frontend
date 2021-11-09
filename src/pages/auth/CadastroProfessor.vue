@@ -143,7 +143,7 @@ export default class CadastroProfessor extends Vue {
           <h1 class="display-1 font-weight-bold">Agora vamos realizar o seu cadastro</h1>
 
           <span class="subtitle-1 grey--text text--darken-1">
-            Aqui você pode encontrar uma tutoria personalizada de acordo com suas necessidades de aprendizagem
+            Aqui você pode encontrar uma tutoria personalizada de acordo com suas necessidades de aprendizagem.
           </span>
         </v-col>
         <v-col cols="4">
@@ -165,7 +165,7 @@ export default class CadastroProfessor extends Vue {
                     v-model="dadosProfessor.formacaoAcademica"
                     :items="opcoes.formacaoAcademica"
                     :rules="rules.campoObrigatorio"
-                    placeholder="Qual sua Formação ?"
+                    placeholder="Qual sua Formação?"
                     outlined
                   />
 
@@ -173,7 +173,7 @@ export default class CadastroProfessor extends Vue {
                     v-model="dadosProfessor.nivelLecionamento"
                     :items="opcoes.nivelLecionamento"
                     :rules="rules.campoObrigatorio"
-                    placeholder="Qual nível você leciona ?"
+                    placeholder="Qual nível você leciona?"
                     outlined
                   />
 
@@ -181,9 +181,9 @@ export default class CadastroProfessor extends Vue {
                     v-model="dataInicioLecionamentoNaoFormatada"
                     v-mask="'##/##/####'"
                     :rules="rules.inicioLecionamento"
-                    placeholder="Quando começou a lecionar ?"
+                    placeholder="Quando começou a lecionar?"
                     append-icon="mdi-calendar"
-                    hint="Não precisamos de uma data exata, uma estimativa basta !"
+                    hint="Não precisamos de uma data exata, uma estimativa basta!"
                     outlined
                   />
 

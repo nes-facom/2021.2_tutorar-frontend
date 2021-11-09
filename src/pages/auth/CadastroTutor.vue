@@ -116,7 +116,7 @@ export default class CadastroTutor extends Vue {
           <h1 class="display-1 font-weight-bold">Agora vamos realizar o seu cadastro</h1>
 
           <span class="subtitle-1 grey--text text--darken-1">
-            Aqui você pode oferecer sua tutoria a professores do brasil inteiro !
+            Aqui você pode oferecer sua tutoria a professores do brasil inteiro!
           </span>
         </v-col>
 

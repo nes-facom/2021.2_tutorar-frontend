@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/precache-manifest.991f6088a9c31d88903225594053d0d2.js"
+  "/precache-manifest.1a0a80efec2e2d7a27970b2ac622e71f.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "tutorar-web-v2"});
