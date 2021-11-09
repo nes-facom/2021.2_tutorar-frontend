@@ -1,14 +1,13 @@
 <script>
-const foto = () => import("@/assets/dog.jpg")
 const ModalCancelarTutoria = () => import("@/components/modals/ModalCancelarTutoria.vue")
-import {Component} from "vue-property-decorator"
+import {Vue, Component} from "vue-property-decorator"
 
 
 @Component({
   name: "Tutorias",
   components: { ModalCancelarTutoria }
 })
-export default class {
+export default class extends Vue {
   dialog = false
   data() {
     return {
@@ -29,7 +28,7 @@ export default class {
       ],
       requests: [
         {
-          foto: foto,
+          foto: "",
           name: "Frozen Yogurt",
           date: "2/09/21",
           time: "13h00 às 14h00",
@@ -112,7 +111,6 @@ export default class {
     item-key="name"
     show-expand
     fixed-header
-    @click:row="handleClick"
     height="40em"
   >
     <template v-slot:[`item.foto`]>
@@ -135,7 +133,7 @@ export default class {
             </div>
           </div>
           <div class="buttonsContainer">
-            <ModalCancelarTutoria/>
+            <ModalCancelarTutoria :value = "false"/>
             <v-btn class="ma-2 btnTextWhite" color="#106CE5"> Aceitar tutoria </v-btn>
           </div>
         </div>

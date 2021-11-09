@@ -2,25 +2,23 @@
 import Auth from "@/store/modules/auth"
 import { getModule } from "vuex-module-decorators"
 import { Vue, Component } from "vue-property-decorator"
-
 import Tutorias from "@/pages/tutor/perfil/usuario/Tutorias.vue"
-import ProfileSidebar from "@/pages/tutor/perfil/usuario/ProfileSidebar.vue"
 import TabDadosUsuarioTutor from "@/pages/tutor/perfil/usuario/TabDadosUsuarioTutor.vue"
 import SolicitacoesTutoria from "@/pages/tutor/perfil/usuario/SolicitacoesTutoria.vue"
-//import AgendaProfessor from "@/pages/tutor/agenda/PageAgenda.vue"
+import AgendaProfessor from "@/pages/tutor/agenda/PageAgenda.vue"
 
-const AgendaTutor = () => import("@/pages/tutor/agenda/PageAgenda.vue")
+//const AgendaProfessor = () => import("@/pages/tutor/agenda/PageAgenda.vue")
 
 @Component({
   name: "PagePerfilUsuarioTutor",
   components: {
     Tutorias,
-    ProfileSidebar,
     SolicitacoesTutoria,
     TabDadosUsuarioTutor,
-    AgendaTutor
+    AgendaProfessor
   }
 })
+
 export default class PagePerfilUsuarioTutor extends Vue {
   authModule = getModule(Auth, this.$store)
 
@@ -33,6 +31,7 @@ export default class PagePerfilUsuarioTutor extends Vue {
   }
 }
 </script>
+
 <template>
   <div class="tableContainer">
       <v-tabs v-model="tab" class="tabBar">
@@ -43,7 +42,7 @@ export default class PagePerfilUsuarioTutor extends Vue {
 
       <v-tabs-items v-model="tab">
               <v-tab-item>
-                <AgendaTutor/>
+                <AgendaProfessor/>
               </v-tab-item>
 
               <v-tab-item>
