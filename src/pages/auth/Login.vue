@@ -97,7 +97,7 @@ export default class PageLogin extends Vue {
             <span class="blue--text">R</span>
           </h1>
           <span class="subtitle-1 grey--text text--darken-1">
-            Junte-se a nós e encontre ajuda para implementação de técnologias digitais na sua prática pedagógica.
+            Junte-se a nós e encontre ajuda para implementação de tecnologias digitais na sua prática pedagógica.
           </span>
         </v-col>
 
