@@ -15,9 +15,9 @@ interface Categoria {
 }
 
 @Component({
-  name: "SelecaoHabilidades"
+  name: "TabSelecaoHabilidades"
 })
-export default class SelecaoHabilidades extends Vue {
+export default class TabSelecaoHabilidades extends Vue {
   habilidadesModule = getModule(HabilidadesModule, this.$store)
   authModule = getModule(Auth, this.$store)
 

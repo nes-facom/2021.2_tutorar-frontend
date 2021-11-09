@@ -111,7 +111,14 @@ export default class TabDadosUsuarioTutor extends Vue {
 
 <template>
   <v-form v-model="canSubmit" class="px-6 pb-6 pt-2">
-    <v-card-title class="pa-0 grey--text text--darken-1">Dados Pessoais</v-card-title>
+    <v-row>
+      <v-card-title class="pa-0 grey--text text--darken-1">Dados Pessoais</v-card-title>
+      <v-spacer />
+      <v-btn :color="isEditing ? 'red' : 'grey'" x-large text @click="isEditing = !isEditing">
+        <span v-text="isEditing ? 'Cancelar' : 'Editar'" />
+        <v-icon class="ml-3" v-text="isEditing ? 'mdi-pencil-off-outline' : 'mdi-pencil'" />
+      </v-btn>
+    </v-row>
     <v-row>
       <v-col cols="12" md="3">
         <v-text-field v-model="user.nome" :rules="rules.nome" :disabled="!isEditing" label="Nome Completo" />
@@ -174,11 +181,11 @@ export default class TabDadosUsuarioTutor extends Vue {
     </v-row>
 
     <v-card-actions class="pa-0">
-      <v-btn :disabled="isEditing" @click="dialogDesativacaoConta = true" color="red" class="mr-4 white--text">
+      <v-btn :disabled="!isEditing" @click="dialogDesativacaoConta = true" color="red" class="mr-4 white--text">
         <span>Desativar Conta</span>
       </v-btn>
 
-      <v-btn :disabled="isEditing" @click="dialogAlterarSenha = true" color="primary" class="white--text">
+      <v-btn :disabled="!isEditing" @click="dialogAlterarSenha = true" color="primary" class="white--text">
         <span>Alterar Senha</span>
       </v-btn>
 

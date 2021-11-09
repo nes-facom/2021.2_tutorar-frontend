@@ -33,7 +33,7 @@ const rotas: RouteConfig[] = [
     redirect: () => {
       const { user } = getModule(Auth, store)
 
-      if (isTutor(user)) return TUTOR_ROUTES.PERFIL_PROPRIO
+      if (isTutor(user)) return TUTOR_ROUTES.HOME
       if (isMonitor(user)) return MONITOR_ROUTES.LISTAGEM_USUARIOS
       if (isProfessor(user)) return PROFESSOR_ROUTES.ESCOLHER_TUTOR
 

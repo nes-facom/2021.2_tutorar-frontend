@@ -2,16 +2,16 @@ import { RouteConfig, RouteMeta } from "@/router"
 
 export enum TUTOR_ROUTES {
   AGENDA = "/tutor/minha-agenda",
-  PERFIL_PROPRIO = "/tutor/meu-perfil",
-  HABILIDADES = "/tutor/minhas-habilidades"
+  HOME = "/tutor/home",
+  PERFIL_PROPRIO = "/tutor/meu-perfil"
 }
 
 const rotas: RouteConfig[] = [
   {
-    path: TUTOR_ROUTES.PERFIL_PROPRIO,
+    path: TUTOR_ROUTES.HOME,
     component: () =>
       import(
-        /* webpackChunkName: "PagePerfilUsuarioTutor" */ "@/pages/tutor/perfil/usuario/PagePerfilUsuarioTutor.vue"
+        /* webpackChunkName: "PagePerfilUsuarioTutor" */ "@/pages/tutor/home/PageHomeTutor.vue"
       ),
     meta: {
       requireLogin: true,
@@ -19,8 +19,8 @@ const rotas: RouteConfig[] = [
     }
   },
   {
-    path: TUTOR_ROUTES.HABILIDADES,
-    component: () => import(/* webpackChunkName: "PageSelecaoHabilidades" */ "@/pages/tutor/PageSelecaoHabilidades.vue")
+    path: TUTOR_ROUTES.PERFIL_PROPRIO,
+    component: () => import(/* webpackChunkName: "PagePerfilTutor" */ "@/pages/tutor/perfil/usuario/PagePerfilUsuarioTutor.vue")
   },
   {
     path: "/tutor/:id/perfil",

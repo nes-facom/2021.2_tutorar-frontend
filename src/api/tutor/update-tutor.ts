@@ -22,7 +22,6 @@ export function updateTutorService(id: string, tutor: Tutor): Promise<RawTutor> 
   const { universidade, cursoLicensiatura, semestreAtual, habilidades, ...copiaTutor } = tutor
   const body: RequestBody = { ...copiaTutor, tutor: { universidade, cursoLicensiatura, semestreAtual, habilidades } }
 
-  console.log(body)
 
   return new Promise((resolve, reject) => {
     api()
