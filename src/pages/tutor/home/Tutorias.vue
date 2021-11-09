@@ -63,30 +63,6 @@ export default class Tutorias extends Vue {
   }
 }
 </script>
-<!--
-<template>
-  <v-row no-gutters class="mt-6">
-    <v-col cols="12">
-      <v-data-table :headers="headers" :items="tutorias" hide-default-footer>
-        <template v-slot:[`item.avatar`]>
-          <v-avatar size="36px">
-            <v-img src="@/assets/dog.jpg" />
-          </v-avatar>
-        </template>
-
-        <template v-slot:[`item.acao`]="{ item }">
-          <v-btn v-if="item.temRegistro" color="primary" small class="white--text mr-2" @click="editarTutoria(item)">
-            <span>Editar</span>
-          </v-btn>
-            <v-btn class="ma-2" outlined color="#106CE5"> Registrar tutoria </v-btn>
-        </template>
-      </v-data-table>
-    </v-col>
-
-    <ModalRegistrarTutoria v-model="showModalRegitrarTutoria" />
-  </v-row>
-</template>
--->
 
 <template>
   <v-data-table :headers="headers" :items="tutorias" :items-per-page="10" class="" fixed-header height="40em">
@@ -121,7 +97,7 @@ export default class Tutorias extends Vue {
 
             <div class="titleAndRadioButtons">
               <h6 class="subtitle1">O professor compareceu a reunião?</h6>
-              <v-radio-group v-model="radioGroup">
+              <v-radio-group >
                 <v-radio value="Sim">
                   <template v-slot:label>
                     <div class="radioButton">Sim</div>
