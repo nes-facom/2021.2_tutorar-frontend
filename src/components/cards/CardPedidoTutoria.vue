@@ -2,11 +2,8 @@
 import { getApropriateTelefoneMask } from "@/utils/inputs/mask"
 import { Vue, Component } from "vue-property-decorator"
 
-const ModalCancelarTutoria = () => import("@/components/modals/ModalCancelarTutoria.vue")
-
 @Component({
-  name: "CardPedidoTutoria",
-  components: { ModalCancelarTutoria }
+  name: "CardPedidoTutoria"
 })
 export default class CardPedidoTutoria extends Vue {
   telefone = "67998801996"
@@ -59,6 +56,5 @@ export default class CardPedidoTutoria extends Vue {
       <v-btn color="green" text>OK</v-btn>
     </v-card-actions>
 
-    <ModalCancelarTutoria v-model="showModalCancelarTutoria" @cancelamento-confirmado="$log('wew')" />
   </v-card>
 </template>

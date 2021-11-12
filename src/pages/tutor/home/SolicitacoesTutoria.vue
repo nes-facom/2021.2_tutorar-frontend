@@ -1,5 +1,6 @@
 <script lang="ts">
 const ModalCancelarTutoria = () => import("@/components/modals/ModalCancelarTutoria.vue")
+const ModalAceitarTutoria = () => import("@/components/modals/ModalAceitarTutoria.vue")
 import { getModule } from "vuex-module-decorators"
 import { Vue, Component } from "vue-property-decorator"
 import TutoriaModule from "@/store/modules/tutoria-module"
@@ -8,6 +9,7 @@ import { User } from "@/store/modules/auth-types"
 import Auth from "@/store/modules/auth"
 
 export interface DadosTutoria {
+  id: string
   date: string
   time: string
   fotoProfessor: string
@@ -18,13 +20,27 @@ export interface DadosTutoria {
   celularProfessor: string
 }
 
+export interface TutoriaAceita {
+  id: string
+  requestState: string
+  tutorId: string
+  professorId: string
+  tutoringDate: string
+  tutoringHour: string
+  requestMessage: string
+}
+
 @Component({
   name: "Tutorias",
-  components: { ModalCancelarTutoria }
+  components: {
+    ModalCancelarTutoria,
+    ModalAceitarTutoria
+  }
 })
 export default class extends Vue {
   dialog = false
   tutoriasArray: DadosTutoria[] = []
+  isCarregandoTutorias = true
 
   tutoriaModule = getModule(TutoriaModule, this.$store)
   professorModule = getModule(ProfessorModule, this.$store)
@@ -33,6 +49,7 @@ export default class extends Vue {
   userCopy: User = { ...this.authModule.user } as User
 
   criarTutoria(
+    id: string,
     date: string,
     time: string,
     fotoProfessor: string,
@@ -43,6 +60,7 @@ export default class extends Vue {
     celularProfessor: string
   ): DadosTutoria {
     const tutoria: DadosTutoria = {
+      id,
       date,
       time,
       fotoProfessor,
@@ -55,6 +73,30 @@ export default class extends Vue {
 
     return tutoria
   }
+
+  // criarTutoriaAceita(
+  //   id: string,
+  //   requestState: string,
+  //   tutorId: string,
+  //   professorId: string,
+  //   tutoringDate: string,
+  //   tutoringHour: string,
+  //   requestMessage: string
+  // ): TutoriaAceita {
+  //   const tutoria: TutoriaAceita = {
+  //     id,
+  //     estadoTutoria,
+  //     tutorId,
+  //     professorId,
+  //     dataTutoria,
+  //     assuntoProfessor,
+  //     mensagemTutoria,
+  //     emailProfessor,
+  //     celularProfessor
+  //   }
+
+  //   return tutoria
+  // }
 
   get user() {
     return (this.userCopy = this.authModule.user as User)
@@ -87,6 +129,7 @@ export default class extends Vue {
       tutorias.forEach(tutoria => {
         this.professorModule.fetchProfessorById(tutoria.professorId).then(professor => {
           const tutoriaCriada = this.criarTutoria(
+            tutoria._id,
             tutoria.tutoringDate.toString(),
             tutoria.tutoringHour.toString(),
             "professor.fotoPerfil",
@@ -97,20 +140,32 @@ export default class extends Vue {
             professor.celular
           )
           tutoriasAux.push(tutoriaCriada)
-          console.log("Tutoria criada: " + tutoriaCriada.nomeProfessor)
         })
       })
     })
-    console.log(this.tutoriasArray)
-    console.log(tutoriasAux)
 
     this.tutoriasArray = tutoriasAux
 
-    console.log(this.tutoriasArray)
+    this.isCarregandoTutorias = false
   }
 
   aceitarTutoria() {
     //this.tutoriaModule.aceitarTutoria(this.tutoriasArray[0]._id)
+  }
+
+  // recebe
+  async handleChange(tutoriaId: string) {
+    if (tutoriaId != null) {
+      await this.tutoriaModule.deleteTutoria(tutoriaId).then(() => {
+        this.$toasted.success("Tutoria deletada", {
+          theme: "toasted-primary",
+          position: "top-right",
+          duration: 5000
+        })
+      })
+    }
+    // depois da remoção, pega os dados novamente no banco
+    this.getTutoria()
   }
 
   mounted() {
@@ -119,41 +174,50 @@ export default class extends Vue {
 }
 </script>
 <template>
-  <v-data-table
-    :headers="requestsHeaders"
-    :items="tutoriasArray"
-    :single-expand="singleExpand"
-    :expanded.sync="expanded"
-    show-expand
-    fixed-header
-    height="40em"
-  >
-    <template v-slot:[`item.foto`]>
-      <v-avatar size="36px">
-        <v-img src="@/assets/dog.jpg" />
-      </v-avatar>
-    </template>
-    <template v-slot:expanded-item="{ headers, item }">
-      <td :colspan="headers.length">
-        <div class="expandedCellContainer">
-          <div class="descriptionContainer">
-            <p class="description">
-              {{ item.mensagemTutoria }}
-            </p>
-            <div class="contactInformationContainer">
-              <p>{{ item.emailProfessor }}</p>
-              <p>{{ item.celularProfessor }}</p>
+  <section id="main" v-if="!isCarregandoTutorias">
+    <v-data-table
+      :headers="requestsHeaders"
+      :items="tutoriasArray"
+      :single-expand="singleExpand"
+      :expanded.sync="expanded"
+      :key="tutoriasArray.id"
+      show-expand
+      current-items
+      fixed-header
+      height="40em"
+    >
+      <template v-slot:[`item.foto`]>
+        <v-avatar size="36px">
+          <v-img src="@/assets/dog.jpg" />
+        </v-avatar>
+      </template>
+      <template v-slot:expanded-item="{ headers, item }">
+        <td :colspan="headers.length">
+          <div class="expandedCellContainer">
+            <div class="descriptionContainer">
+              <p class="description">
+                {{ item.mensagemTutoria }}
+              </p>
+              <div class="contactInformationContainer">
+                <p>{{ item.emailProfessor }}</p>
+                <p>{{ item.celularProfessor }}</p>
+              </div>
+            </div>
+            <div class="buttonsContainer">
+              <ModalCancelarTutoria v-on:inputChange="handleChange(item.id)" :value="false" :tutoriaId="item.id" />
+              <ModalAceitarTutoria :value="true" />
             </div>
           </div>
-          <div class="buttonsContainer">
-            <ModalCancelarTutoria :value="false" />
-            <v-btn class="ma-2 btnTextWhite" color="#106CE5" @click="aceitarTutoria()"> Aceitar tutoria </v-btn>
-          </div>
-        </div>
-      </td>
-    </template>
-  </v-data-table>
+        </td>
+      </template>
+    </v-data-table>
+  </section>
+  <section id="loading" v-else>
+    <v-progress-linear color="deep-purple accent-4" class="mt-12" indeterminate rounded height="6" />
+  </section>
 </template>
+
+
 
 <style lang = "scss" >
 .v-data-table__expanded.v-data-table__expanded__content {
@@ -166,7 +230,8 @@ export default class extends Vue {
 .contactInformationContainer {
   display: flex;
   flex-direction: column;
-  margin-left: 2rem;
+  margin-left: 16px;
+  margin-right: 16px;
 }
 .descriptionContainer {
   display: flex;
@@ -174,16 +239,15 @@ export default class extends Vue {
   margin-top: 8pt;
   margin-bottom: 16pt;
   justify-content: space-between;
+  width: 100%;
 }
 .description {
-  width: 410pt;
-  min-width: 210pt;
+  max-width: 450px;
 }
 
 .expandedCellContainer {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
 }
 
 .btnTextWhite {
