@@ -1,7 +1,22 @@
-<script>
+<script lang="ts">
 const ModalCancelarTutoria = () => import("@/components/modals/ModalCancelarTutoria.vue")
-import {Vue, Component} from "vue-property-decorator"
+import { getModule } from "vuex-module-decorators"
+import { Vue, Component } from "vue-property-decorator"
+import TutoriaModule from "@/store/modules/tutoria-module"
+import ProfessorModule from "@/store/modules/professor-module"
+import { User } from "@/store/modules/auth-types"
+import Auth from "@/store/modules/auth"
 
+export interface DadosTutoria {
+  date: string
+  time: string
+  fotoProfessor: string
+  nomeProfessor: string
+  assuntoProfessor: string
+  mensagemTutoria: string
+  emailProfessor: string
+  celularProfessor: string
+}
 
 @Component({
   name: "Tutorias",
@@ -9,6 +24,42 @@ import {Vue, Component} from "vue-property-decorator"
 })
 export default class extends Vue {
   dialog = false
+  tutoriasArray: DadosTutoria[] = []
+
+  tutoriaModule = getModule(TutoriaModule, this.$store)
+  professorModule = getModule(ProfessorModule, this.$store)
+  authModule = getModule(Auth, this.$store)
+
+  userCopy: User = { ...this.authModule.user } as User
+
+  criarTutoria(
+    date: string,
+    time: string,
+    fotoProfessor: string,
+    nomeProfessor: string,
+    assuntoProfessor: string,
+    mensagemTutoria: string,
+    emailProfessor: string,
+    celularProfessor: string
+  ): DadosTutoria {
+    const tutoria: DadosTutoria = {
+      date,
+      time,
+      fotoProfessor,
+      nomeProfessor,
+      assuntoProfessor,
+      mensagemTutoria,
+      emailProfessor,
+      celularProfessor
+    }
+
+    return tutoria
+  }
+
+  get user() {
+    return (this.userCopy = this.authModule.user as User)
+  }
+
   data() {
     return {
       expanded: [],
@@ -20,95 +71,59 @@ export default class extends Vue {
           sortable: false,
           value: "foto"
         },
-        { text: "Nome", value: "name" },
+        { text: "Nome", value: "nomeProfessor" },
         { text: "Data", value: "date" },
         { text: "Horário", value: "time" },
-        { text: "Assunto", value: "theme" },
+        { text: "Assunto", value: "assuntoProfessor" },
         { text: "", value: "data-table-expand" }
-      ],
-      requests: [
-        {
-          foto: "",
-          name: "Frozen Yogurt",
-          date: "2/09/21",
-          time: "13h00 às 14h00",
-          theme: "Google Meet"
-        },
-        {
-          foto: "",
-          name: "Ice cream sandwich",
-          date: "2/09/21",
-          time: "13h00 às 14h00",
-          theme: "Google Meet"
-        },
-        {
-          foto: "",
-          name: "Eclair",
-          date: "2/09/21",
-          time: "13h00 às 14h00",
-          theme: "Google Meet"
-        },
-        {
-          photo: "",
-          name: "Cupcake",
-          date: "2/09/21",
-          time: "13h00 às 14h00",
-          theme: "Google Meet"
-        },
-        {
-          photo: "",
-          name: "Gingerbread",
-          date: "2/09/21",
-          time: "13h00 às 14h00",
-          theme: "Google Meet"
-        },
-        {
-          photo: "",
-          name: "Jelly bean",
-          date: "2/09/21",
-          time: "13h00 às 14h00",
-          theme: "Google Meet"
-        },
-        {
-          photo: "",
-          name: "Lollipop",
-          date: "2/09/21",
-          time: "13h00 às 14h00",
-          theme: "Google Meet"
-        },
-        {
-          photo: "",
-          name: "Honeycomb",
-          date: "2/09/21",
-          time: "13h00 às 14h00",
-          theme: "Google Meet"
-        },
-        {
-          photo: "",
-          name: "Donut",
-          date: "2/09/21",
-          time: "13h00 às 14h00",
-          theme: "Google Meet"
-        },
-        {
-          photo: "",
-          name: "KitKat",
-          date: "2/09/21",
-          time: "13h00 às 14h00",
-          theme: "Google Meet"
-        }
       ]
     }
+  }
+
+  async getTutoria() {
+    const tutoriasAux: any[] = []
+
+    await this.tutoriaModule.getTutoriasPendentesFromTutor(this.userCopy._id).then(tutorias => {
+      tutorias.forEach(tutoria => {
+        this.professorModule.fetchProfessorById(tutoria.professorId).then(professor => {
+          const tutoriaCriada = this.criarTutoria(
+            tutoria.tutoringDate.toString(),
+            tutoria.tutoringHour.toString(),
+            "professor.fotoPerfil",
+            professor.nome,
+            "Google meet",
+            tutoria.requestMessage,
+            professor.email,
+            professor.celular
+          )
+          tutoriasAux.push(tutoriaCriada)
+          console.log("Tutoria criada: " + tutoriaCriada.nomeProfessor)
+        })
+      })
+    })
+    console.log(this.tutoriasArray)
+    console.log(tutoriasAux)
+
+    this.tutoriasArray = tutoriasAux
+
+    console.log(this.tutoriasArray)
+  }
+
+  aceitarTutoria() {
+    //this.tutoriaModule.aceitarTutoria(this.tutoriasArray[0]._id)
+  }
+
+  mounted() {
+    this.getTutoria()
   }
 }
 </script>
 <template>
   <v-data-table
     :headers="requestsHeaders"
-    :items="requests"
+    :items="tutoriasArray"
     :single-expand="singleExpand"
     :expanded.sync="expanded"
-    item-key="name"
     show-expand
     fixed-header
     height="40em"
@@ -123,18 +138,16 @@ export default class extends Vue {
         <div class="expandedCellContainer">
           <div class="descriptionContainer">
             <p class="description">
-              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
-              industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
-              scrambled it to make a type specimen book. More info about {{ item.name }}
+              {{ item.mensagemTutoria }}
             </p>
             <div class="contactInformationContainer">
-              <p>Aqui vai o email</p>
-              <p>Aqui vai o celular</p>
+              <p>{{ item.emailProfessor }}</p>
+              <p>{{ item.celularProfessor }}</p>
             </div>
           </div>
           <div class="buttonsContainer">
-            <ModalCancelarTutoria :value = "false"/>
-            <v-btn class="ma-2 btnTextWhite" color="#106CE5"> Aceitar tutoria </v-btn>
+            <ModalCancelarTutoria :value="false" />
+            <v-btn class="ma-2 btnTextWhite" color="#106CE5" @click="aceitarTutoria()"> Aceitar tutoria </v-btn>
           </div>
         </div>
       </td>
@@ -160,9 +173,11 @@ export default class extends Vue {
   flex-direction: row;
   margin-top: 8pt;
   margin-bottom: 16pt;
+  justify-content: space-between;
 }
 .description {
-  max-width: 410pt;
+  width: 410pt;
+  min-width: 210pt;
 }
 
 .expandedCellContainer {
