@@ -10,8 +10,6 @@ export default class ModalCancelarTutoria extends Vue {
   
   dialog = false
   @Prop({ required: true })
-  value!: boolean
-  @Prop({ required: true })
   tutoriaId!: string  
 
   cancelarTutoria() {
@@ -23,7 +21,7 @@ export default class ModalCancelarTutoria extends Vue {
 </script>
 
 <template>
-  <v-dialog :value="value" v-model="dialog" max-width="500">
+  <v-dialog v-model="dialog" max-width="500">
     <template v-slot:activator="{ on, attrs }">
       <v-btn class="ma-2" outlined color="#106CE5" v-bind="attrs" v-on="on"> Rejeitar tutoria </v-btn>
     </template>

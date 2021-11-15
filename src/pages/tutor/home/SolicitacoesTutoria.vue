@@ -74,30 +74,6 @@ export default class extends Vue {
     return tutoria
   }
 
-  // criarTutoriaAceita(
-  //   id: string,
-  //   requestState: string,
-  //   tutorId: string,
-  //   professorId: string,
-  //   tutoringDate: string,
-  //   tutoringHour: string,
-  //   requestMessage: string
-  // ): TutoriaAceita {
-  //   const tutoria: TutoriaAceita = {
-  //     id,
-  //     estadoTutoria,
-  //     tutorId,
-  //     professorId,
-  //     dataTutoria,
-  //     assuntoProfessor,
-  //     mensagemTutoria,
-  //     emailProfessor,
-  //     celularProfessor
-  //   }
-
-  //   return tutoria
-  // }
-
   get user() {
     return (this.userCopy = this.authModule.user as User)
   }
@@ -125,32 +101,30 @@ export default class extends Vue {
   async getTutoria() {
     const tutoriasAux: any[] = []
 
-    await this.tutoriaModule.getTutoriasPendentesFromTutor(this.userCopy._id).then(tutorias => {
-      tutorias.forEach(tutoria => {
-        this.professorModule.fetchProfessorById(tutoria.professorId).then(professor => {
-          const tutoriaCriada = this.criarTutoria(
-            tutoria._id,
-            tutoria.tutoringDate.toString(),
-            tutoria.tutoringHour.toString(),
-            "professor.fotoPerfil",
-            professor.nome,
-            "Google meet",
-            tutoria.requestMessage,
-            professor.email,
-            professor.celular
-          )
-          tutoriasAux.push(tutoriaCriada)
+    await this.tutoriaModule
+      .getTutoriasPendentesFromTutor(this.userCopy._id)
+      .then(tutorias => {
+        tutorias.forEach(tutoria => {
+          this.professorModule.fetchProfessorById(tutoria.professorId).then(professor => {
+            const tutoriaCriada = this.criarTutoria(
+              tutoria._id,
+              this.formatarData(tutoria.tutoringDate.toString()),
+              tutoria.tutoringHour.toString(),
+              "professor.fotoPerfil",
+              professor.nome,
+              "Google meet",
+              tutoria.requestMessage,
+              professor.email,
+              professor.celular
+            )
+            tutoriasAux.push(tutoriaCriada)
+          })
         })
       })
-    })
-
-    this.tutoriasArray = tutoriasAux
-
-    this.isCarregandoTutorias = false
-  }
-
-  aceitarTutoria() {
-    //this.tutoriaModule.aceitarTutoria(this.tutoriasArray[0]._id)
+      .finally(() => {
+        this.tutoriasArray = tutoriasAux
+        this.isCarregandoTutorias = false
+      })
   }
 
   // recebe
@@ -166,6 +140,32 @@ export default class extends Vue {
     }
     // depois da remoção, pega os dados novamente no banco
     this.getTutoria()
+  }
+  async acceptChange(tutoriaId: string) {
+    if (tutoriaId != null) {
+      await this.tutoriaModule.aceitaTutoria(tutoriaId).then(() => {
+        this.$toasted.success("Tutoria aceita", {
+          theme: "toasted-primary",
+          position: "top-right",
+          duration: 5000
+        })
+      })
+    }
+    // depois da remoção, pega os dados novamente no banco
+    this.getTutoria()
+  }
+
+  formatarData(data: string) {
+    if (!data) return ""
+    let dataFormatada = data.substring(0, 10)
+
+    const dia = dataFormatada.substring(8, 10)
+    const mes = dataFormatada.substring(5, 7)
+    const ano = dataFormatada.substring(0, 4)
+
+    dataFormatada = `${dia}/${mes}/${ano}`
+    
+    return dataFormatada
   }
 
   mounted() {
@@ -204,8 +204,8 @@ export default class extends Vue {
               </div>
             </div>
             <div class="buttonsContainer">
-              <ModalCancelarTutoria v-on:inputChange="handleChange(item.id)" :value="false" :tutoriaId="item.id" />
-              <ModalAceitarTutoria :value="true" />
+              <ModalCancelarTutoria v-on:inputChange="handleChange(item.id)" :tutoriaId="item.id" />
+              <ModalAceitarTutoria v-on:inputChange="acceptChange(item.id)" :tutoriaId="item.id" />
             </div>
           </div>
         </td>

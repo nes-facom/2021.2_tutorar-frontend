@@ -19,13 +19,13 @@ export default class App extends Vue {
   }
 
   get routerViewContainerPadding() {
-    if (this.$route.meta.fullpage) return "main-container"
+    if (this.$route.meta?.fullpage) return "main-container"
 
-    return this.$route.meta.centered ? "px-auto" : "pa-0 pa-md-4 pa-lg-8 ma-0"
+    return this.$route.meta?.centered ? "px-auto" : "pa-0 pa-md-4 pa-lg-8 ma-0"
   }
 
   get hideHeader() {
-    return !this.isLoggedIn || !!this.$route.meta.hideHeader
+    return !this.isLoggedIn || !!this.$route.meta?.hideHeader
   }
 }
 </script>
@@ -41,7 +41,6 @@ export default class App extends Vue {
         </v-fade-transition>
       </v-container>
     </v-main>
-
   </v-app>
 </template>
 

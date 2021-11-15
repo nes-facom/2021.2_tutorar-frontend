@@ -5,7 +5,7 @@ import { Vue, Component, Prop } from "vue-property-decorator"
 export default class ModalAceitarTutoria extends Vue {
   dialog = false
   @Prop({ required: true })
-  value!: boolean
+  tutoriaId!: string
 
   aceitarTutoria() {
     this.$emit("input", false)
@@ -14,7 +14,7 @@ export default class ModalAceitarTutoria extends Vue {
 </script>
 
 <template>
-  <v-dialog :value="value" v-model="dialog" max-width="450" max-height="250">
+  <v-dialog v-model="dialog" max-width="450" max-height="250">
     <template v-slot:activator="{ on, attrs }">
       <v-btn class="ma-2 btnTextWhite" color="#106CE5" v-bind="attrs" v-on="on"> Aceitar tutoria </v-btn>
     </template>
@@ -23,7 +23,7 @@ export default class ModalAceitarTutoria extends Vue {
 
       <v-card-actions>
         <v-btn color="#106CE5" outlined @click="dialog = false"> Cancelar </v-btn>
-        <v-btn class="btnTextWhite" color="#106CE5" @click="dialog = false"> Aceitar </v-btn>
+        <v-btn class="btnTextWhite" color="#106CE5" v-on:click="(event) => this.$emit('inputChange', event)" @click="dialog = false"> Aceitar </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
