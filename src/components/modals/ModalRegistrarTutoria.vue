@@ -1,142 +1,126 @@
 <script lang="ts">
 import { Vue, Component, Prop } from "vue-property-decorator"
 
-@Component({
-  name: "ModalRegistrarTutoria"
-})
+@Component({ name: "ModalRegistrarTutoria" })
 export default class ModalRegistrarTutoria extends Vue {
-  @Prop({ required: true })
-  value!: boolean
-
-  ferramentas = ["Foo", "Bar", "Fizz", "Buzz"]
-  canalComunicacao = ["Foo1", "Bar1", "Fizz1", "Buzz1"]
-  tempoDuracao = ["Foo2", "Bar2", "Fizz2", "Buzz2"]
-
   dialog = false
-  dataMenu = false
-  dataInput = null
-  segHorarioInput = null
-  primHorarioInput = null
+
+  @Prop({ required: true })
+  tutoriaId!: string
+
+  registrarTutoria() {
+    this.$emit("input", false)
+  }
 }
 </script>
 
 <template>
-  <v-dialog :value="value" persistent width="530">
+  <v-dialog v-model="dialog" max-width="550" max-height="250">
+    <template v-slot:activator="{ on, attrs }">
+      <v-btn class="ma-2 btnTextWhite" color="#106CE5" v-bind="attrs" v-on="on"> Registrar tutoria </v-btn>
+    </template>
     <v-card>
-      <v-card-title />
+      <v-card-title class="text-h6"> Registrar tutoria </v-card-title>
+      <div class="infosTutoria">
+        <div class="itemInfo">
+          <p class="subtitle1 titleInfo">Professor:</p>
+          <p class="textInfo">Robertinho inho</p>
+        </div>
+        <div class="itemInfo">
+          <p class="subtitle1 titleInfo">Horário:</p>
+          <p class="textInfo">14h00 às 15h00</p>
+        </div>
+        <div class="itemInfo">
+          <p class="subtitle1 titleInfo">Data:</p>
+          <p class="textInfo">20/10/2010</p>
+        </div>
+      </div>
 
-      <v-card-text>
-        <h4 class="blue--text">Informações sobre a Tutoria</h4>
-        <v-row>
-          <v-col cols="3">
-            <v-menu
-              v-model="dataMenu"
-              :close-on-content-click="false"
-              :nudge-right="40"
-              transition="scale-transition"
-              offset-y
-              min-width="290px"
-            >
-              <template v-slot:activator="{ on, attrs }">
-                <v-text-field
-                  v-model="dataInput"
-                  label="Data"
-                  prepend-icon="mdi-calendar"
-                  readonly
-                  v-bind="attrs"
-                  v-on="on"
-                ></v-text-field>
-              </template>
-              <v-date-picker v-model="dataInput" @input="menu = false"></v-date-picker>
-            </v-menu>
-          </v-col>
-          <v-col cols="3">
-            <v-menu
-              ref="primMenu"
-              :close-on-content-click="false"
-              :nudge-right="40"
-              transition="scale-transition"
-              offset-y
-              max-width="290px"
-              min-width="290px"
-            >
-              <template v-slot:activator="{ on, attrs }">
-                <v-text-field
-                  v-model="primHorarioInput"
-                  label="Inicio"
-                  prepend-icon="mdi-clock-time-four-outline"
-                  readonly
-                  v-bind="attrs"
-                  v-on="on"
-                ></v-text-field>
-              </template>
-              <v-time-picker
-                format="24hr"
-                v-model="primHorarioInput"
-                @click:minute="$refs.primMenu.save(primHorarioInput)"
-              ></v-time-picker>
-            </v-menu>
-          </v-col>
-          <v-col cols="3">
-            <v-menu
-              ref="segMenu"
-              :close-on-content-click="false"
-              :nudge-right="40"
-              :return-value.sync="segHorarioInput"
-              transition="scale-transition"
-              offset-y
-              max-width="290px"
-              min-width="290px"
-            >
-              <template v-slot:activator="{ on, attrs }">
-                <v-text-field
-                  :disabled="diaTodo"
-                  v-model="segHorarioInput"
-                  label="Fim"
-                  prepend-icon="mdi-clock-time-four-outline"
-                  readonly
-                  v-bind="attrs"
-                  v-on="on"
-                ></v-text-field>
-              </template>
-              <v-time-picker
-                format="24hr"
-                v-model="segHorarioInput"
-                @click:minute="$refs.segMenu.save(segHorarioInput)"
-              ></v-time-picker>
-            </v-menu>
-          </v-col>
-          <v-col cols="3">
-            <v-select :items="ferramentas" label="Ferramenta" />
-          </v-col>
-        </v-row>
-      </v-card-text>
-
-      <v-card-text>
-        <h4 class="blue--text">Registro da Tutoria</h4>
-        <v-row>
-          <v-col cols="5">
-            <v-select :items="canalComunicacao" label="Canal de Comunicação" />
-          </v-col>
-          <v-col cols="5">
-            <v-select :items="tempoDuracao" label="Tempo de Duração" />
-          </v-col>
-        </v-row>
-        <h4 class="blue--text">Descrição</h4>
-        <v-textarea label="Descrição" counter maxlength="1000"></v-textarea>
-      </v-card-text>
-
-      <v-divider />
-
+      <div class="titleAndRadioButtons">
+        <h6 class="subtitle1">O professor compareceu a reunião?</h6>
+        <v-radio-group>
+          <v-radio value="Sim">
+            <template v-slot:label>
+              <div class="radioButton">Sim</div>
+            </template>
+          </v-radio>
+          <v-radio value="Não">
+            <template v-slot:label>
+              <div class="radioButton">Não</div>
+            </template>
+          </v-radio>
+        </v-radio-group>
+      </div>
+      <div class="titleAndTextArea">
+        <h6 class="subtitle1 textArea">Descreva como foi a reunião:</h6>
+        <v-textarea auto-grow name="input" outlined no-resize></v-textarea>
+      </div>
       <v-card-actions>
-        <v-spacer />
-        <v-btn color="red" text @click="$emit('input', false)">
-          Cancelar
-        </v-btn>
-        <v-btn color="green" class="white--text" @click="$emit('input', false)">
+        <v-spacer></v-spacer>
+        <v-btn color="#106CE5" outlined @click="dialog = false"> Cancelar </v-btn>
+        <v-btn
+          class="btnTextWhite"
+          color="#106CE5"
+          v-on:click="event => this.$emit('inputChange', event)"
+          @click="dialog = false"
+        >
           Registrar
         </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
+
+<style lang = "scss" >
+.buttonWrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+.btnTextWhite {
+  color: white !important;
+}
+.infosTutoria {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-left: 24px;
+  margin-right: 24px;
+}
+.subtitle1 {
+  font-weight: 400;
+  line-height: 18, 75px;
+  letter-spacing: 0.15px;
+  font-size: 16px;
+}
+.titleAndRadioButtons {
+  display: flex;
+  flex-direction: column;
+  margin-left: 20px;
+}
+.radioButton {
+  font-size: 14px;
+}
+.textArea {
+  margin-bottom: 16px;
+}
+
+.titleAndTextArea {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+.titleInfo {
+  margin-right: 8px;
+}
+.textInfo {
+  font-size: 13px;
+  color: green;
+}
+
+.itemInfo {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+</style>

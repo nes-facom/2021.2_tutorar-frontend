@@ -5,10 +5,11 @@ import { getModule } from "vuex-module-decorators"
 import TutoriaModule from "@/store/modules/tutoria-module"
 import ProfessorModule from "@/store/modules/professor-module"
 import { User } from "@/store/modules/auth-types"
+const ModalRegistrarTutoria = () => import("@/components/modals/ModalRegistrarTutoria.vue")
 
 export interface DadosTutoriaRegistrada {
   id: string
-  fotoProfessor: string
+  fotoProfessor: any
   nomeProfessor: string
   date: string
   time: string
@@ -16,7 +17,10 @@ export interface DadosTutoriaRegistrada {
 }
 
 @Component({
-  name: "Tutorias"
+  name: "Tutorias",
+  components: {
+    ModalRegistrarTutoria
+  }
 })
 export default class Tutorias extends Vue {
   authModule = getModule(Auth, this.$store)
@@ -30,6 +34,9 @@ export default class Tutorias extends Vue {
   isCarregandoTutorias = true
 
   tutoriasArray: DadosTutoriaRegistrada[] = []
+
+  expanded = []
+  singleExpand = false
 
   headers = [
     {
@@ -57,12 +64,13 @@ export default class Tutorias extends Vue {
     {
       text: "",
       value: "acao"
-    }
+    },
+    { text: "", value: "data-table-expand" }
   ]
 
   criarTutoria(
     id: string,
-    fotoProfessor: string,
+    fotoProfessor: any,
     nomeProfessor: string,
     date: string,
     time: string,
@@ -80,12 +88,14 @@ export default class Tutorias extends Vue {
     return tutoriaCriada
   }
 
-  registrarTutoria(tutoria: any) {
+  registrarTutoria() {
+    console.log("registrarTutoria")
     this.showModalRegitrarTutoria = true
   }
 
-  editarTutoria(tutoria: any) {
-    this.showModalRegitrarTutoria = true
+  cancelarOperacao() {
+    this.showModalRegitrarTutoria = false
+    this.dialog = false
   }
 
   adicionaZero(numero: number) {
@@ -102,8 +112,12 @@ export default class Tutorias extends Vue {
     const ano = dataFormatada.substring(0, 4)
 
     dataFormatada = `${dia}/${mes}/${ano}`
-    
+
     return dataFormatada
+  }
+
+  get user() {
+    return (this.userCopy = this.authModule.user as User)
   }
 
   async getTutorias() {
@@ -116,7 +130,7 @@ export default class Tutorias extends Vue {
           this.professorModule.fetchProfessorById(tutoria.professorId).then(professor => {
             const tutoriaCriada = this.criarTutoria(
               tutoria._id,
-              "professor.fotoPerfil",
+              professor.fotoPerfil,
               professor.nome,
               this.formatarData(tutoria.tutoringDate.toString()),
               tutoria.tutoringHour.toString(),
@@ -132,6 +146,18 @@ export default class Tutorias extends Vue {
       })
   }
 
+  async handleChange(tutoriaId: string) {
+    if (tutoriaId != null) {
+      await this.tutoriaModule.registraTutoria(tutoriaId).then(() => {
+        this.$toasted.success("Tutoria registrada", {
+          theme: "toasted-primary",
+          position: "top-right",
+          duration: 5000
+        })
+      })
+    }
+  }
+
   mounted() {
     this.getTutorias()
   }
@@ -140,63 +166,29 @@ export default class Tutorias extends Vue {
 
 <template>
   <section id="main" v-if="!isCarregandoTutorias">
-    <v-data-table :headers="headers" :items="tutoriasArray" :items-per-page="10" class="" fixed-header height="40em">
+    <v-data-table
+      :headers="headers"
+      :items="tutoriasArray"
+      :single-expand="singleExpand"
+      :expanded.sync="expanded"
+      :key="tutoriasArray.id"
+      :items-per-page="10"
+      show-expand
+      fixed-header
+      height="40em"
+    >
       <template v-slot:[`item.avatar`]>
         <v-avatar size="36px">
           <v-img src="@/assets/dog.jpg" />
         </v-avatar>
       </template>
 
-      <template v-slot:[`item.acao`]>
-        <div class="buttonWrapper">
-          <v-dialog v-model="dialog" max-width="600">
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn class="ma-2" text color="#106CE5" v-bind="attrs" v-on="on"> Registrar tutoria </v-btn>
-            </template>
-            <v-card>
-              <v-card-title class="text-h6"> Registrar tutoria </v-card-title>
-              <div class="infosTutoria">
-                <div class="itemInfo">
-                  <p class="subtitle1 titleInfo">Professor:</p>
-                  <p class="textInfo">Robertinho inho</p>
-                </div>
-                <div class="itemInfo">
-                  <p class="subtitle1 titleInfo">Horário:</p>
-                  <p class="textInfo">14h00 às 15h00</p>
-                </div>
-                <div class="itemInfo">
-                  <p class="subtitle1 titleInfo">Data:</p>
-                  <p class="textInfo">20/10/2010</p>
-                </div>
-              </div>
-
-              <div class="titleAndRadioButtons">
-                <h6 class="subtitle1">O professor compareceu a reunião?</h6>
-                <v-radio-group>
-                  <v-radio value="Sim">
-                    <template v-slot:label>
-                      <div class="radioButton">Sim</div>
-                    </template>
-                  </v-radio>
-                  <v-radio value="Não">
-                    <template v-slot:label>
-                      <div class="radioButton">Não</div>
-                    </template>
-                  </v-radio>
-                </v-radio-group>
-              </div>
-              <div class="titleAndTextArea">
-                <h6 class="subtitle1 textArea">Descreva como foi a reunião:</h6>
-                <v-textarea auto-grow name="input" outlined no-resize></v-textarea>
-              </div>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="#106CE5" outlined @click="dialog = false"> Cancelar </v-btn>
-                <v-btn class="btnTextWhite" color="#106CE5" @click="dialog = false"> Registrar </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-        </div>
+      <template v-slot:expanded-item="{ headers, item }">
+        <td :colspan="headers.length">
+          <div class="buttonsContainer">
+            <ModalRegistrarTutoria v-on:inputChange="handleChange(item.id)" :tutoriaId="item.id" />
+          </div>
+        </td>
       </template>
     </v-data-table>
   </section>
@@ -205,56 +197,38 @@ export default class Tutorias extends Vue {
   </section>
 </template>
 
-<style lang = "scss" >
-.buttonWrapper {
+<style lang="scss">
+.v-data-table__expanded.v-data-table__expanded__content {
+  box-shadow: none !important;
+}
+.buttonsContainer {
+  display: flex;
+  flex-direction: column;
+}
+.contactInformationContainer {
+  display: flex;
+  flex-direction: column;
+  margin-left: 16px;
+  margin-right: 16px;
+}
+.descriptionContainer {
   display: flex;
   flex-direction: row;
-  justify-content: flex-end;
+  margin-top: 8pt;
+  margin-bottom: 16pt;
+  justify-content: space-between;
+  width: 100%;
+}
+.description {
+  max-width: 450px;
+}
+
+.expandedCellContainer {
+  display: flex;
+  flex-direction: row;
 }
 
 .btnTextWhite {
   color: white !important;
-}
-.infosTutoria {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  margin-left: 24px;
-  margin-right: 24px;
-}
-.subtitle1 {
-  font-weight: 400;
-  line-height: 18, 75px;
-  letter-spacing: 0.15px;
-  font-size: 16px;
-}
-.titleAndRadioButtons {
-  display: flex;
-  flex-direction: column;
-  margin-left: 20px;
-}
-.radioButton {
-  font-size: 14px;
-}
-.textArea {
-  margin-bottom: 16px;
-}
-
-.titleAndTextArea {
-  margin-left: 20px;
-  margin-right: 20px;
-}
-.titleInfo {
-  margin-right: 8px;
-}
-.textInfo {
-  font-size: 13px;
-  color: green;
-}
-
-.itemInfo {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
 }
 </style>

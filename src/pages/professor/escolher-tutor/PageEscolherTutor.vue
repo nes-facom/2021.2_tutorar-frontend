@@ -36,7 +36,7 @@ export default class PageHome extends Vue {
   mounted() {
     this.tutorModule.getAllTutores()
 
-    this.isCarregandoTutores = true
+    //this.isCarregandoTutores = true
 
     this.habilidadesModule.fetchAll({ forceRefetch: false }).finally(() => {
       this.isCarregandoTutores = false

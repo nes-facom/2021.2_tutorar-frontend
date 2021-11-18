@@ -2,6 +2,7 @@
 import { Vue, Component, Prop } from "vue-property-decorator"
 
 @Component({ name: "ModalAceitarTutoria" })
+
 export default class ModalAceitarTutoria extends Vue {
   dialog = false
   @Prop({ required: true })
@@ -21,6 +22,7 @@ export default class ModalAceitarTutoria extends Vue {
     <v-card class="modal">
       <v-card-title class="cardTitle"> Deseja aceitar a tutoria? </v-card-title>
 
+      <v-card-text class="text-center"> A solicitação será aceita e a ação não poderá ser desfeita. </v-card-text>
       <v-card-actions>
         <v-btn color="#106CE5" outlined @click="dialog = false"> Cancelar </v-btn>
         <v-btn class="btnTextWhite" color="#106CE5" v-on:click="(event) => this.$emit('inputChange', event)" @click="dialog = false"> Aceitar </v-btn>

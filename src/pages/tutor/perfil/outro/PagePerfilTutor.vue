@@ -6,6 +6,8 @@ import TutorModule, { isTutor } from "@/store/modules/tutor-module"
 import HabilidadesModule from "@/store/modules/habilidades-module"
 import { Tutor } from "@/store/modules/auth-types"
 import Auth from "@/store/modules/auth"
+import FerramentasTutor from "@/pages/tutor/perfil/outro/FerramentasTutor.vue"
+import DisponibilidadeTutor from "@/pages/tutor/perfil/outro/DisponibilidadeTutor.vue"
 
 const ListaExibicaoHorarios = () => import("@/pages/tutor/perfil/outro/ListaExibicaoHorarios.vue")
 const ModalAgendarTutoria = () => import("@/components/modals/ModalAgendarTutoria.vue")
@@ -14,7 +16,9 @@ const ModalAgendarTutoria = () => import("@/components/modals/ModalAgendarTutori
   name: "PagePerfilTutor",
   components: {
     ModalAgendarTutoria,
-    ListaExibicaoHorarios
+    ListaExibicaoHorarios,
+    FerramentasTutor,
+    DisponibilidadeTutor
   }
 })
 export default class PagePerfilTutor extends Vue {
@@ -78,60 +82,47 @@ export default class PagePerfilTutor extends Vue {
       <v-card v-else-if="tutor">
         <v-row no-gutters>
           <v-col cols="3">
-            <div class="d-flex align-center">
+            <div class="profileAndBackButton">
+              <v-btn color="primary" class="backButton" text @click="$router.push({ path: '/home' })">
+                <v-icon>mdi-arrow-left</v-icon>
+              </v-btn>
               <v-avatar size="150px" class="mt-8 mx-auto">
                 <v-img :src="tutor.fotoPerfil" lazy-src="@/assets/taylor.jpg" />
               </v-avatar>
             </div>
 
-            <v-card-text class="text-center blue--text display-1" v-text="tutor.nome" />
+            <v-card-text class="text-center h4 display-1" v-text="tutor.nome" />
             <v-divider />
 
             <v-card-text class="pb-0">
-              <span class="grey--text subtitle d-block">Curso</span>
-              <span class="blue--text title" v-text="tutor.cursoLicensiatura" />
+              <span class="subtitle2 d-block">Curso</span>
+              <span class="h5" v-text="tutor.cursoLicensiatura" />
             </v-card-text>
 
             <v-card-text>
-              <span class="grey--text subtitle d-block">Universidade</span>
-              <span class="blue--text title" v-text="tutor.universidade" />
+              <span class="subtitle2 d-block">Universidade</span>
+              <span class="h5" v-text="tutor.universidade" />
             </v-card-text>
 
             <v-card-actions v-if="authModule.user && !authModule.user.isMonitor">
-              <v-btn color="green" class="white--text mx-auto mb-3" @click="showModalAgendarTutoria = true" small>
+              <!--  <v-btn color="green" class="white--text mx-auto mb-3" @click="showModalAgendarTutoria = true" small>
                 Agendar Tutoria
-              </v-btn>
+              </v-btn> -->
             </v-card-actions>
           </v-col>
 
           <v-col cols="9" style="border-left: 1px solid #e3e3e3; min-height: 300px">
-            <v-card-title class="pb-0">
-              <v-icon color="primary" left>mdi-calendar</v-icon>
-              <span class="grey--text text--darken-1">Disponiblidade do Tutor</span>
-
-              <v-spacer />
-              <v-btn color="primary" text @click="$router.push({ path: '/home' })">
-                <v-icon>mdi-arrow-left</v-icon>
-              </v-btn>
-            </v-card-title>
-
-            <ListaExibicaoHorarios :agenda="tutor.agenda" />
-
-            <v-divider class="py-1" />
-
-            <v-card-title class="mb-0">
-              <v-icon color="primary" left>mdi-account-details</v-icon>
-              <span class="grey--text text--darken-1">Ferramentas</span>
-            </v-card-title>
-
-            <v-chip-group multiple class="mx-4 mb-4">
-              <v-chip
-                v-for="(habilidade, i) in tutorModule.habilidadesTutor(idTutorEmExibicao)"
-                v-text="habilidade.nome"
-                :key="habilidade._id"
-                :color="`${habilidadesChipColors[i]} white--text`"
-              />
-            </v-chip-group>
+            <template>
+              <div>
+                <ferramentas-tutor />
+              </div>
+              <div>
+                <disponibilidade-tutor />
+              </div>
+              <div class="btn">
+                <v-btn class="ma-2 btnTextWhite" color="#106CE5"> Solicitar tutoria </v-btn>
+              </div>
+            </template>
           </v-col>
         </v-row>
       </v-card>
@@ -139,3 +130,51 @@ export default class PagePerfilTutor extends Vue {
     <ModalAgendarTutoria v-if="tutor" v-model="showModalAgendarTutoria" :tutor="tutor" />
   </v-row>
 </template>
+
+
+<style lang = "scss" >
+.h4 {
+  font-weight: 400;
+  font-style: normal;
+  font-size: 34px;
+  line-height: 40px;
+  letter-spacing: 0.25px;
+  color: #333333;
+}
+.h5 {
+  font-weight: 400;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 28px;
+  color: #333333;
+}
+.subtitle2 {
+  font-weight: 500;
+  font-style: normal;
+  font-size: 14px;
+  line-height: 19px;
+  color: #878787;
+}
+.profileAndBackButton {
+  display: flex;
+  flex-direction: column;
+}
+.backButton {
+  display: flex;
+  align-self: flex-start;
+}
+.toolsAndAvailabilityWrapper {
+  display: flex;
+  flex-direction: column;
+}
+.btnTextWhite {
+  color: white !important;
+}
+.btn{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  padding-right: 20px;
+  padding-bottom: 20px;
+}
+</style>

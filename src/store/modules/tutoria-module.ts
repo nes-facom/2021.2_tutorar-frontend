@@ -16,6 +16,7 @@ import { getTutoriasFromTutorService } from "@/api/tutoria/get-tutorias-from-tut
 import { deleteTutoriaService } from "@/api/tutoria/delete-tutoria"
 import { updateTutoriaService } from "@/api/tutoria/update-tutoria"
 import { aceitaTutoriaService } from "@/api/tutoria/aceitar-tutoria"
+import { registraTutoriaService } from "@/api/tutoria/registrar-tutoria"
 
 export interface Tutoria extends MongoDocument {
   tutorId: string
@@ -112,5 +113,11 @@ export default class TutoriaModule extends VuexModule implements CrudModule<Tuto
   async aceitaTutoria(idTutoria: string): Promise<void> {
     // TODO a terminar, MS de tutorias não esta retornando os dados att
     return aceitaTutoriaService(idTutoria)
+  }
+
+  @Action({ rawError: true })
+  async registraTutoria(idTutoria: string): Promise<void> {
+    // TODO a terminar, MS de tutorias não esta retornando os dados att
+    return registraTutoriaService(idTutoria)
   }
 }
