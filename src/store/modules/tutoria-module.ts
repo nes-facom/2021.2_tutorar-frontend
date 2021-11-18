@@ -12,7 +12,7 @@ import {
   updateMeta
 } from "../utils/crud-module-utils"
 import { DadosSolicitacaoTutoria, solicitarTutoriaService } from "@/api/tutoria/solicitar-tutoria"
-import { getTutoriasFromTutorService } from "@/api/tutoria/get-tutorias-from-tutor"
+import { getAllTutoriasFromTutorService, getTutoriasFromTutorService } from "@/api/tutoria/get-tutorias-from-tutor"
 import { deleteTutoriaService } from "@/api/tutoria/delete-tutoria"
 import { updateTutoriaService } from "@/api/tutoria/update-tutoria"
 import { aceitaTutoriaService } from "@/api/tutoria/aceitar-tutoria"
@@ -91,6 +91,14 @@ export default class TutoriaModule extends VuexModule implements CrudModule<Tuto
   @Action({ rawError: true })
   async getTutoriasPendentesFromTutor(idTutor: string): Promise<Tutoria[]> {
     return getTutoriasFromTutorService(idTutor).then(tutorias => {
+      this.ADD_ITEMS(tutorias)
+      return tutorias
+    })
+  }
+
+  @Action({ rawError: true })
+  async getAllTutoriasFromTutor(idTutor: string): Promise<Tutoria[]> {
+    return getAllTutoriasFromTutorService(idTutor).then(tutorias => {
       this.ADD_ITEMS(tutorias)
       return tutorias
     })

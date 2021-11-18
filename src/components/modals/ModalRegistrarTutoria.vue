@@ -6,7 +6,13 @@ export default class ModalRegistrarTutoria extends Vue {
   dialog = false
 
   @Prop({ required: true })
-  tutoriaId!: string
+  nome!: string
+
+  @Prop({ required: true })
+  data!: string
+
+  @Prop({ required: true })
+  horario!: string
 
   registrarTutoria() {
     this.$emit("input", false)
@@ -24,15 +30,15 @@ export default class ModalRegistrarTutoria extends Vue {
       <div class="infosTutoria">
         <div class="itemInfo">
           <p class="subtitle1 titleInfo">Professor:</p>
-          <p class="textInfo">Robertinho inho</p>
+          <p class="textInfo">{{ nome }}</p>
         </div>
         <div class="itemInfo">
           <p class="subtitle1 titleInfo">Horário:</p>
-          <p class="textInfo">14h00 às 15h00</p>
+          <p class="textInfo">{{ horario }}</p>
         </div>
         <div class="itemInfo">
           <p class="subtitle1 titleInfo">Data:</p>
-          <p class="textInfo">20/10/2010</p>
+          <p class="textInfo">{{ data }}</p>
         </div>
       </div>
 
@@ -80,6 +86,7 @@ export default class ModalRegistrarTutoria extends Vue {
 
 .btnTextWhite {
   color: white !important;
+  width: 200px;
 }
 .infosTutoria {
   display: flex;

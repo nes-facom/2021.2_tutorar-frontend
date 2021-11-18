@@ -14,6 +14,7 @@ export interface DadosTutoriaRegistrada {
   date: string
   time: string
   assunto: string
+  estado: string
 }
 
 @Component({
@@ -74,7 +75,8 @@ export default class Tutorias extends Vue {
     nomeProfessor: string,
     date: string,
     time: string,
-    assunto: string
+    assunto: string,
+    estado: string
   ): DadosTutoriaRegistrada {
     const tutoriaCriada: DadosTutoriaRegistrada = {
       id,
@@ -82,7 +84,8 @@ export default class Tutorias extends Vue {
       nomeProfessor,
       date,
       time,
-      assunto
+      assunto,
+      estado
     }
 
     return tutoriaCriada
@@ -124,26 +127,36 @@ export default class Tutorias extends Vue {
     const tutoriasAux: any[] = []
 
     await this.tutoriaModule
-      .getTutoriasPendentesFromTutor(this.userCopy._id)
+      .getAllTutoriasFromTutor(this.userCopy._id)
       .then(tutorias => {
         tutorias.forEach(tutoria => {
-          this.professorModule.fetchProfessorById(tutoria.professorId).then(professor => {
-            const tutoriaCriada = this.criarTutoria(
-              tutoria._id,
-              professor.fotoPerfil,
-              professor.nome,
-              this.formatarData(tutoria.tutoringDate.toString()),
-              tutoria.tutoringHour.toString(),
-              "Google meet"
-            )
-            tutoriasAux.push(tutoriaCriada)
-          })
+          if (tutoria.requestState !== "pendente") {
+            this.professorModule.fetchProfessorById(tutoria.professorId).then(professor => {
+              const tutoriaCriada = this.criarTutoria(
+                tutoria._id,
+                professor.fotoPerfil,
+                professor.nome,
+                this.formatarData(tutoria.tutoringDate.toString()),
+                tutoria.tutoringHour.toString(),
+                "Google meet",
+                tutoria.requestState
+              )
+              tutoriasAux.push(tutoriaCriada)
+            })
+          }
         })
       })
       .finally(() => {
         this.tutoriasArray = tutoriasAux
         this.isCarregandoTutorias = false
       })
+  }
+
+  getRequestState(estado: string) {
+    if (estado === "registrada") 
+      return false
+    else 
+      return true
   }
 
   async handleChange(tutoriaId: string) {
@@ -185,8 +198,11 @@ export default class Tutorias extends Vue {
 
       <template v-slot:expanded-item="{ headers, item }">
         <td :colspan="headers.length">
-          <div class="buttonsContainer">
-            <ModalRegistrarTutoria v-on:inputChange="handleChange(item.id)" :tutoriaId="item.id" />
+          <div class="buttonsContainer" v-if="getRequestState(item.estado)">
+            <ModalRegistrarTutoria v-on:inputChange="handleChange(item.id)" :nome="item.nomeProfessor" :data="item.date" :horario="item.time" />
+          </div>
+          <div v-else class="buttonsContainer">
+            <v-btn class="btnTextWhite" color="#106CE5" disabled>Registrar tutoria </v-btn>  
           </div>
         </td>
       </template>
@@ -204,6 +220,7 @@ export default class Tutorias extends Vue {
 .buttonsContainer {
   display: flex;
   flex-direction: column;
+  align-items: flex-end;
 }
 .contactInformationContainer {
   display: flex;
