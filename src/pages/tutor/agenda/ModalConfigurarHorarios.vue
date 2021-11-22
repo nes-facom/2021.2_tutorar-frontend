@@ -91,7 +91,21 @@ export default class ModalConfigurarHorarios extends Vue {
     const tutor = this.authModule.user
     if (!isTutor(tutor)) return
 
-    const agendaFormatada = this.removeHorariosVazios(this.copiaHorarios)
+    // const agendaFormatada = this.removeHorariosVazios(this.copiaHorarios)
+
+    // const agendaFormatada = this.copiaHorarios
+    const agendaFormatada = {
+      segunda: [{inicio: "1300", fim: "1400"}],
+      terca: [{inicio: "1300", fim: "1400"}],
+      quarta: [{inicio: "1300", fim: "1400"}],
+      quinta: [{inicio: "1300", fim: "1400"}],
+      sexta: [{inicio: "1300", fim: "1400"}]
+    }
+
+
+    console.log("agenda formatada", agendaFormatada)
+    // const agendaFormatada = this.copiaHorarios
+
 
     updateAgendaTutorService(tutor._id, agendaFormatada).then(novaAgenda => {
       // sinalizo os novos horários pra agenda, isso provavelmente sera util numa feature, xis de

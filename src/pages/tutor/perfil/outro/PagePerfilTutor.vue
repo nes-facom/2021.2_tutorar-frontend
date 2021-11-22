@@ -8,6 +8,9 @@ import { Tutor } from "@/store/modules/auth-types"
 import Auth from "@/store/modules/auth"
 import FerramentasTutor from "@/pages/tutor/perfil/outro/FerramentasTutor.vue"
 import DisponibilidadeTutor from "@/pages/tutor/perfil/outro/DisponibilidadeTutor.vue"
+import { map } from "lodash"
+import TutoriaModule from "@/store/modules/tutoria-module"
+
 
 const ListaExibicaoHorarios = () => import("@/pages/tutor/perfil/outro/ListaExibicaoHorarios.vue")
 const ModalAgendarTutoria = () => import("@/components/modals/ModalAgendarTutoria.vue")
@@ -25,6 +28,8 @@ export default class PagePerfilTutor extends Vue {
   habilidadesModule = getModule(HabilidadesModule, this.$store)
   tutorModule = getModule(TutorModule, this.$store)
   authModule = getModule(Auth, this.$store)
+  tutoriaModule = getModule(TutoriaModule, this.$store)
+
 
   isCarregandoTutor = false
   failedToLoadTutor = false
@@ -32,6 +37,15 @@ export default class PagePerfilTutor extends Vue {
   showModalAgendarTutoria = false
 
   habilidadesChipColors = ["red", "green", "purple", "orange", "indigo"]
+
+  habilidadesTutorAtual: string[] = []
+
+
+  // variaveis referentes aos valores escolhidos
+  habilidadeSelected = ''
+  hourSelected = ''
+  dateSelected = ''
+  mensagemPedido = ''
 
   get tutor(): Tutor | null {
     return this.tutorModule.byId[this.idTutorEmExibicao]
@@ -41,20 +55,70 @@ export default class PagePerfilTutor extends Vue {
     return this.$route.params["id"]
   }
 
-  mounted() {
-    this.habilidadesModule.fetchAll({ forceRefetch: false })
+  async getHabilidades(){
+    const test = await this.tutorModule.habilidadesTutor(this.idTutorEmExibicao)
+    this.habilidadesTutorAtual = test.map((item) => item.nome)
+  }
 
+  imprime(){
+    console.log(this.habilidadeSelected)
+    console.log(this.hourSelected)
+    console.log(this.dateSelected)
+  }
+
+/**
+   * envia o pedido a api
+   */
+  solicitarTutoria() {
+    if (!this.authModule.user) return
+    if (this.tutor) {
+    this.tutoriaModule
+      .solicitarTutoria({
+        tutorId: this.tutor._id,
+        professorId: this.authModule.user?._id,
+        tutoringDate: this.dateSelected,
+        tutoringHour: this.hourSelected,
+        requestMessage: this.mensagemPedido,
+        tutoringTopic: this.habilidadeSelected
+      })
+      .then(() => {
+        this.$toasted.success("Solicitação registrada", {
+          theme: "toasted-primary",
+          position: "top-right",
+          duration: 5000
+        })
+
+        this.$emit("input", false)
+      })
+    }
+  }
+
+
+
+  mounted() {
     const tutorFoiCarregadoPreviamente = isTutor(this.tutorModule.byId[this.idTutorEmExibicao])
 
-    if (tutorFoiCarregadoPreviamente) return
+    if (tutorFoiCarregadoPreviamente) {
+      this.habilidadesModule.fetchAll({ forceRefetch: false }).then(() => {
+        this.getHabilidades()
+      })
+      console.log('a', this.tutor)
 
+      return
+    }
     this.isCarregandoTutor = true
-
+    
     this.tutorModule
       .getById(this.idTutorEmExibicao)
       .then(() => (this.isCarregandoTutor = true))
       .catch(() => (this.failedToLoadTutor = true))
-      .finally(() => (this.isCarregandoTutor = false))
+      .finally(() => {
+        this.habilidadesModule.fetchAll({ forceRefetch: false }).then(() => {
+        this.getHabilidades()
+      })
+        console.log(this.tutor)
+        this.isCarregandoTutor = false
+      })
   }
 }
 </script>
@@ -114,13 +178,26 @@ export default class PagePerfilTutor extends Vue {
           <v-col cols="9" style="border-left: 1px solid #e3e3e3; min-height: 300px">
             <template>
               <div>
-                <ferramentas-tutor />
+                <FerramentasTutor :habilidades="habilidadesTutorAtual" :habilidadeEscolhida="habilidadeSelected" @update-habilidades-selected="habilidadeSelected = $event"/>
+                <!-- <ferramentas-tutor /> -->
               </div>
               <div>
-                <disponibilidade-tutor />
+                <DisponibilidadeTutor :tutorAtual="tutor"   
+                :horaEscolhida="hourSelected" @update-hora-selected="hourSelected = $event"
+                :dataEscolhida="dateSelected" @update-date-selected="dateSelected = $event"/>
+                <!-- <disponibilidade-tutor /> -->
+              </div>
+              <div>
+                <v-textarea
+                v-model="mensagemPedido"
+                class="ma-6"
+                rows="1"
+                counter="500"
+                placeholder="Caso deseje enviar uma mensagem com o pedido digite aqui!">
+          </v-textarea>
               </div>
               <div class="btn">
-                <v-btn class="ma-2 btnTextWhite" color="#106CE5"> Solicitar tutoria </v-btn>
+                <v-btn class="ma-2 btnTextWhite" @click="imprime(); solicitarTutoria()" color="#106CE5"> Solicitar tutoria </v-btn>
               </div>
             </template>
           </v-col>

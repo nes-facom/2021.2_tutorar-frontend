@@ -23,7 +23,7 @@ export default class ModalCancelarTutoria extends Vue {
 <template>
   <v-dialog v-model="dialog" max-width="500">
     <template v-slot:activator="{ on, attrs }">
-      <v-btn class="ma-2" outlined color="#106CE5" v-bind="attrs" v-on="on"> Rejeitar tutoria </v-btn>
+      <v-btn class="ma-2 btnRejeitarTutoria" outlined color="#106CE5" v-bind="attrs" v-on="on"> Rejeitar tutoria </v-btn>
     </template>
     <v-card class="modal">
       <v-card-title class="cardTitle"> Deseja mesmo rejeitar a tutoria? </v-card-title>
@@ -49,5 +49,13 @@ export default class ModalCancelarTutoria extends Vue {
 .cardTitle {
   width: 100%;
   justify-content: start;
+}
+
+.btnTextWhite {
+  color: white !important;
+}
+
+.btnRejeitarTutoria {
+  width: 170px;
 }
 </style>

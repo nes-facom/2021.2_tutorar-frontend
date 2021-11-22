@@ -1,27 +1,85 @@
 <script lang="ts">
 import { getApropriateTelefoneMask } from "@/utils/inputs/mask"
-import { Vue, Component } from "vue-property-decorator"
+import { Vue, Component, Prop} from "vue-property-decorator"
 
 @Component({
   name: "CardPedidoTutoria"
 })
 export default class CardPedidoTutoria extends Vue {
-  telefone = "67998801996"
+  @Prop({ required: true })
+  telefone!: string
 
-  showModalCancelarTutoria = false
+  @Prop({ required: true })
+  professorEmail!: string
+
+  @Prop({ required: false })
+  professorFoto!: string
+
+  @Prop({ required: true })
+  professorNome!: string
+
+  @Prop({ required: true })
+  tutoriaInicio?: string
+  @Prop({ required: true })
+  tutoriaFim?: string
+
+  @Prop({ required: true })
+  showModalTutoria?: string
+
+
+  dialog = true
 
   openTutorWhatsAppLink() {
     window.open(`https://wa.me/55${this.telefone}_blank`)
   }
 
+  formataStringDataToBr(timestamp: string) {
+    const ano  = timestamp.split("-")[0];
+    const mes  = timestamp.split("-")[1];
+    const dia  = timestamp.split("-")[2];
+
+    return dia + '/' + ("0"+mes).slice(-2) + '/' + ("0"+ano).slice(-2);
+  }
+
+ 
+
   get mascaraTelefone(): string {
     return getApropriateTelefoneMask(this.telefone)
   }
+
+  get dataFormatada(): string{
+    if (this.tutoriaInicio){
+      return this.formataStringDataToBr(this.tutoriaInicio.split(" ")[0].trim())
+    } else if (this.tutoriaFim){
+      return this.formataStringDataToBr(this.tutoriaFim.split(" ")[0].trim())
+    }
+    return ''
+  }
+
+  get horaInicioFormatada(): string{
+    if (this.tutoriaInicio){
+      return this.tutoriaInicio.split(" ")[1].trim()
+    }
+    return ''
+  }
+
+  get horaFimFormatada(): string{
+    if (this.tutoriaFim){
+      return this.tutoriaFim.split(" ")[1].trim()
+    }
+    return ''
+  }
+
+  updateShowModal() {
+      // Emite um evento partindo do child para ser capturado pelo parent
+      this.$emit('update-modal-tutoria', !this.showModalTutoria)
+  }
+
 }
 </script>
 
 <template>
-  <v-card color="grey lighten-4" min-width="350px" width="400px" flat>
+  <v-card  color="grey lighten-4" min-width="350px" width="500px" flat>
     <v-toolbar color="green white--text" class="px-4" flat>
       <v-toolbar-title>Tutoria Agendada</v-toolbar-title>
     </v-toolbar>
@@ -34,7 +92,7 @@ export default class CardPedidoTutoria extends Vue {
           </v-avatar>
         </v-col>
         <v-col cols="9" align-self="center">
-          <h4>Fulano gostaria de agendar uma tutoria no dia 20/10/20 às 18:30.</h4>
+          <h4>{{ professorNome }} possui uma tutoria agendada com você dia {{ dataFormatada }} das {{ horaInicioFormatada }} ás {{ horaFimFormatada}}.</h4>
         </v-col>
       </v-row>
 
@@ -43,17 +101,16 @@ export default class CardPedidoTutoria extends Vue {
           <h5>Telefone</h5>
           <a @click="openTutorWhatsAppLink">{{ telefone | VMask(mascaraTelefone) }}</a>
         </v-col>
-        <v-col cols="6">
+        <v-col cols="10">
           <h5>Email</h5>
-          <span>fulano.prof@gmail.com</span>
+          <span>{{ professorEmail }}</span>
         </v-col>
       </v-row>
     </div>
 
     <v-card-actions class="mt-2">
-      <v-spacer />
-      <v-btn color="red lighten-2" text @click="showModalCancelarTutoria = true">Cancelar Tutoria</v-btn>
-      <v-btn color="green" text>OK</v-btn>
+      <v-spacer> </v-spacer>
+      <v-btn color="green" @click="updateShowModal()" text>OK</v-btn>
     </v-card-actions>
 
   </v-card>

@@ -30,6 +30,8 @@ export interface Tutoria extends MongoDocument {
   requestMessage: string
 
   requestState: string
+
+  tutoringTopic: string
 }
 
 @Module({

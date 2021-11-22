@@ -1,11 +1,23 @@
-<script>
-import { Vue, Component } from "vue-property-decorator"
+<script lang="ts">
+import { Vue, Component, Prop} from "vue-property-decorator"
 
 @Component({
   name: "FerramentasTutor"
 })
 export default class Horarios extends Vue {
-  data() {
+ @Prop({ required: true })
+ habilidades!: string[]
+
+ @Prop({ required: true })
+ habilidadeEscolhida!: string
+
+ updateHabilidadeSelected(habilidadeE: string) {
+      // Emite um evento partindo do child para ser capturado pelo parent
+      this.$emit('update-habilidades-selected', habilidadeE)
+  }
+
+
+ data() {
     return {
       tags: [
         "Work",
@@ -20,23 +32,27 @@ export default class Horarios extends Vue {
       ]
     }
   }
+
 }
 </script>
 
 
 <template>
-  <div class="tools">
+  <div  class="tools">
     <div class="iconAndTitle">
       <div class="icon">
         <v-icon> mdi-tools</v-icon>
       </div>
       Ferramentas
-    </div>
-    <v-chip-group active-class="primary--text" show-arrows>
-      <v-chip v-for="tag in tags" :key="tag">
+    </div >
+    <v-chip-group v-if="habilidades.length > 0" active-class="primary--text" show-arrows>
+      <v-chip v-show="true" v-for="tag in habilidades" :key="tag"
+      @click="updateHabilidadeSelected(tag)">
         {{ tag }}
       </v-chip>
     </v-chip-group>
+    <p v-else>Infelizmente esse tutor não informou suas habilidades</p>
+   
   </div>
 </template>
 
@@ -62,6 +78,10 @@ align-items: flex-start;
 .chip{
   color: white !important;
   background-color: aqua  !important;
+}
+
+p {
+  padding-left: 40px;
 }
 
 

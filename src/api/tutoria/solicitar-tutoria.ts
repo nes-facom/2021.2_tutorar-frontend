@@ -8,6 +8,7 @@ export interface DadosSolicitacaoTutoria {
   tutoringDate: string
   tutoringHour: string
   requestMessage?: string
+  tutoringTopic: string
 }
 
 export function solicitarTutoriaService(dados: DadosSolicitacaoTutoria): Promise<Tutoria> {

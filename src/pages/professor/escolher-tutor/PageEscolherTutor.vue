@@ -36,7 +36,7 @@ export default class PageHome extends Vue {
   mounted() {
     this.tutorModule.getAllTutores()
 
-    //this.isCarregandoTutores = true
+    this.isCarregandoTutores = true
 
     this.habilidadesModule.fetchAll({ forceRefetch: false }).finally(() => {
       this.isCarregandoTutores = false
@@ -70,7 +70,9 @@ export default class PageHome extends Vue {
             if(habilidade.nome.toLowerCase().includes(sanitizedSearchString)){
               // verifica se ja existe um tutor no array antes de inserir
               // se o index for negativo, logo pode inserir, pois não esse tutor ainda não foi inserido
-              const index = searchAuxArray.findIndex(x => x.name==tutor.name)
+              const index = searchAuxArray.findIndex(x => {
+                return x.nome === tutor.nome
+              })
               if (index === -1) searchAuxArray.push(tutor)
             }
           })

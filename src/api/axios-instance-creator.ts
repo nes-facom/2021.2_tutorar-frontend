@@ -5,7 +5,7 @@ export function api(options?: AxiosRequestConfig): AxiosInstance {
   // http://localhost:5005/
   // https://tutorar-api.herokuapp.com/
   const defaultOptions: AxiosRequestConfig = {
-    baseURL: "https://tutorar-api.herokuapp.com/",
+    baseURL: "http://localhost:80/",
     headers: {
       "X-Requested-With": "XMLHttpRequest",
       Authorization: token ? `Bearer ${token}` : null

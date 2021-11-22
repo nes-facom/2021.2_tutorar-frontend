@@ -126,7 +126,8 @@ export default class ModalAgendarTutoria extends Vue {
         professorId: this.authModule.user?._id,
         tutoringDate: this.dataTutoria,
         tutoringHour: this.horaInicioTutoria,
-        requestMessage: this.mensagemPedido
+        requestMessage: this.mensagemPedido,
+        tutoringTopic: "testando"
       })
       .then(() => {
         this.$toasted.success("Solicitação registrada", {

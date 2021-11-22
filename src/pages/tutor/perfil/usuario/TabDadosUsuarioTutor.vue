@@ -203,7 +203,7 @@ export default class TabDadosUsuarioTutor extends Vue {
     </v-card-actions>
 
     <DialogDesativacaoConta v-model="dialogDesativacaoConta" />
-    <DialogAlterarSenha v-model="dialogAlterarSenha" />
+    <DialogAlterarSenha v-model="dialogAlterarSenha"  @update-modal-senha="dialogAlterarSenha = $event" />
   </v-form>
 </template>
 

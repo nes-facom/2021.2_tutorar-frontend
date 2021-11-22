@@ -142,7 +142,7 @@ export default class PagePerfilUsuarioProfessor extends Vue {
       </v-card>
     </v-col>
     <DialogDesativacaoConta v-model="dialogDesativacaoConta" />
-    <DialogAlterarSenha v-model="dialogAlterarSenha" />
+    <DialogAlterarSenha v-model="dialogAlterarSenha" @update-modal-senha="dialogAlterarSenha = $event"/>
   </v-row>
 </template>
 

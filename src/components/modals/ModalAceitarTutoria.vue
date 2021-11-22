@@ -17,7 +17,7 @@ export default class ModalAceitarTutoria extends Vue {
 <template>
   <v-dialog v-model="dialog" max-width="450" max-height="250">
     <template v-slot:activator="{ on, attrs }">
-      <v-btn class="ma-2 btnTextWhite" color="#106CE5" v-bind="attrs" v-on="on"> Aceitar tutoria </v-btn>
+      <v-btn class="ma-2 btnAceitarTutoria" color="#106CE5" v-bind="attrs" v-on="on"> Aceitar tutoria </v-btn>
     </template>
     <v-card class="modal">
       <v-card-title class="cardTitle"> Deseja aceitar a tutoria? </v-card-title>
@@ -46,5 +46,11 @@ export default class ModalAceitarTutoria extends Vue {
 
 .btnTextWhite {
   color: white !important;
+  width: 200px;
+}
+
+.btnAceitarTutoria {
+  color: white !important;
+  width: 170px;
 }
 </style>
