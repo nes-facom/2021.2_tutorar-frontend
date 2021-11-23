@@ -55,7 +55,7 @@ export default class Horarios extends Vue {
 
 
       ],
-      // date: new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().substr(0, 10)
+      date: new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().substr(0, 10)
     }
   }
 
@@ -82,8 +82,10 @@ export default class Horarios extends Vue {
   }
 
   updateDateSelected(date: string) {
-      // Emite um evento partindo do child para ser capturado pelo parent
-      this.$emit('update-date-selected', date)
+    // Emite um evento partindo do child para ser capturado pelo parent
+    console.log("data", date)
+    this.date = '2021-02-04'
+    this.$emit('update-date-selected', date)
   }
 
   date = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().substr(0, 10)
@@ -122,7 +124,6 @@ export default class Horarios extends Vue {
         label="Selecione a data desejada:"
         prepend-icon="mdi-calendar"
         readonly
-        outlined
         v-bind="attrs"
         v-on="on"
       ></v-text-field>
@@ -130,7 +131,7 @@ export default class Horarios extends Vue {
     <v-date-picker locale="pt-BR" v-model="date" no-title scrollable>
       <v-spacer></v-spacer>
       <v-btn text color="primary" @click="menu = false"> Cancelar </v-btn>
-      <v-btn text color="primary" @click="getWeekdayFromDate(date); updateDateSelected(date); menu = false"> OK </v-btn>
+      <v-btn text color="primary" @click="$refs.menu.save(date); getWeekdayFromDate(date); updateDateSelected(date); menu = false"> OK </v-btn>
     </v-date-picker>
   </v-menu>
 </div>

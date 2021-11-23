@@ -1,6 +1,6 @@
 <script lang="ts">
 import Auth from "@/store/modules/auth"
-import { Vue, Component } from "vue-property-decorator"
+import { Vue, Component, Prop } from "vue-property-decorator"
 import { getModule } from "vuex-module-decorators"
 import TutoriaModule from "@/store/modules/tutoria-module"
 import ProfessorModule from "@/store/modules/professor-module"
@@ -38,6 +38,7 @@ export default class Tutorias extends Vue {
 
   expanded = []
   singleExpand = false
+
 
   headers = [
     {
@@ -138,7 +139,7 @@ export default class Tutorias extends Vue {
                 professor.nome,
                 this.formatarData(tutoria.tutoringDate.toString()),
                 tutoria.tutoringHour.toString(),
-                "Google meet",
+                tutoria.tutoringTopic,
                 tutoria.requestState
               )
               tutoriasAux.push(tutoriaCriada)
@@ -174,6 +175,33 @@ export default class Tutorias extends Vue {
   mounted() {
     this.getTutorias()
   }
+
+  updated() {
+    console.log('update')
+  }
+
+  activated(){
+    console.log('activate')
+
+  }
+
+  renderTriggered(){
+    console.log('rendetrTrigged')
+
+  }
+
+   renderTracked(){
+     console.log(' renderTracked')
+   }
+
+    unmounted(){
+      console.log( 'unmounted')
+    }
+
+     deactivated(){
+       console.log('deactivated')
+     }
+
 }
 </script>
 

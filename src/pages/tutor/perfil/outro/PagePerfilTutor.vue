@@ -148,7 +148,7 @@ export default class PagePerfilTutor extends Vue {
           <v-col cols="3">
             <div class="profileAndBackButton">
               <v-btn color="primary" class="backButton" text @click="$router.push({ path: '/home' })">
-                <v-icon>mdi-arrow-left</v-icon>
+                <v-icon>mdi-arrow-left</v-icon>Voltar
               </v-btn>
               <v-avatar size="150px" class="mt-8 mx-auto">
                 <v-img :src="tutor.fotoPerfil" lazy-src="@/assets/taylor.jpg" />

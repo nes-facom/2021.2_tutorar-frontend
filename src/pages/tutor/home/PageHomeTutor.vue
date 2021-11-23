@@ -7,6 +7,9 @@ import Tutorias from "@/pages/tutor/home/Tutorias.vue"
 import SolicitacoesTutoria from "@/pages/tutor/home/SolicitacoesTutoria.vue"
 //import AgendaProfessor from "@/pages/tutor/agenda/PageAgenda.vue"
 
+import Horarios from "@/pages/tutor/home/Horarios.vue"
+
+
 const AgendaTutor = () => import("@/pages/tutor/agenda/PageAgenda.vue")
 
 @Component({
@@ -14,7 +17,8 @@ const AgendaTutor = () => import("@/pages/tutor/agenda/PageAgenda.vue")
   components: {
     Tutorias,
     SolicitacoesTutoria,
-    AgendaTutor
+    AgendaTutor,
+    Horarios
   }
 })
 export default class PageHomeTutor extends Vue {
@@ -27,6 +31,7 @@ export default class PageHomeTutor extends Vue {
   get canEditUser() {
     return Number(this.tab) === 2
   }
+  
 }
 </script>
 <template>
@@ -35,6 +40,7 @@ export default class PageHomeTutor extends Vue {
           <v-tab>Minha agenda</v-tab>
           <v-tab>Solicitações de tutorias</v-tab>
           <v-tab>Tutorias realizadas</v-tab>
+          <v-tab>Horários</v-tab>
       </v-tabs>
 
       <v-tabs-items v-model="tab">
@@ -43,12 +49,14 @@ export default class PageHomeTutor extends Vue {
               </v-tab-item>
 
               <v-tab-item>
-                <SolicitacoesTutoria />
+                <SolicitacoesTutoria/>
               </v-tab-item>
-
               <v-tab-item>
-                <Tutorias />
+                <Tutorias/>
               </v-tab-item>
+              <v-tab-item>
+                <Horarios />
+             </v-tab-item>
             </v-tabs-items>
   </div>
 </template>

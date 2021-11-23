@@ -94,6 +94,8 @@ export default class ModalConfigurarHorarios extends Vue {
     // const agendaFormatada = this.removeHorariosVazios(this.copiaHorarios)
 
     // const agendaFormatada = this.copiaHorarios
+    
+    
     const agendaFormatada = {
       segunda: [{inicio: "1300", fim: "1400"}],
       terca: [{inicio: "1300", fim: "1400"}],

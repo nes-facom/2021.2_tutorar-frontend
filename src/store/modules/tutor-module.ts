@@ -19,6 +19,8 @@ import {
   CrudMeta
 } from "../utils/crud-module-utils"
 import store from ".."
+import { AgendaHorarios } from "@/pages/tutor/agenda/agenda"
+import { getAgendaTutorService } from "@/api/tutor/get-agenda"
 
 export function isTutor(user?: User | Tutor | Professor | Monitor | null): user is Tutor {
   if (!user) return false
@@ -161,4 +163,10 @@ export default class TutorModule extends VuexModule implements CrudModule<Tutor>
         })
     })
   }
+
+  @Action({ rawError: true })
+  async getAgenda(id: string): Promise<AgendaHorarios> {
+    return getAgendaTutorService(id)
+  }
+
 }

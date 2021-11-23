@@ -2,17 +2,20 @@
 const ModalCancelarTutoria = () => import("@/components/modals/ModalCancelarTutoria.vue")
 const ModalAceitarTutoria = () => import("@/components/modals/ModalAceitarTutoria.vue")
 import { getModule } from "vuex-module-decorators"
-import { Vue, Component } from "vue-property-decorator"
+import { Vue, Component, Prop } from "vue-property-decorator"
 import TutoriaModule from "@/store/modules/tutoria-module"
 import ProfessorModule from "@/store/modules/professor-module"
 import { User } from "@/store/modules/auth-types"
 import Auth from "@/store/modules/auth"
+const foto = "@/assets/dog.jpg"
+
+
 
 export interface DadosTutoria {
   id: string
   date: string
   time: string
-  fotoProfessor: string
+  fotoProfessor: any
   nomeProfessor: string
   assuntoProfessor: string
   mensagemTutoria: string
@@ -46,13 +49,14 @@ export default class extends Vue {
   professorModule = getModule(ProfessorModule, this.$store)
   authModule = getModule(Auth, this.$store)
 
+
   userCopy: User = { ...this.authModule.user } as User
 
   criarTutoria(
     id: string,
     date: string,
     time: string,
-    fotoProfessor: string,
+    fotoProfessor: any,
     nomeProfessor: string,
     assuntoProfessor: string,
     mensagemTutoria: string,
@@ -110,9 +114,9 @@ export default class extends Vue {
               tutoria._id,
               this.formatarData(tutoria.tutoringDate.toString()),
               tutoria.tutoringHour.toString(),
-              "professor.fotoPerfil",
+              professor.fotoPerfil,
               professor.nome,
-              "Google meet",
+              tutoria.tutoringTopic,
               tutoria.requestMessage,
               professor.email,
               professor.celular

@@ -21,7 +21,7 @@ export default class PageHome extends Vue {
 
   data = ""
   showMenuCalendario = false
-  isCarregandoTutores = false
+  isCarregandoTutores = true
 
   get dataFormatada() {
     if (!this.data) return ""
@@ -35,9 +35,6 @@ export default class PageHome extends Vue {
 
   mounted() {
     this.tutorModule.getAllTutores()
-
-    this.isCarregandoTutores = true
-
     this.habilidadesModule.fetchAll({ forceRefetch: false }).finally(() => {
       this.isCarregandoTutores = false
       this.searchItems = this.tutorModule.asArray

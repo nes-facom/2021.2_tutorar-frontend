@@ -1,7 +1,7 @@
 <script lang="ts">
 import { VCalendar } from "@/typings/vuetify"
 import { CalendarDaySlotScope, CalendarEvent } from "vuetify"
-import { Vue, Component, Ref } from "vue-property-decorator"
+import { Vue, Component, Ref, Prop} from "vue-property-decorator"
 import { AgendaHorarios } from "./agenda"
 import { getModule } from "vuex-module-decorators"
 import Auth from "@/store/modules/auth"
@@ -11,6 +11,7 @@ import TutoriaModule from "@/store/modules/tutoria-module"
 import ProfessorModule from "@/store/modules/professor-module"
 import { User } from "@/store/modules/auth-types"
 import { forEach } from "lodash"
+
 
 
 const InputTipoExibicaoCalendario = () => import("@/components/inputs/InputTipoExibicaoCalendario.vue")
@@ -70,6 +71,10 @@ export default class AgendaProfessor extends Vue {
   events: CalendarEvent[] = []
 
   telefone = 67991121434
+
+  colors = ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1', 'red', 'grey']
+
+
 
   /**
    * O tutor que esta acessando a página
@@ -216,7 +221,7 @@ export default class AgendaProfessor extends Vue {
   setEvent(nome: any, inicio: any, fim: any, cor: any, diaTodo: any, telefone: any, email:any, nomeDoProfessor: any) {
     this.events.push({
       name: nome,
-      color: cor,
+      color: this.colors[Math.floor(Math.random()*this.colors.length)],
       timed: !diaTodo,
       start: new Date(inicio),
       end: new Date(fim),
