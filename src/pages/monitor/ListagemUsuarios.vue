@@ -110,17 +110,17 @@ export default class PageListagemUsuarios extends Vue {
           no-data-text="Nenhum registro encontrado"
           no-results-text="Nenhum registro encontrado com esses filtros"
         >
-          <template #item.avatar="{ item }">
+          <template v-slot:[`item.avatar`]="{ item }">
             <v-avatar size="50" class="my-2 avatar-usuario" @click="gotoUserPage(item)">
-              <img :src="item.fotoPerfil" layz-src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
+              <img :src="item.fotoPerfil" alt="sem foto" />
             </v-avatar>
           </template>
 
-          <template #item.idade="{ item }">
+          <template v-slot:[`item.idade`]="{ item }">
             <span v-text="getAgeFromYYYYMMDD(item.dataNascimento)" />
           </template>
 
-          <template #item.isActive="{ item }">
+          <template v-slot:[`item.isActive`]="{ item }">
             <v-chip
               v-text="item.isActive ? 'ativo' : 'inativo'"
               :color="item.isActive ? '#448FF2' : '#89DCF6'"

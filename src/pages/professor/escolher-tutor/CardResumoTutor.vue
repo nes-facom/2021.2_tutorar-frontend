@@ -26,8 +26,7 @@ export default class CardResumoTutor extends Vue {
     <template slot="progress">
       <v-progress-linear color="deep-purple" height="10" indeterminate />
     </template>
-
-    <!-- @TODO colocar o placeholder em lazy src quando as meninas acharem uma imagem legal -->
+    
     <v-img
       class="align-end"
       height="200px"

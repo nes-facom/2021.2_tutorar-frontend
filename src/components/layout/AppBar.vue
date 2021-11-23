@@ -44,6 +44,7 @@ export default class AppBar extends Vue {
     if (this.$route.path !== route) this.$router.push(route)
   }
 
+
   logout() {
     this.authModule.logout({ redirectTo: AUTH_ROUTES.LOGIN })
   }

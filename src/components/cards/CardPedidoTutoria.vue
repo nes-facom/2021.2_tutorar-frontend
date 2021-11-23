@@ -26,6 +26,8 @@ export default class CardPedidoTutoria extends Vue {
   @Prop({ required: true })
   showModalTutoria?: string
 
+  @Prop({ required: true })
+  assuntoDaTutoria?: string
 
   dialog = true
 
@@ -104,6 +106,10 @@ export default class CardPedidoTutoria extends Vue {
         <v-col cols="10">
           <h5>Email</h5>
           <span>{{ professorEmail }}</span>
+        </v-col>
+        <v-col cols="12">
+          <h5>Assunto</h5>
+          <span>{{ assuntoDaTutoria }}</span>
         </v-col>
       </v-row>
     </div>

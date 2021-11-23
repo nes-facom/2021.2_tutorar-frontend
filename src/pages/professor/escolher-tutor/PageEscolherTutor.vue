@@ -1,12 +1,10 @@
 <script lang="ts">
-import { Vue, Component, Prop } from "vue-property-decorator"
+import { Vue, Component } from "vue-property-decorator"
 import TutorModule from "@/store/modules/tutor-module"
 import { getModule } from "vuex-module-decorators"
 import { Tutor } from "@/store/modules/auth-types"
 import Auth from "@/store/modules/auth"
-import { TUTOR_ROUTES } from "@/router/rotas/tutor"
 import HabilidadesModule from "@/store/modules/habilidades-module"
-import { lowerCase } from "lodash"
 
 const CardResumoTutor = () => import("@/pages/professor/escolher-tutor/CardResumoTutor.vue")
 

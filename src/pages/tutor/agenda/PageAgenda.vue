@@ -2,7 +2,6 @@
 import { VCalendar } from "@/typings/vuetify"
 import { CalendarDaySlotScope, CalendarEvent } from "vuetify"
 import { Vue, Component, Ref, Prop} from "vue-property-decorator"
-import { AgendaHorarios } from "./agenda"
 import { getModule } from "vuex-module-decorators"
 import Auth from "@/store/modules/auth"
 import { Tutor } from "@/store/modules/auth-types"
@@ -10,12 +9,10 @@ import { affirmIsTutorAndReturn, isTutor } from "@/store/modules/tutor-module"
 import TutoriaModule from "@/store/modules/tutoria-module"
 import ProfessorModule from "@/store/modules/professor-module"
 import { User } from "@/store/modules/auth-types"
-import { forEach, update } from "lodash"
 
 
 
 const InputTipoExibicaoCalendario = () => import("@/components/inputs/InputTipoExibicaoCalendario.vue")
-const ModalConfigurarHorarios = () => import("@/pages/tutor/agenda/ModalConfigurarHorarios.vue")
 const CardPedidoTutoria = () => import("@/components/cards/CardPedidoTutoria.vue")
 
 
@@ -36,7 +33,6 @@ export interface DadosTutoria {
   name: "AgendaProfessor",
   components: {
     CardPedidoTutoria,
-    ModalConfigurarHorarios,
     InputTipoExibicaoCalendario
   }
 })
@@ -50,9 +46,6 @@ export default class AgendaProfessor extends Vue {
   userCopy: User = { ...this.authModule.user } as User
 
   tutoriasArray: DadosTutoria[] = []
-
-
-  showModalConfigurarHorarios = false
 
   exibirMenuEventoSelecionado = false
 
@@ -139,7 +132,7 @@ export default class AgendaProfessor extends Vue {
                 tutoria.tutoringHour.toString(),
                 "professor.fotoPerfil",
                 professor.nome,
-                "Google meet",
+                tutoria.tutoringTopic,
                 tutoria.requestMessage,
                 professor.email,
                 professor.celular
@@ -150,7 +143,14 @@ export default class AgendaProfessor extends Vue {
               console.log("horas", horas)
               
               if (horas[0] && horas[1]) {
-                this.setEvent(`Tutoria prof. ${tutoriaCriada.nomeProfessor}`, dataFormatada + " " + horas[0].trim(), dataFormatada + " " + horas[1].trim(), "blue", false, tutoriaCriada.celularProfessor, tutoriaCriada.emailProfessor, tutoriaCriada.nomeProfessor)
+                this.setEvent(`Tutoria prof. ${tutoriaCriada.nomeProfessor}`, 
+                dataFormatada + " " + horas[0].trim(),
+                 dataFormatada + " " + horas[1].trim(),
+                false,
+                tutoriaCriada.celularProfessor, 
+                tutoriaCriada.emailProfessor,
+                tutoriaCriada.nomeProfessor,
+                tutoriaCriada.assuntoProfessor)
               }
             })
             }
@@ -218,7 +218,7 @@ export default class AgendaProfessor extends Vue {
   }
 
   // TODO: se livrar desses anys
-  setEvent(nome: any, inicio: any, fim: any, cor: any, diaTodo: any, telefone: any, email:any, nomeDoProfessor: any) {
+  setEvent(nome: any, inicio: any, fim: any, diaTodo: any, telefone: any, email:any, nomeDoProfessor: any, assuntoProfessor: any) {
     this.events.push({
       name: nome,
       color: this.colors[Math.floor(Math.random()*this.colors.length)],
@@ -230,6 +230,7 @@ export default class AgendaProfessor extends Vue {
       nomeProfessor: nomeDoProfessor,
       startString: inicio,
       endString: fim,
+      assunto: assuntoProfessor,
     })
   }
 
@@ -246,10 +247,6 @@ export default class AgendaProfessor extends Vue {
   }
 
   mounted() {
-    // this.setEvent("Teste", new Date(), new Date(), "blue", false, "64", "test@email", "Vinicius")
-    this.setEvent("Tutoria", "2020-11-11 12:30", "2020-11-11 21:00", "blue", false, "64", "test@email",  "Vinicius")
-    this.setEvent("Tutoria", "2021-11-21 12:30", "2021-11-21 21:00", "blue", false, "64", "test@email",  "Vinicius")
-    this.setEvent("Tutoria", "2021-11-21 12:30", "2021-11-21 21:00", "blue", false, "64", "test@email",  "Vinicius")
     this.getTutoria()
 
     this.$root.$on('myEvent', () => {
@@ -262,12 +259,6 @@ export default class AgendaProfessor extends Vue {
 
 <template>
   <div>
-    <ModalConfigurarHorarios
-      v-model="showModalConfigurarHorarios"
-      :horarios-tutor="tutor.agenda"
-      @horarios-atualizados="$log('horarios-att !', $event)"
-    />
-
     <v-toolbar flat class="px-0">
       <v-btn outlined class="mr-4" color="grey darken-2" @click="setToday">Hoje</v-btn>
 
@@ -285,9 +276,6 @@ export default class AgendaProfessor extends Vue {
       </template>
 
       <v-spacer />
-
-      <v-btn @click="showModalConfigurarHorarios = true" color="primary" class="mr-6">Meus Horários</v-btn>
-
       <InputTipoExibicaoCalendario v-model="tipoExibicaoCalendario" />
     </v-toolbar>
 
@@ -320,6 +308,7 @@ export default class AgendaProfessor extends Vue {
         :professorNome="selectedEvent.nomeProfessor"
         :tutoriaInicio="selectedEvent.startString"
         :tutoriaFim="selectedEvent.endString"
+        :assuntoDaTutoria="selectedEvent.assunto"
         :showModalTutoria="exibirMenuEventoSelecionado" @update-modal-tutoria="exibirMenuEventoSelecionado = $event"/>
       </v-menu>
     </v-sheet>

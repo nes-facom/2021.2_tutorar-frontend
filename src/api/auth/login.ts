@@ -28,22 +28,22 @@ export interface LoginResponse {
 function normalizaUsuario(rawUser: RawUser): User {
   const { tutor: dadosTutor, professor: dadosProfessor, ...dadosPessoa } = rawUser
 
-  if (dadosTutor) {
+  if (dadosTutor && !dadosPessoa.isMonitor) {
     const tutor: Tutor = { ...dadosTutor, ...dadosPessoa, role: "tutor" }
     return { ...tutor, isMonitor: false }
   }
 
-  if (dadosProfessor) {
+  if (dadosProfessor && !dadosPessoa.isMonitor) {
     const professor: Professor = { ...dadosProfessor, ...dadosPessoa, role: "professor" }
     return { ...professor, isMonitor: false }
   }
-
   /**
    * @TODO FIXME
    * não quero ir além pq estou esperando login do victor mas a ideia aqui é que o usuario so pode ter 3 roles
    * e se chegou aqui ele deve ser monitor
    */
-  return { ...rawUser, role: "monitor", isMonitor: true }
+   return { ...rawUser, role: "monitor", isMonitor: true }
+
 }
 
 /**
