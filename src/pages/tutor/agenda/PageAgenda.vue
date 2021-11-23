@@ -10,7 +10,7 @@ import { affirmIsTutorAndReturn, isTutor } from "@/store/modules/tutor-module"
 import TutoriaModule from "@/store/modules/tutoria-module"
 import ProfessorModule from "@/store/modules/professor-module"
 import { User } from "@/store/modules/auth-types"
-import { forEach } from "lodash"
+import { forEach, update } from "lodash"
 
 
 
@@ -72,7 +72,7 @@ export default class AgendaProfessor extends Vue {
 
   telefone = 67991121434
 
-  colors = ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1', 'red', 'grey']
+  colors = ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1', 'red', 'pink']
 
 
 
@@ -147,7 +147,7 @@ export default class AgendaProfessor extends Vue {
               tutoriasAux.push(tutoriaCriada)
               const dataFormatada = this.formataStringData(tutoriaCriada.date)
               const horas = tutoriaCriada.time.split('-')
-              console.log(horas)
+              console.log("horas", horas)
               
               if (horas[0] && horas[1]) {
                 this.setEvent(`Tutoria prof. ${tutoriaCriada.nomeProfessor}`, dataFormatada + " " + horas[0].trim(), dataFormatada + " " + horas[1].trim(), "blue", false, tutoriaCriada.celularProfessor, tutoriaCriada.emailProfessor, tutoriaCriada.nomeProfessor)
@@ -240,12 +240,22 @@ export default class AgendaProfessor extends Vue {
     }, 2500)
   }
 
+  updatePageData() {
+    console.log('updateAgenda')
+    this.getTutoria()
+  }
+
   mounted() {
     // this.setEvent("Teste", new Date(), new Date(), "blue", false, "64", "test@email", "Vinicius")
     this.setEvent("Tutoria", "2020-11-11 12:30", "2020-11-11 21:00", "blue", false, "64", "test@email",  "Vinicius")
     this.setEvent("Tutoria", "2021-11-21 12:30", "2021-11-21 21:00", "blue", false, "64", "test@email",  "Vinicius")
     this.setEvent("Tutoria", "2021-11-21 12:30", "2021-11-21 21:00", "blue", false, "64", "test@email",  "Vinicius")
     this.getTutoria()
+
+    this.$root.$on('myEvent', () => {
+     console.log('chegou no evento')
+     this.updatePageData()
+    })
   }
 }
 </script>

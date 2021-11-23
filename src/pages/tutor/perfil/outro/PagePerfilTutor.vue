@@ -72,6 +72,38 @@ export default class PagePerfilTutor extends Vue {
   solicitarTutoria() {
     if (!this.authModule.user) return
     if (this.tutor) {
+    
+    if(!this.habilidadeSelected) {
+      console.log('selecione uma abilidade')
+      this.$toasted.error("Por favor, selecione uma habilidade!", {
+          theme: "toasted-primary",
+          position: "top-right",
+          duration: 5000
+        })
+      return
+    }
+
+    if(!this.dateSelected) {
+      console.log('selecione uma data')
+      this.$toasted.error("Por favor, selecione uma data em que o tutor possua horarios!", {
+          theme: "toasted-primary",
+          position: "top-right",
+          duration: 5000
+        })
+      return
+    }
+
+    console.log("hora", this.hourSelected)
+    if(!this.hourSelected) {
+      console.log('selecione uma data')
+      this.$toasted.error("Por favor, selecione um horário em que deseja ser atendido.", {
+          theme: "toasted-primary",
+          position: "top-right",
+          duration: 5000
+        })
+      return
+    }
+
     this.tutoriaModule
       .solicitarTutoria({
         tutorId: this.tutor._id,
@@ -87,8 +119,9 @@ export default class PagePerfilTutor extends Vue {
           position: "top-right",
           duration: 5000
         })
-
         this.$emit("input", false)
+      }).finally(()=> {
+        this.mensagemPedido = ''
       })
     }
   }

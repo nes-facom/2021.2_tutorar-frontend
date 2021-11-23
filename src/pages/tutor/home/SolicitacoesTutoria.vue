@@ -91,7 +91,7 @@ export default class extends Vue {
           text: "Foto",
           align: "start",
           sortable: false,
-          value: "foto"
+          value: "fotoProfessor"
         },
         { text: "Nome", value: "nomeProfessor" },
         { text: "Data", value: "date" },
@@ -154,6 +154,8 @@ export default class extends Vue {
           duration: 5000
         })
       })
+      this.$root.$emit('myEvent', 'new message!');
+
     }
     // depois da remoção, pega os dados novamente no banco
     this.getTutoria()
@@ -190,9 +192,12 @@ export default class extends Vue {
       fixed-header
       height="40em"
     >
-      <template v-slot:[`item.foto`]>
+    <template v-slot:no-data>
+      <strong class="py-1">Ainda não há nenhum dado para ser exibido nesta página</strong>
+    </template>
+      <template v-slot:[`item.fotoProfessor`]="{item}">
         <v-avatar size="36px">
-          <v-img src="@/assets/dog.jpg" />
+          <v-img :src="item.fotoProfessor" lazy-src="@/assets/dog.jpg" />
         </v-avatar>
       </template>
       <template v-slot:expanded-item="{ headers, item }">

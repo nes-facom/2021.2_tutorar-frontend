@@ -34,11 +34,11 @@ export default class PageHome extends Vue {
   searchItems: Tutor[] = []
 
   mounted() {
-    this.tutorModule.getAllTutores()
-    this.habilidadesModule.fetchAll({ forceRefetch: false }).finally(() => {
-      this.isCarregandoTutores = false
-      this.searchItems = this.tutorModule.asArray
-    })
+    this.tutorModule.getAllTutores().then(()=> {
+      this.habilidadesModule.fetchAll({ forceRefetch: false }).finally(() => {
+        this.searchItems = this.tutorModule.asArray
+      })
+    }).finally(() => this.isCarregandoTutores = false)
   }
 
   /* 

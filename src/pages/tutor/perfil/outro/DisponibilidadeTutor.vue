@@ -27,16 +27,16 @@ export default class Horarios extends Vue {
 
     if(this.tutorAtual && this.tutorAtual.agenda && day){
       
-      // tratar caso onde estamos buscando horarios de sab ou domingo
-      if (day === "sabado" || day == "domingo"){
-        return 
-      }
-      
+      if ((this.tutorAtual.agenda as any)[day]) {
       const horariosDayArr = (this.tutorAtual.agenda as any)[day].map((item: any) => {
-        return `${item.inicio} às ${item.fim}`
+        return `${item.inicio} - ${item.fim}`
         // console.log("item", item.fim, item.inicio)
       })       
       this.horariosArr = horariosDayArr
+      } else {
+        this.horariosArr = []
+        this.date = ''
+      }
     }
   }
 
@@ -72,6 +72,7 @@ export default class Horarios extends Vue {
     if (x == 5) dayweek = 'sabado'
     if (x == 6) dayweek = 'domingo'
 
+    console.log('day', dayweek)
     this.tutorHorariosByWeekday(dayweek)
 
   }
@@ -84,16 +85,17 @@ export default class Horarios extends Vue {
   updateDateSelected(date: string) {
     // Emite um evento partindo do child para ser capturado pelo parent
     console.log("data", date)
-    this.date = '2021-02-04'
+    this.date = date
     this.$emit('update-date-selected', date)
   }
 
   date = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().substr(0, 10)
 
   mounted() {
-    this.tutorHorariosByWeekday('quinta')
-    // this.date = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().substr(0, 10)
-
+    // a principio, load os horarios do dia atual
+    this.date = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().substr(0, 10)
+    this.getWeekdayFromDate(this.date)
+    this.$emit('update-date-selected', this.date)
   }
 }
 </script>
@@ -128,7 +130,7 @@ export default class Horarios extends Vue {
         v-on="on"
       ></v-text-field>
     </template>
-    <v-date-picker locale="pt-BR" v-model="date" no-title scrollable>
+    <v-date-picker color="primary" locale="pt-BR" v-model="date" no-title scrollable >
       <v-spacer></v-spacer>
       <v-btn text color="primary" @click="menu = false"> Cancelar </v-btn>
       <v-btn text color="primary" @click="$refs.menu.save(date); getWeekdayFromDate(date); updateDateSelected(date); menu = false"> OK </v-btn>
@@ -136,7 +138,7 @@ export default class Horarios extends Vue {
   </v-menu>
 </div>
     <v-chip-group v-if="this.horariosArr.length > 0" center-active show-arrows active-class="primary--text">
-      <v-chip v-for="tag in this.horariosArr" :key="tag"
+      <v-chip filter v-for="tag in this.horariosArr" :key="tag"
        @click="updateHoraSelected(tag)">
         {{ tag }}
       </v-chip>

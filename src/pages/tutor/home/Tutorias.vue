@@ -43,7 +43,7 @@ export default class Tutorias extends Vue {
   headers = [
     {
       text: "Avatar",
-      value: "avatar",
+      value: "fotoProfessor",
       sortable: false,
       align: "start"
     },
@@ -168,39 +168,23 @@ export default class Tutorias extends Vue {
           position: "top-right",
           duration: 5000
         })
+        this.$root.$emit('myEvent', 'new message!');
       })
     }
   }
 
-  mounted() {
+  updatePageData(){
     this.getTutorias()
   }
 
-  updated() {
-    console.log('update')
+  mounted() {
+    this.getTutorias()
+    this.$root.$on('myEvent', () => {
+     console.log('chegou no evento')
+     this.updatePageData()
+    })
   }
-
-  activated(){
-    console.log('activate')
-
-  }
-
-  renderTriggered(){
-    console.log('rendetrTrigged')
-
-  }
-
-   renderTracked(){
-     console.log(' renderTracked')
-   }
-
-    unmounted(){
-      console.log( 'unmounted')
-    }
-
-     deactivated(){
-       console.log('deactivated')
-     }
+   
 
 }
 </script>
@@ -218,9 +202,12 @@ export default class Tutorias extends Vue {
       fixed-header
       height="40em"
     >
-      <template v-slot:[`item.avatar`]>
+    <template v-slot:no-data>
+      <strong class="py-1">Ainda não há nenhum dado para ser exibido nesta página</strong>
+    </template>
+      <template v-slot:[`item.fotoProfessor`]="{item}">
         <v-avatar size="36px">
-          <v-img src="@/assets/dog.jpg" />
+          <v-img :src="item.fotoProfessor" lazy-src="@/assets/dog.jpg" />
         </v-avatar>
       </template>
 
