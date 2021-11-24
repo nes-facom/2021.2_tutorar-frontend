@@ -7,9 +7,6 @@ import TutoriaModule from "@/store/modules/tutoria-module"
 import ProfessorModule from "@/store/modules/professor-module"
 import { User } from "@/store/modules/auth-types"
 import Auth from "@/store/modules/auth"
-const foto = "@/assets/dog.jpg"
-
-
 
 export interface DadosTutoria {
   id: string

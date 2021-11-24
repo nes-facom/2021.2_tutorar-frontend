@@ -22,7 +22,6 @@ interface RequestBody {
 
 export function updateTutorService(id: string, tutor: Tutor): Promise<RawTutor> {
   const { universidade, cursoLicensiatura, semestreAtual, habilidades, agenda, ...copiaTutor } = tutor
-  console.log("AGENDA", agenda)
   const body: RequestBody = { ...copiaTutor, tutor: { universidade, cursoLicensiatura, semestreAtual, habilidades } }
 
 
@@ -32,15 +31,10 @@ export function updateTutorService(id: string, tutor: Tutor): Promise<RawTutor> 
       .then(res => {
         // seria interessante integrar a agenda ao body da req de updateTutor, mas na versão atual da API
         // esse fomarto de body não é aceitavel, logo devem ser realizadas duas requisições
-        console.log("resposta da API", res.data)
         if (agenda){
-          const agendaUpdate: AgendaHorarios = { ... agenda}
-          console.log("AGENDA UPDATE", agendaUpdate)
           updateAgendaTutorService(id, agenda)
           res.data = {...res.data, agenda}
         }
-        console.log("resposta da API2", res.data)
-
         resolve(res.data)
       })
       .catch(error => {

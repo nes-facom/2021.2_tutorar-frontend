@@ -93,7 +93,6 @@ export default class Tutorias extends Vue {
   }
 
   registrarTutoria() {
-    console.log("registrarTutoria")
     this.showModalRegitrarTutoria = true
   }
 
@@ -180,7 +179,6 @@ export default class Tutorias extends Vue {
   mounted() {
     this.getTutorias()
     this.$root.$on('myEvent', () => {
-     console.log('chegou no evento')
      this.updatePageData()
     })
   }

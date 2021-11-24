@@ -15,20 +15,6 @@ import { User } from "@/store/modules/auth-types"
 const InputTipoExibicaoCalendario = () => import("@/components/inputs/InputTipoExibicaoCalendario.vue")
 const CardPedidoTutoria = () => import("@/components/cards/CardPedidoTutoria.vue")
 
-
-export interface DadosTutoria {
-  id: string
-  date: string
-  time: string
-  fotoProfessor: string
-  nomeProfessor: string
-  assuntoProfessor: string
-  mensagemTutoria: string
-  emailProfessor: string
-  celularProfessor: string
-}
-
-
 @Component({
   name: "AgendaProfessor",
   components: {
@@ -44,8 +30,6 @@ export default class AgendaProfessor extends Vue {
   tutoriaModule = getModule(TutoriaModule, this.$store)
   professorModule = getModule(ProfessorModule, this.$store)
   userCopy: User = { ...this.authModule.user } as User
-
-  tutoriasArray: DadosTutoria[] = []
 
   exibirMenuEventoSelecionado = false
 
@@ -63,10 +47,7 @@ export default class AgendaProfessor extends Vue {
 
   events: CalendarEvent[] = []
 
-  telefone = 67991121434
-
   colors = ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1', 'red', 'pink']
-
 
 
   /**
@@ -74,34 +55,6 @@ export default class AgendaProfessor extends Vue {
    */
   get tutor(): Tutor {
     return affirmIsTutorAndReturn(this.authModule.user)
-  }
-
-
-
- criarTutoria(
-    id: string,
-    date: string,
-    time: string,
-    fotoProfessor: string,
-    nomeProfessor: string,
-    assuntoProfessor: string,
-    mensagemTutoria: string,
-    emailProfessor: string,
-    celularProfessor: string
-  ): DadosTutoria {
-    const tutoria: DadosTutoria = {
-      id,
-      date,
-      time,
-      fotoProfessor,
-      nomeProfessor,
-      assuntoProfessor,
-      mensagemTutoria,
-      emailProfessor,
-      celularProfessor
-    }
-
-    return tutoria
   }
 
   formatarData(data: string) {
@@ -118,59 +71,32 @@ export default class AgendaProfessor extends Vue {
   }
 
   async getTutoria() {
-      const tutoriasAux: any[] = []
-
-      await this.tutoriaModule
-        .getAllTutoriasFromTutor(this.userCopy._id)
-        .then(tutorias => {
-          tutorias.forEach(tutoria => {
-            if (tutoria.requestState === "aceita") {
-            this.professorModule.fetchProfessorById(tutoria.professorId).then(professor => {
-              const tutoriaCriada = this.criarTutoria(
-                tutoria._id,
-                this.formatarData(tutoria.tutoringDate.toString()),
-                tutoria.tutoringHour.toString(),
-                "professor.fotoPerfil",
-                professor.nome,
-                tutoria.tutoringTopic,
-                tutoria.requestMessage,
-                professor.email,
-                professor.celular
-              )
-              tutoriasAux.push(tutoriaCriada)
-              const dataFormatada = this.formataStringData(tutoriaCriada.date)
-              const horas = tutoriaCriada.time.split('-')
-              console.log("horas", horas)
-              
-              if (horas[0] && horas[1]) {
-                this.setEvent(`Tutoria prof. ${tutoriaCriada.nomeProfessor}`, 
-                dataFormatada + " " + horas[0].trim(),
-                 dataFormatada + " " + horas[1].trim(),
-                false,
-                tutoriaCriada.celularProfessor, 
-                tutoriaCriada.emailProfessor,
-                tutoriaCriada.nomeProfessor,
-                tutoriaCriada.assuntoProfessor)
-              }
-            })
+    await this.tutoriaModule
+      .getAllTutoriasFromTutor(this.userCopy._id)
+      .then(tutorias => {
+        tutorias.forEach(tutoria => {
+          if (tutoria.requestState === "aceita") {
+          this.professorModule.fetchProfessorById(tutoria.professorId).then(professor => {
+            const dataFormatada = this.formataStringData(this.formatarData(tutoria.tutoringDate.toString()))
+            const horas = tutoria.tutoringHour.toString().split('-')
+            
+            // se as horas estão definidas, cria um evento no calendario
+            if (horas[0] && horas[1]) {
+              this.setEvent(`Tutoria com prof. ${professor.nome}`, 
+              dataFormatada + " " + horas[0].trim(),
+              dataFormatada + " " + horas[1].trim(),
+              false,
+              professor.celular, 
+              professor.email,
+              professor.nome,
+              tutoria.tutoringTopic,
+              professor.fotoPerfil || '')
             }
-          })
-          console.log('tuto', tutoriasAux, tutoriasAux.length)
-
+          }
+          )}
         })
-        .finally(() => {
-          this.tutoriasArray = tutoriasAux
-          console.log(tutoriasAux)
-          console.log("test")
-          console.log(this.tutoriasArray.length, this.tutoriasArray)
-
-          tutoriasAux.forEach((tutoria) => {
-            console.log("test")            
-            console.log(tutoria.date)
-          } )
-        })
+      })
     }
-
 
   viewDay({ date }: CalendarDaySlotScope) {
     this.calendarTimeFrame = date
@@ -184,8 +110,7 @@ export default class AgendaProfessor extends Vue {
 
     // Utilizo o .slice(-2) para garantir o formato com 2 digitos.
     return ano + '-' + ("0"+mes).slice(-2) + '-' + ("0"+dia).slice(-2);
-}
-
+  }
 
   // TODO se livrar do any
   getEventColor(event: any) {
@@ -217,8 +142,9 @@ export default class AgendaProfessor extends Vue {
     nativeEvent.stopPropagation()
   }
 
-  // TODO: se livrar desses anys
-  setEvent(nome: any, inicio: any, fim: any, diaTodo: any, telefone: any, email:any, nomeDoProfessor: any, assuntoProfessor: any) {
+  // cria um evento no calendario
+  setEvent(nome: string, inicio: string, fim: string, diaTodo: boolean, telefone: string,
+   email: string, nomeDoProfessor: string, assuntoProfessor: string, fotoProfessor: string) {
     this.events.push({
       name: nome,
       color: this.colors[Math.floor(Math.random()*this.colors.length)],
@@ -231,18 +157,11 @@ export default class AgendaProfessor extends Vue {
       startString: inicio,
       endString: fim,
       assunto: assuntoProfessor,
+      foto: fotoProfessor
     })
   }
 
-  closeAndCancel(calendarTimeFrame: any) {
-    setTimeout(() => {
-      this.exibirMenuEventoSelecionado = false
-      this.events.splice(calendarTimeFrame, 1)
-    }, 2500)
-  }
-
   updatePageData() {
-    console.log('updateAgenda')
     this.getTutoria()
   }
 
@@ -250,7 +169,6 @@ export default class AgendaProfessor extends Vue {
     this.getTutoria()
 
     this.$root.$on('myEvent', () => {
-     console.log('chegou no evento')
      this.updatePageData()
     })
   }
@@ -299,9 +217,7 @@ export default class AgendaProfessor extends Vue {
         :activator="selectedElement"
         offset-x
       >
-        <!-- usando v-if para não quebrar por receber null, caso não funcione
-             refatorar para passar o objeto todo para o card, ou seja, selecteEvent
-             e parsear dentro do card -->
+        <!-- usando v-if para evitar receber null -->
         <CardPedidoTutoria v-if="selectedEvent" 
         :telefone="selectedEvent.telefoneProfessor"
         :professorEmail="selectedEvent.emailProfessor"
@@ -309,6 +225,7 @@ export default class AgendaProfessor extends Vue {
         :tutoriaInicio="selectedEvent.startString"
         :tutoriaFim="selectedEvent.endString"
         :assuntoDaTutoria="selectedEvent.assunto"
+        :fotoDoProfessor="selectedEvent.foto"
         :showModalTutoria="exibirMenuEventoSelecionado" @update-modal-tutoria="exibirMenuEventoSelecionado = $event"/>
       </v-menu>
     </v-sheet>

@@ -53,18 +53,12 @@ export default class Horarios extends Vue {
       { text: "22:00 - 23:00" },
     ]
 
-    
-  horasTutor = [
-    { id: 1, text: "07:00 - 09:00" },
-    { id: 2, text: "08:00 - 09:00" },
-    { text: "10:00 - 11:00" },
-    { text: "16:00 - 17:00" },
-    { text: "17:00 - 18:00" },
-    { text: "18:00 - 19:00" },
-    { text: "19:00 - 20:00" },
-    { text: "22:00 - 23:00" },
-  ]
-
+  /*
+   * Dado a agenda do tutor (array de horarios) buscamos na lista total
+   * de horarios possiveis, definidos pelo array horas e retornamos apenas  
+   * um array contendo os indices de ocorrencia das horas do tutor
+   * no array de horas total, ou seja, retorna a intersecção.
+  */
   encontraInterseccao() {
       const result = this.horas.map((a, index) => {
         if (this.agendaTutorDia.some(b => {
@@ -75,18 +69,15 @@ export default class Horarios extends Vue {
 
     // esse array prove a lista de intercecção
     const filteredResult = result.filter(item => item !== undefined);
-    console.log("resultadoFiltrado", filteredResult)
     this.intersec = filteredResult
   }
 
-  // pega a genda do banco e salva em uma variavel
+  // pega a agenda do tutor do banco de dados e salva em uma variavel
   async getAgenda() {
     const tutor = this.authModule.user
     if (!isTutor(tutor)) return
 
     await getAgendaTutorService(tutor._id).then((res) => {
-      console.log("Agenda obtida do banco", res)
-
       this.agendaTutorBD = res
 
       // remove os campos _id para obter um objeto formatado, pronto para request
@@ -95,22 +86,29 @@ export default class Horarios extends Vue {
         const dia = _dia as keyof AgendaHorarios
         this.agendaFormatadaParaRequest[dia].forEach((item) => removeMongoAttrsFromDocument(item))
       })
-      console.log("copiaHorariosTeste", this.agendaFormatadaParaRequest)
     })
   }
-
   
-  /**
-   * Cópia dos horários, para não alterar-los diretamente
-   */
+  // Cópia da agenda, para não alterar diretamente
   agendaFormatadaParaRequest: AgendaHorarios = createAgendaVazia()   
   
-  /**
-   * Dia da semana que o tutor esta setando os horários livres
-   */
+  // Dia da semana que o tutor esta setando os horários livres, por padrão, quando
+  // carregamos a página esse dia é a segunda.
   diaSelecionado = "segunda"
 
+  // como mencionado, por padrão o dia quando a página carrega é segunda, por isso
+  // selecionamos o primeiro v-chip das horas, o qual representa a segunda feira
+  // isso garante que não iremos enviar o dia vazio na requisição
   preselectday = 0
+
+   // array que define os itens que possuem intersecção entre todos os horarios
+  // e os horarios ja escolhidos pelo tutor
+  intersec: any[] = []
+
+  agendaTutorBD!: AgendaHorarios
+
+  agendaTutorDia: any[] = []
+
 
   addHorario(data: string) {
     const inicioData = data.split('-')[0].trim()
@@ -118,8 +116,6 @@ export default class Horarios extends Vue {
     if (this.diaSelecionado){
       (this.agendaFormatadaParaRequest as any)[this.diaSelecionado].push({ inicio: inicioData, fim: fimData })
     }
-    console.log("apos adicionar", this.agendaFormatadaParaRequest)
-
   }
 
   removeHorario(data: string) {
@@ -130,18 +126,7 @@ export default class Horarios extends Vue {
     (this.agendaFormatadaParaRequest as any)[this.diaSelecionado] = (this.agendaFormatadaParaRequest as any)[this.diaSelecionado].filter((item: any) => {
       if (item.inicio !== inicioData && item.fim !== fimData){ return true }
     })}
-    console.log("apos remover", this.agendaFormatadaParaRequest)
   }
-
-
-  // array que define os itens que possuem intersecção entre todos os horarios
-  // e os horarios ja escolhidos pelo tutor
-  intersec: any[] = []
-
-  agendaTutorBD!: AgendaHorarios
-
-  agendaTutorDia: any[] = []
-
 
   isSelected(index: number) {
     // selected
@@ -149,40 +134,20 @@ export default class Horarios extends Vue {
     return this.intersec.indexOf(index) !== -1
   }
 
+  // carrega apenas os dados do dia
   carregaHorariosDoDia(dia: string) {
-    console.log("agendaBD por semana", (this.agendaTutorBD as any)[dia])
-    
-    // formata essa agenda de um dia especifo para que ela possa ser exibida
-    // nos chips
+    // formata a agenda de um dia especifo para que ela possa ser exibida nos chips
     this.agendaTutorDia = (this.agendaTutorBD as any)[dia].map((item: any) => {
       return { "text": `${item.inicio} - ${item.fim}` }
     })
-
-    console.log("agenda do tutor no dia", this.agendaTutorDia)
     this.encontraInterseccao()
     this.diaSelecionado = dia
-
   }
 
+  // envia o request a api salvando os novos horarios
   salvaConfiguracao() {
     const tutor = this.authModule.user
     if (!isTutor(tutor)) return
-
-    // const agendaFormatada = this.removeHorariosVazios(this.copiaHorarios)
-
-    // const agendaFormatada = this.copiaHorarios
-    const agendaFormatada = {
-      segunda: [{inicio: "1300", fim: "1400"}],
-      terca: [{inicio: "1300", fim: "1400"}],
-      quarta: [{inicio: "1300", fim: "1400"}],
-      quinta: [{inicio: "1300", fim: "1400"}],
-      sexta: [{inicio: "1300", fim: "1400"}]
-    }
-
-
-    console.log("agenda formatada", agendaFormatada)
-    // const agendaFormatada = this.copiaHorarios
-
 
     updateAgendaTutorService(tutor._id, this.agendaFormatadaParaRequest).then(novaAgenda => {
       // sinalizo os novos horários pra agenda, isso provavelmente sera util numa feature, xis de
@@ -199,7 +164,20 @@ export default class Horarios extends Vue {
 
       // Sinalizo pro componente pai fechar o modal
       this.$emit("input", false)
-    })
+    
+      this.$toasted.success("Horarios atualizados", {
+          theme: "toasted-primary",
+          position: "top-right",
+          duration: 3000
+        })
+        this.getAgenda()
+    }).catch( () => {
+      this.$toasted.error("Um comportamento inesperado aconteceu, tente novamente.", {
+          theme: "toasted-primary",
+          position: "top-left",
+          duration: 3000
+        })
+    }) 
   }
 
   mounted() {
@@ -230,26 +208,7 @@ export default class Horarios extends Vue {
                @click="isSelected(index) ? removeHorario(hora.text) : addHorario(hora.text)">
         {{ hora.text }}
       </v-chip>
-
       </v-chip-group>
-    
-    <!-- <v-chip-group  multiple column active-class="primary--text">
-
-              <v-chip
-                class="ma-2"
-                active-class="primary--text"
-                v-for="(hora, index) in horas"
-                :key="index"
-                
-                :filter="isSelected(2)"
-                outlined
-                @click="isSelected()"
-              ><span v-text="hora.text" />
-              </v-chip>
-      </v-chip-group> -->
-
-
-
     <div class="btnSalvar">
       <v-btn class="ma-2 btnTextWhite" @click="salvaConfiguracao()" color="#106CE5"> Salvar </v-btn>
     </div>

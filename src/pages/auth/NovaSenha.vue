@@ -18,9 +18,6 @@ export default class NovaSenha extends Vue {
   updatePassword(password: string, newPassword: string) {
   
     const token = this.$route.query.token
-    console.log(token)
-    console.log(password)
-    console.log(newPassword)
 
     if(password && newPassword) {
       if(!resetPasswordService(token.toString(), password, newPassword)) {

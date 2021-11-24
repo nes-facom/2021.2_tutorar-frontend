@@ -23,14 +23,11 @@ export default class Horarios extends Vue {
   menu = false
 
   tutorHorariosByWeekday(day: string) {
-    // console.log('tutoratual', tutor)
-
     if(this.tutorAtual && this.tutorAtual.agenda && day){
       
       if ((this.tutorAtual.agenda as any)[day]) {
       const horariosDayArr = (this.tutorAtual.agenda as any)[day].map((item: any) => {
         return `${item.inicio} - ${item.fim}`
-        // console.log("item", item.fim, item.inicio)
       })       
       this.horariosArr = horariosDayArr
       } else {
@@ -43,18 +40,6 @@ export default class Horarios extends Vue {
 
   data() {
     return {
-      tags: [
-        "1100 às 1900",
-        "2100 às 2200",
-        "2200 às 2300",
-        "13h00 às 14h00",
-        // "14h00 às 15h00",
-        // "15h00 às 16h00",
-        // "16h00 às 17h00",
-        // "17h00 às 18h00"
-
-
-      ],
       date: new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().substr(0, 10)
     }
   }
@@ -72,9 +57,7 @@ export default class Horarios extends Vue {
     if (x == 5) dayweek = 'sabado'
     if (x == 6) dayweek = 'domingo'
 
-    console.log('day', dayweek)
     this.tutorHorariosByWeekday(dayweek)
-
   }
 
   updateHoraSelected(hora: string) {
@@ -84,7 +67,6 @@ export default class Horarios extends Vue {
 
   updateDateSelected(date: string) {
     // Emite um evento partindo do child para ser capturado pelo parent
-    console.log("data", date)
     this.date = date
     this.$emit('update-date-selected', date)
   }

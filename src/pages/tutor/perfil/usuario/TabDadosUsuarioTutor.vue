@@ -106,6 +106,7 @@ export default class TabDadosUsuarioTutor extends Vue {
         this.isEditing = false
       })
   }
+  
 }
 </script>
 

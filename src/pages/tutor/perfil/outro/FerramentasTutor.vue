@@ -47,7 +47,8 @@ export default class Horarios extends Vue {
     </div >
     <v-chip-group center-active v-if="habilidades.length > 0" active-class="primary--text" show-arrows>
       <v-chip filter v-show="true" v-for="tag in habilidades" :key="tag"
-      @click="updateHabilidadeSelected(tag)">
+      @click="updateHabilidadeSelected(tag)"
+      >
         {{ tag }}
       </v-chip>
     </v-chip-group>

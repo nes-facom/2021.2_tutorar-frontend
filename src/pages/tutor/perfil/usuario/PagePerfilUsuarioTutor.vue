@@ -3,10 +3,8 @@ import Auth from "@/store/modules/auth"
 import { getModule } from "vuex-module-decorators"
 import { Vue, Component } from "vue-property-decorator"
 
-
 import TabDadosUsuarioTutor from "@/pages/tutor/perfil/usuario/TabDadosUsuarioTutor.vue"
 import TabSelecaoHabilidades from "@/pages/tutor/perfil/usuario/TabSelecaoHabilidades.vue"
-//import AgendaProfessor from "@/pages/tutor/agenda/PageAgenda.vue"
 
 
 

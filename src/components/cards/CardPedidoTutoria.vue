@@ -29,6 +29,9 @@ export default class CardPedidoTutoria extends Vue {
   @Prop({ required: true })
   assuntoDaTutoria?: string
 
+  @Prop({ required: true })
+  fotoDoProfessor?: any
+
   dialog = true
 
   openTutorWhatsAppLink() {
@@ -42,8 +45,6 @@ export default class CardPedidoTutoria extends Vue {
 
     return dia + '/' + ("0"+mes).slice(-2) + '/' + ("0"+ano).slice(-2);
   }
-
- 
 
   get mascaraTelefone(): string {
     return getApropriateTelefoneMask(this.telefone)
@@ -90,7 +91,7 @@ export default class CardPedidoTutoria extends Vue {
       <v-row class="px-4">
         <v-col cols="3">
           <v-avatar size="100%">
-            <v-img src="@/assets/dog.jpg" />
+            <v-img :src="fotoDoProfessor" lazy-src="@/assets/dog.jpg"/>
           </v-avatar>
         </v-col>
         <v-col cols="9" align-self="center">

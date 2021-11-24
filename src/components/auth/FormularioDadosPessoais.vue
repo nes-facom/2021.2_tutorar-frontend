@@ -51,7 +51,6 @@ export default class FormularioDadosPessoais extends Vue {
 
   @Watch("dados.email")
   onEmailChange(email: string) {
-    console.log("email", email)
     if (isValidEmail(email) !== true) return
 
     if (this.emailTimerId) clearTimeout(this.emailTimerId)

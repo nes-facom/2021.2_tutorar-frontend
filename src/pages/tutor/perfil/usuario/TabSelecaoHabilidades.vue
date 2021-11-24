@@ -102,7 +102,6 @@ export default class TabSelecaoHabilidades extends Vue {
     // if (this.usuarioTutor.habilidades.length >= 5) return
 
     const dadosUpdate = cloneDeep(this.usuarioTutor)
-    console.log("dadosUpdate", dadosUpdate)
     dadosUpdate.habilidades.push(habilidade._id)
 
     this.authModule.updateUser({ id: this.usuarioTutor._id, user: dadosUpdate })

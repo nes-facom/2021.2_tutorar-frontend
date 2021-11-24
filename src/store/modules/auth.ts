@@ -103,7 +103,6 @@ export default class Auth extends VuexModule {
 
     if (isTutor(user)) {
       const tutorModule = getModule(TutorModule, store)
-      console.log("user", user)
       return tutorModule
         .updateTutor({
           data: { tutor: user, id, foto },
@@ -111,7 +110,6 @@ export default class Auth extends VuexModule {
         })
         .then(updatedTutor => {
           const updatedUser = { ...updatedTutor, isAdmin: user.isAdmin }
-          console.log("updatedUser", updatedUser)
           this.AUTH_UPDATE({ user: { ...updatedUser, isMonitor: false } })
         })
     }

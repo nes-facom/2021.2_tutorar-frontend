@@ -5,10 +5,8 @@ import { Vue, Component } from "vue-property-decorator"
 
 import Tutorias from "@/pages/tutor/home/Tutorias.vue"
 import SolicitacoesTutoria from "@/pages/tutor/home/SolicitacoesTutoria.vue"
-//import AgendaProfessor from "@/pages/tutor/agenda/PageAgenda.vue"
 
 import Horarios from "@/pages/tutor/home/Horarios.vue"
-
 
 const AgendaTutor = () => import("@/pages/tutor/agenda/PageAgenda.vue")
 

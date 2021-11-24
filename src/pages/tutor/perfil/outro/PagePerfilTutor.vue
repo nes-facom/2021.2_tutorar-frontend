@@ -60,12 +60,6 @@ export default class PagePerfilTutor extends Vue {
     this.habilidadesTutorAtual = test.map((item) => item.nome)
   }
 
-  imprime(){
-    console.log(this.habilidadeSelected)
-    console.log(this.hourSelected)
-    console.log(this.dateSelected)
-  }
-
 /**
    * envia o pedido a api
    */
@@ -74,7 +68,6 @@ export default class PagePerfilTutor extends Vue {
     if (this.tutor) {
     
     if(!this.habilidadeSelected) {
-      console.log('selecione uma abilidade')
       this.$toasted.error("Por favor, selecione uma habilidade!", {
           theme: "toasted-primary",
           position: "top-right",
@@ -84,7 +77,6 @@ export default class PagePerfilTutor extends Vue {
     }
 
     if(!this.dateSelected) {
-      console.log('selecione uma data')
       this.$toasted.error("Por favor, selecione uma data em que o tutor possua horarios!", {
           theme: "toasted-primary",
           position: "top-right",
@@ -93,9 +85,7 @@ export default class PagePerfilTutor extends Vue {
       return
     }
 
-    console.log("hora", this.hourSelected)
     if(!this.hourSelected) {
-      console.log('selecione uma data')
       this.$toasted.error("Por favor, selecione um horário em que deseja ser atendido.", {
           theme: "toasted-primary",
           position: "top-right",
@@ -126,8 +116,6 @@ export default class PagePerfilTutor extends Vue {
     }
   }
 
-
-
   mounted() {
     const tutorFoiCarregadoPreviamente = isTutor(this.tutorModule.byId[this.idTutorEmExibicao])
 
@@ -135,8 +123,6 @@ export default class PagePerfilTutor extends Vue {
       this.habilidadesModule.fetchAll({ forceRefetch: false }).then(() => {
         this.getHabilidades()
       })
-      console.log('a', this.tutor)
-
       return
     }
     this.isCarregandoTutor = true
@@ -149,7 +135,6 @@ export default class PagePerfilTutor extends Vue {
         this.habilidadesModule.fetchAll({ forceRefetch: false }).then(() => {
         this.getHabilidades()
       })
-        console.log(this.tutor)
         this.isCarregandoTutor = false
       })
   }
@@ -230,7 +215,7 @@ export default class PagePerfilTutor extends Vue {
           </v-textarea>
               </div>
               <div class="btn">
-                <v-btn class="ma-2 btnTextWhite" @click="imprime(); solicitarTutoria()" color="#106CE5"> Solicitar tutoria </v-btn>
+                <v-btn class="ma-2 btnTextWhite" @click="solicitarTutoria()" color="#106CE5"> Solicitar tutoria </v-btn>
               </div>
             </template>
           </v-col>

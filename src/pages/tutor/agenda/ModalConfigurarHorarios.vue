@@ -104,11 +104,6 @@ export default class ModalConfigurarHorarios extends Vue {
       sexta: [{inicio: "1300", fim: "1400"}]
     }
 
-
-    console.log("agenda formatada", agendaFormatada)
-    // const agendaFormatada = this.copiaHorarios
-
-
     updateAgendaTutorService(tutor._id, agendaFormatada).then(novaAgenda => {
       // sinalizo os novos horários pra agenda, isso provavelmente sera util numa feature, xis de
       this.$emit("horarios-atualizados", novaAgenda)
