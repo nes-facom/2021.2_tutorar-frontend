@@ -6,8 +6,8 @@ import { unmask } from "@/utils/inputs/mask"
 
 import { Vue, Component, Watch } from "vue-property-decorator"
 
-import { findUserByCpfService } from "@/api/users/find-by-cpf"
-import { findByEmailService } from "@/api/users/find-by-email"
+import { findUserByCpfService } from "@/api/users/check-cpf"
+import { findByEmailAndCheckService } from "@/api/users/check-email"
 import { ddmmyyyyStringToIso } from "@/utils"
 import { isValidEmail } from "@/utils/form/validation"
 
@@ -57,9 +57,10 @@ export default class FormularioDadosPessoais extends Vue {
 
     // debounce de 300ms pra buscar na api
     this.emailTimerId = setTimeout(() => {
-      findByEmailService(email)
-        .then(user => {
-          if (user) this.isEmailEmUso = true
+      findByEmailAndCheckService(email)
+        .then(res => {
+          if (res === true) this.isEmailEmUso = true
+          else this.isEmailEmUso = false
         })
         .catch(err => {
           if (err.statusCode === 404) this.isEmailEmUso = false
@@ -94,8 +95,9 @@ export default class FormularioDadosPessoais extends Vue {
     this.isCheckingCpf = true
 
     findUserByCpfService(cpf)
-      .then(user => {
-        if (user) this.isCpfEmUso = true
+      .then(res => {
+        if (res === true) this.isCpfEmUso = true
+        else this.isCpfEmUso = false
       })
       .catch(err => {
         if (err.statusCode === 404) this.isCpfEmUso = false

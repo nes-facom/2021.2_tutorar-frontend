@@ -152,9 +152,7 @@ export default class TutorModule extends VuexModule implements CrudModule<Tutor>
     return new Promise((resolve, reject) => {
       updateTutorService(id, tutor)
         .then(raw => {
-          console.log("rawTutor", raw)
           const tutor = normalizaTutor(raw)
-          console.log("normalizedTutor", tutor)
           if (options.updateRecord) this.ADD_ITEMS([tutor])
           resolve(tutor)
         })

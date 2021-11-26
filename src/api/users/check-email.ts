@@ -2,10 +2,10 @@ import handleAxiosError from "@/api/axios-error-handler"
 import { api } from "@/api/axios-instance-creator"
 import { RawUser } from "@/store/modules/users-types"
 
-export function findUserByCpfService(cpf: string): Promise<RawUser> {
+export function findByEmailAndCheckService(email: string): Promise<boolean> {
   return new Promise((resolve, reject) => {
     api()
-      .post("users/find-by-cpf", { cpf })
+      .post("users/check-email", { email })
       .then(res => {
         resolve(res.data)
       })
