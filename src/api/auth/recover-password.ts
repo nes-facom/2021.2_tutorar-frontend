@@ -9,6 +9,7 @@ export function resetPasswordService(token: string, password: string, passwordCo
     .patch("users/auth/reset-password/" + `${token}`, { password, passwordConfirmation })
     .then(response => {
       if (response.status == 200 || response.status == 201 || response.status == 204) {
+        console.log("sucesso")
       }
     })
     .catch((error: AxiosError) => {
