@@ -1,18 +1,14 @@
 # Projeto Tutorar
-## Documentação
-Para visitar a documentação oficial do Vue.Js, acesse [vuejs.org](https://vuejs.org).
 
-## Instalar as dependências
+# Executando o projeto
+
+## Instale as dependências
 ```bash
 npm install
 ```
-
-## Instalar o Vuetify
-```bash
-npm install vuetify
-```
-
-## Rodar o projeto
+## Inicie o projeto
 ```bash
 npm run serve
 ```
+
+Para mais detalhes, consulte o Manual de Instalação, presente na documentação do projeto.
