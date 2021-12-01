@@ -74,7 +74,6 @@ export default class Horarios extends Vue {
   date = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().substr(0, 10)
 
   mounted() {
-    // a principio, load os horarios do dia atual
     this.date = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().substr(0, 10)
     this.getWeekdayFromDate(this.date)
     this.$emit('update-date-selected', this.date)

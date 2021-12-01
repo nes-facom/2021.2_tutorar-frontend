@@ -1,6 +1,3 @@
-/**
- * @see https://pt.wikipedia.org/wiki/Lista_de_universidades_federais_do_Brasil
- */
 export default [
   "UTFPR",
   "UNIVASF",

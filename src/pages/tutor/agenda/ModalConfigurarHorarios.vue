@@ -76,7 +76,6 @@ export default class ModalConfigurarHorarios extends Vue {
     const copiaHorarios = cloneDeep(horarios)
     Object.keys(copiaHorarios).map(_dia => {
       const dia = _dia as keyof AgendaHorarios
-      // Filtro os horarios sem inicio ou fim
       copiaHorarios[dia] = copiaHorarios[dia].filter(horario => horario.inicio && horario.fim)
     })
     return copiaHorarios
@@ -91,11 +90,6 @@ export default class ModalConfigurarHorarios extends Vue {
     const tutor = this.authModule.user
     if (!isTutor(tutor)) return
 
-    // const agendaFormatada = this.removeHorariosVazios(this.copiaHorarios)
-
-    // const agendaFormatada = this.copiaHorarios
-    
-    
     const agendaFormatada = {
       segunda: [{inicio: "1300", fim: "1400"}],
       terca: [{inicio: "1300", fim: "1400"}],
@@ -105,13 +99,12 @@ export default class ModalConfigurarHorarios extends Vue {
     }
 
     updateAgendaTutorService(tutor._id, agendaFormatada).then(novaAgenda => {
-      // sinalizo os novos horários pra agenda, isso provavelmente sera util numa feature, xis de
       this.$emit("horarios-atualizados", novaAgenda)
 
       const user = this.authModule.user
       if (!isTutor(user)) return
 
-      // Não altero o usuario diretamente, chamo uma mutation, ver se tem como encurtar isso
+      // Não altero o usuario diretamente, chamo uma mutation
       const userCopy = cloneDeep(user)
       userCopy.agenda = novaAgenda
 

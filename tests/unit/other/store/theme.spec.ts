@@ -5,7 +5,6 @@ import { getModule } from "vuex-module-decorators"
 describe("Vuex Theme Module", () => {
   let themeModule = getModule(ThemeModule, Store)
 
-  // Reinstancio para resetar estado
   beforeEach(() => {
     themeModule = getModule(ThemeModule, Store)
   })

@@ -36,9 +36,7 @@ export default class AppBar extends Vue {
 
   user = this.authModule.user
 
-  // Pra usar na template
   getPerfilRoute = getPerfilRoute
-
 
   goToRoute(route: string) {
     if (this.$route.path !== route) this.$router.push(route)

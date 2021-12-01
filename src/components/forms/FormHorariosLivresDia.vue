@@ -11,10 +11,7 @@ export default class FormHorariosLivresDia extends Vue {
   @Prop({ type: Array, required: true })
   value!: HorarioLivre[]
 
-  /**
-   * Array com as mensagems de erro,
-   * elas tem o mesmo index que o horario com erro
-   */
+  // array com as mensagems de erro
   get inputErrorMessages(): string[] {
     const errorMessages: string[] = []
 

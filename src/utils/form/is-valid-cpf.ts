@@ -1,9 +1,3 @@
-/**
- * Valida um cpf, detalhes da implementação ver
- * https://www.devmedia.com.br/validar-cpf-com-javascript/23916
- *
- * @param cpf
- */
 export default (cpf: string) => {
   cpf = cpf.replace(/[^0-9a-z]/gi, "")
 

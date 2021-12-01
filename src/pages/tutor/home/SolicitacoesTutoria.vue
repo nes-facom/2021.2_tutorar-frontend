@@ -128,7 +128,6 @@ export default class extends Vue {
       })
   }
 
-  // recebe
   async handleChange(tutoriaId: string) {
     if (tutoriaId != null) {
       await this.tutoriaModule.deleteTutoria(tutoriaId).then(() => {

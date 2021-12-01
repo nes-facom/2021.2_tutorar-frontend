@@ -51,7 +51,6 @@ export default class CadastroProfessor extends Vue {
 
   dataInicioLecionamentoNaoFormatada = ""
 
-  // Passo 0
   dadosPessoais: DadosPessoais = {
     nome: "",
     email: "",
@@ -61,21 +60,17 @@ export default class CadastroProfessor extends Vue {
     dataNascimento: ""
   }
 
-  // Passo 1
   dadosProfessor = {
     nivelLecionamento: "",
     formacaoAcademica: "",
     inicioLecionamento: ""
   }
 
-  // Passo 2
   senha = ""
 
-  // Passo 3
   fotoPerfil: null | File = null
 
   opcoes = {
-    // @see https://www.vestibulandoweb.com.br/formacao.htm
     formacaoAcademica: [
       FORMACAO_ACADEMICA.BACHARELADO,
       FORMACAO_ACADEMICA.LICENSIATURA,

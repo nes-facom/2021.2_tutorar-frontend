@@ -3,10 +3,7 @@ import { Component, Vue, Prop } from "vue-property-decorator"
 
 @Component({ name: "FotoDropZone" })
 export default class FotoDropZone extends Vue {
-  /**
-   * Tipos de imagem aceitos pelo input
-   * @see: https://www.w3schools.com/tags/att_input_accept.asp
-   */
+  //Tipos de imagem aceitos pelo input
   @Prop({ default: "image/png, image/jpeg" }) allowedMimeTypes!: string
   @Prop({ default: 7000000 }) maxSize!: number
 
@@ -14,11 +11,6 @@ export default class FotoDropZone extends Vue {
 
   preview: string | null = null
 
-  /**
-   * Uso counter ao invés de boolean pois ao dar hover
-   * em child elements da minha dropzone o dragleave é
-   * triggered.
-   */
   dragEnterCounter = 0
 
   onImageSelected(event: Event) {

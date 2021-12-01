@@ -29,8 +29,6 @@ export function updateTutorService(id: string, tutor: Tutor): Promise<RawTutor> 
     api()
       .put(`users/tutores/${id}`, body)
       .then(res => {
-        // seria interessante integrar a agenda ao body da req de updateTutor, mas na versão atual da API
-        // esse fomarto de body não é aceitavel, logo devem ser realizadas duas requisições
         if (agenda){
           updateAgendaTutorService(id, agenda)
           res.data = {...res.data, agenda}

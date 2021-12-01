@@ -92,17 +92,23 @@ export default class Horarios extends Vue {
   // Cópia da agenda, para não alterar diretamente
   agendaFormatadaParaRequest: AgendaHorarios = createAgendaVazia()   
   
-  // Dia da semana que o tutor esta setando os horários livres, por padrão, quando
-  // carregamos a página esse dia é a segunda.
+  /*
+   * Dia da semana que o tutor esta setando os horários livres, por padrão, quando
+   * carregamos a página esse dia é a segunda.
+  */
   diaSelecionado = "segunda"
 
-  // como mencionado, por padrão o dia quando a página carrega é segunda, por isso
-  // selecionamos o primeiro v-chip das horas, o qual representa a segunda feira
-  // isso garante que não iremos enviar o dia vazio na requisição
+  /*
+   * Como por padrão o dia quando a página carrega é segunda, seleciona
+   * o primeiro v-chip das horas, o qual representa a segunda feira
+   * isso garante que não iremos enviar o dia vazio na requisição
+  */
   preselectday = 0
 
-   // array que define os itens que possuem intersecção entre todos os horarios
-  // e os horarios ja escolhidos pelo tutor
+  /*
+   * array que define os itens que possuem intersecção entre todos os horarios
+   * e os horarios ja escolhidos pelo tutor
+  */
   intersec: any[] = []
 
   agendaTutorBD!: AgendaHorarios
@@ -122,14 +128,12 @@ export default class Horarios extends Vue {
     const inicioData = data.split('-')[0].trim()
     const fimData = data.split('-')[1].trim()
     if(this.diaSelecionado){
-    // (this.agendaFormatadaParaRequest as any)[this.diaSelecionado].splice(index, 1)
     (this.agendaFormatadaParaRequest as any)[this.diaSelecionado] = (this.agendaFormatadaParaRequest as any)[this.diaSelecionado].filter((item: any) => {
       if (item.inicio !== inicioData && item.fim !== fimData){ return true }
     })}
   }
 
   isSelected(index: number) {
-    // selected
     this.intersec.indexOf(index) === -1
     return this.intersec.indexOf(index) !== -1
   }
@@ -150,19 +154,19 @@ export default class Horarios extends Vue {
     if (!isTutor(tutor)) return
 
     updateAgendaTutorService(tutor._id, this.agendaFormatadaParaRequest).then(novaAgenda => {
-      // sinalizo os novos horários pra agenda, isso provavelmente sera util numa feature, xis de
+      // sinaliza os novos horários pra agenda
       this.$emit("horarios-atualizados", novaAgenda)
 
       const user = this.authModule.user
       if (!isTutor(user)) return
 
-      // Não altero o usuario diretamente, chamo uma mutation, ver se tem como encurtar isso
+      // Não altera o usuario diretamente, chama uma mutation
       const userCopy = cloneDeep(user)
       userCopy.agenda = novaAgenda
 
       this.authModule.AUTH_UPDATE({ user: userCopy })
 
-      // Sinalizo pro componente pai fechar o modal
+      // Sinaliza pro componente pai fechar o modal
       this.$emit("input", false)
     
       this.$toasted.success("Horarios atualizados", {

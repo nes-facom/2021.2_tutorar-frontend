@@ -1,9 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-/**
- * Tipagem de componentes do vuetify, baseado na API da documentação deles,
- * infelizmente eles não proveem tipagem para tudo
- */
+
+// Tipagem de componentes do vuetify
 export type VForm = Vue & {
   validate: () => boolean
   reset: () => void

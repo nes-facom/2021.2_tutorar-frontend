@@ -27,7 +27,6 @@ export default class PageHome extends Vue {
     return `${d[2]}/${d[1]}/${d[0].substring(2)}`
   }
 
-  // criado para iterar
   search = ''
   searchItems: Tutor[] = []
 
@@ -43,12 +42,13 @@ export default class PageHome extends Vue {
    * @param searchHabilidade: string
 
    * Esse método é utilizado para filtrar os tutores de acordo com suas habilidades.
-   * O usuário busca a habilidade desejada inserindo uma string na barra de navegação
-   * <v-text-field>. Essa string serve como parâmetro para esse método, o qual itera por
-   * todos os tutores e, a cada tutor, compara se sua(s) habilidade(s) possui(em) uma substrig
-   * que combina com a habilidade buscada pelo usuário. Um array auxiliar é gerado para armazenar
-   * todos os tutores filtrados. Por fim o array auxiliar sobrescreve o array responsável por conter
-   * os tutores que serão carregados e exiidos pela página.
+   * O usuário busca a habilidade desejada inserindo uma string na barra de navegação.
+   * Essa string serve como parâmetro para esse método, o qual itera por todos os tutores
+   * e, a cada tutor, compara se sua(s) habilidade(s) possui(em) uma substrig que combina 
+   * com a habilidade buscada pelo usuário. Um array auxiliar é gerado para armazenar todos
+   * os tutores filtrados. 
+   * Por fim o array auxiliar sobrescreve o array responsável por conter os tutores que serão
+   * carregados e exiidos pela página.
    
    * Caso a string de busca seja inválida o array responsável pro conter os tutores que serão carregados
    * e exibidos é povoada por todos os tutores existentes, retornados pela api. 

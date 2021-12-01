@@ -23,7 +23,7 @@ export type vuexModuleName = keyof typeof modules
 
 const actions = {
   /**
-   * Reseta TODO o estado da aplicação percorrendo os módulos
+   * Reseta o estado da aplicação percorrendo os módulos
    * se o módulo tem uma função própria para resetar eu o chamo
    */
   RESET_VUEX_STATE({ commit }: ActionContext<any, any>, payload?: ResetStateOptions) {

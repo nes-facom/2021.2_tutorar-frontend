@@ -35,7 +35,6 @@ export default class ModalAgendarTutoria extends Vue {
 
   isExibindoCalendarioSelecaoDia = false
 
-  // dados tutoria
   dataTutoria = ""
   horaFimTutoria = ""
   horaInicioTutoria = ""
@@ -96,7 +95,6 @@ export default class ModalAgendarTutoria extends Vue {
     const mes = dateArr[1] - 1 // mes é 0 indexed
     const dia = dateArr[2]
 
-    // Construo data com ano, mes, dia porque JS é um lixo e pode errar o dia ao parsear string
     const diaSemana = new Date(ano, mes, dia).getDay()
 
     const dias: diasSemana[] = ["domingo", "segunda", "terca", "quarta", "quinta", "sexta", "sabado"]
@@ -107,7 +105,6 @@ export default class ModalAgendarTutoria extends Vue {
    * Função para validar dias permitidos para seleção da tutoria
    */
   filterDiasCalendario(data: string) {
-    // mano foda-se, se o tutor não informou nada na agenda libera ae
     if (this.diasSemanaPermitidos.length === 0) return true
 
     const diaSemana = this.getDiaSemana(data)

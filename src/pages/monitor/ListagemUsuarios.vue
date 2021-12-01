@@ -59,7 +59,6 @@ export default class PageListagemUsuarios extends Vue {
 
   gotoUserPage(selectedUser: User) {
     if (isTutor(selectedUser)) return this.$router.push(`/tutor/${selectedUser._id}/perfil`)
-    // if (isProfessor(selectedUser)) return this.$router.push(`/professor/${selectedUser._id}/perfil`)
     return
   }
 

@@ -7,10 +7,8 @@ import { NIVEL_LECIONAMENTO } from "@/utils/constants/nivel-lecionamento"
 
 // Mockup do módulo de login
 jest.mock("@/api/auth/login", () => ({
-  // Preciso disso porque uso es6 imports, see: https://github.com/facebook/jest/issues/5579#event-1477087994
   __esModule: true,
 
-  // falo que o export default do módulo de login é esse mock
   default: jest.fn(
     () =>
       new Promise(resolve => {
@@ -92,7 +90,6 @@ describe("Vuex Auth Module", () => {
     })
 
     afterEach(() => {
-      // Limpo o mock da localstorage para evitar leaks
       jest.clearAllMocks()
     })
 
@@ -127,11 +124,6 @@ describe("Vuex Auth Module", () => {
     })
 
     it("Should call the AUTH_LOGOUT mutation with the same args", () => {
-      /**
-       * Importante !
-       * authModule é apenas uma classe, pra espiar nos commit tenho que
-       * utilizar a store em si
-       */
       const spy = jest.spyOn(store, "commit")
 
       const payload = { clearLocalStorage: false, redirectTo: "/some/page" }

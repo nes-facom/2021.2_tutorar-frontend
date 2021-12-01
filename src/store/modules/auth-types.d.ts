@@ -52,9 +52,5 @@ export interface Monitor extends Pessoa {
 export type User = (Professor | Tutor | Monitor) &
   MongoDocument & {
     isAdmin: boolean
-
-    // Essa flag is monitor é redundante,
-    // é que no back não temos nenhum dado especifico para monitor,
-    // então criamos essa flag
     isMonitor: boolean
   }

@@ -5,10 +5,6 @@ import "vuetify/dist/vuetify.min.css"
 
 Vue.use(Vuetify)
 
-/**
- * Opções padrão do vuetify
- * @see https://next.vuetifyjs.com/en/customization/theme/#api
- */
 const options = {
   breakpoint: {
     scrollBarWidth: 16,
@@ -25,7 +21,6 @@ const options = {
   },
   lang: {
     current: "en",
-    // locales: { en },
     t: undefined
   },
   rtl: false,

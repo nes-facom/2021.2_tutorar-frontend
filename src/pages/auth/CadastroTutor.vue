@@ -49,7 +49,6 @@ export default class CadastroTutor extends Vue {
     semestreAtual: [...Array(16).keys()]
   }
 
-  // Passo 0
   dadosPessoais: DadosPessoais = {
     nome: "",
     email: "",
@@ -59,17 +58,14 @@ export default class CadastroTutor extends Vue {
     dataNascimento: ""
   }
 
-  // Passo 1
   dadosTutor = {
     universidade: "",
     semestreAtual: "",
     cursoLicensiatura: ""
   }
 
-  // Passo 2
   senha = ""
 
-  // Passo 3
   fotoPerfil: null | File = null
 
   async submit() {

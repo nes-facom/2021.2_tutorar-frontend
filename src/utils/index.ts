@@ -21,7 +21,6 @@ export function removeMongoAttrsFromDocument(doc: any) {
 }
 
 
-// yyyy-mm-dd length === 10
 export function yyyymmddToddmm(data?: string) {
   if (!data || data.length < 10) return ""
   const d = data.substring(0,10).split("-")

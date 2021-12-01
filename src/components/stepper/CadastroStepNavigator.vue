@@ -3,9 +3,6 @@ import { Component, Prop, Vue } from "vue-property-decorator"
 
 @Component({ name: "FormStepNavigator" })
 export default class FormStepNavigator extends Vue {
-  /**
-   * Passo atual
-   */
   @Prop({ type: Number, required: true })
   currentStep!: number
 

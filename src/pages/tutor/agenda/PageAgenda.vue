@@ -35,10 +35,6 @@ export default class AgendaProfessor extends Vue {
 
   tipoExibicaoCalendario: "month" | "week" | "day" = "month"
 
-  /**
-   * A date in the format of YYYY-MM-DD which determines
-   * what span of time for the calendar.
-   */
   calendarTimeFrame = ""
 
   selectedEvent = null
@@ -108,11 +104,10 @@ export default class AgendaProfessor extends Vue {
     const mes  = data.split("/")[1];
     const ano  = data.split("/")[2];
 
-    // Utilizo o .slice(-2) para garantir o formato com 2 digitos.
+    // aqui o .slice(-2) garante o formato com 2 digitos.
     return ano + '-' + ("0"+mes).slice(-2) + '-' + ("0"+dia).slice(-2);
   }
 
-  // TODO se livrar do any
   getEventColor(event: any) {
     if (!event) return null
     return event.color
@@ -122,7 +117,6 @@ export default class AgendaProfessor extends Vue {
     this.calendarTimeFrame = ""
   }
 
-  // TODO se livrar do any
   exibirEvento({ nativeEvent, event }: { [x: string]: any }) {
     const open = () => {
       this.selectedEvent = event

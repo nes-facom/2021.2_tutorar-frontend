@@ -115,19 +115,16 @@ export default class TutoriaModule extends VuexModule implements CrudModule<Tuto
 
   @Action({ rawError: true })
   async updateTutoria(payload: { idTutoria: string; dados: Tutoria }): Promise<void> {
-    // TODO a terminar, MS de tutorias não esta retornando os dados att
     return updateTutoriaService(payload.idTutoria, payload.dados)
   }
 
   @Action({ rawError: true })
   async aceitaTutoria(idTutoria: string): Promise<void> {
-    // TODO a terminar, MS de tutorias não esta retornando os dados att
     return aceitaTutoriaService(idTutoria)
   }
 
   @Action({ rawError: true })
   async registraTutoria(idTutoria: string): Promise<void> {
-    // TODO a terminar, MS de tutorias não esta retornando os dados att
     return registraTutoriaService(idTutoria)
   }
 }

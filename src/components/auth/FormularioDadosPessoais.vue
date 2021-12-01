@@ -132,7 +132,6 @@ export default class FormularioDadosPessoais extends Vue {
     dataNascimento: [
       v => !!v || "Data de nascimento é obrigatório",
       v => {
-        // TODO Eca, refatorar depois
         const maxYear = new Date().getFullYear() - 16
         if (!v) return "Campo Obrigatório"
         const error = isValidDMY(v, { maxYear })
@@ -173,8 +172,6 @@ export default class FormularioDadosPessoais extends Vue {
       faço isso pois a validação de inputs é feita quando há um input
       mas no caso do cpf eu só sei se é valida quando a api responde,
       por isso preciso setar manualmente o estado de erro.
-
-      see: https://vuetifyjs.com/en/api/v-text-field/#props
     -->
     <v-text-field
       v-model="maskedCpf"

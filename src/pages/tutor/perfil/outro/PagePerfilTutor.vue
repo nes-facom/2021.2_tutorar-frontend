@@ -60,9 +60,6 @@ export default class PagePerfilTutor extends Vue {
     this.habilidadesTutorAtual = test.map((item) => item.nome)
   }
 
-/**
-   * envia o pedido a api
-   */
   solicitarTutoria() {
     if (!this.authModule.user) return
     if (this.tutor) {

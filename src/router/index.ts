@@ -38,7 +38,7 @@ Vue.use(VueRouter)
 /**
  * Se a rota não é de redirect, tem um path e não tem um name específico
  * o name é a conversão do path para o padrão a seguir
- * Ex: /meu/path/maroto -> Meu_Path_Maroto
+ * Ex: /meu/path/test -> Meu_Path_Test
  */
 routes.map(route => {
   if (!route.redirect && !route.name && route.path) {
@@ -57,11 +57,6 @@ const router = new VueRouter({ mode: "history", base: "/", routes })
  * Verificar permissões do usuário
  * Verificar papeis do usuário
  * Enviar requests a API preemptivamente
- * Etc..
- *
- * Obviamente isso deve ficar simples e conter lógica uteis a todas as rotas
- * para executar a lógica em apenas uma rota basta definir a prop beforeEnter
- * na rota desejada
  */
 router.beforeEach((to, from, next) => {
   const meta: RouteMeta = to.meta || {}
